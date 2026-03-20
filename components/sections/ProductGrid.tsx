@@ -41,7 +41,7 @@ export default function ProductGrid() {
             Vil du ha alle 25? Spar 71% med komplett pakke.
           </p>
           <Button href="#komplett" variant="primary" className="text-base px-8 py-3.5">
-            Se Studentplanleggeren Komplett — 349 kr
+            Se Studentplanlegger Komplett — 349 kr
           </Button>
         </div>
       </div>

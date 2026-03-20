@@ -39,7 +39,7 @@ const faqItems = [
   {
     question: "Hva er inkludert i den komplette pakken?",
     answer:
-      "Studentplanleggeren Komplett inneholder alle 25 planleggere (daglige, ukentlige, månedlige, årlige, produktivitet, helse og sporing) pluss 12 papirmaler (prikket, rutenett og linjert i ulike størrelser). Alt som fyllbare PDF-er.",
+      "Studentplanlegger Komplett inneholder alle 25 planleggere (daglige, ukentlige, månedlige, årlige, produktivitet, helse og sporing) pluss 12 papirmaler (prikket, rutenett og linjert i ulike størrelser). Alt som fyllbare PDF-er.",
   },
 ];
 

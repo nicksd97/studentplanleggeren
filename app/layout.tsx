@@ -17,7 +17,7 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Studentplanleggeren — Få orden på studiene",
+  title: "Studentplanlegger — Få orden på studiene",
   description:
     "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
   keywords: [
@@ -32,9 +32,9 @@ export const metadata: Metadata = {
   ],
   openGraph: {
     locale: "nb_NO",
-    url: "https://studentplanleggeren.no",
-    siteName: "Studentplanleggeren",
-    title: "Studentplanleggeren — Få orden på studiene",
+    url: "https://studentplanlegger.no",
+    siteName: "Studentplanlegger",
+    title: "Studentplanlegger — Få orden på studiene",
     description:
       "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
     type: "website",

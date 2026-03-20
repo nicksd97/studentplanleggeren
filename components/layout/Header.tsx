@@ -37,7 +37,7 @@ export default function Header() {
               </svg>
             </div>
             <span className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark">
-              Studentplanleggeren
+              Studentplanlegger
             </span>
           </a>
 

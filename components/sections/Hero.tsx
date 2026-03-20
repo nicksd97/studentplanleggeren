@@ -45,7 +45,7 @@ export default function Hero() {
 
         {/* Heading */}
         <h1 className="font-[family-name:var(--font-display)] text-5xl sm:text-6xl lg:text-7xl font-bold text-brand-dark mb-4">
-          Studentplanleggeren
+          Studentplanlegger
         </h1>
 
         {/* Subheading */}
