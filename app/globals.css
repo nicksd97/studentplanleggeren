@@ -1,26 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --brand-dark: #3D3229;
+  --brand-medium: #8B7355;
+  --brand-accent: #C4A882;
+  --brand-soft: #E5E2DD;
+  --brand-pale: #F5F0EA;
+  --brand-cream: #FAF8F5;
+  --brand-black: #1A1A1A;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-brand-dark: #3D3229;
+  --color-brand-medium: #8B7355;
+  --color-brand-accent: #C4A882;
+  --color-brand-soft: #E5E2DD;
+  --color-brand-pale: #F5F0EA;
+  --color-brand-cream: #FAF8F5;
+  --color-brand-black: #1A1A1A;
+  --font-display: "Playfair Display", serif;
+  --font-body: "DM Sans", sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--brand-cream);
+  color: var(--brand-black);
+  font-family: var(--font-body);
+}
+
+.dot-pattern {
+  background-image: radial-gradient(circle, var(--brand-medium) 0.5px, transparent 0.5px);
+  background-size: 24px 24px;
+  opacity: 0.03;
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
