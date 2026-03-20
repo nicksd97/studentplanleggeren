@@ -2,21 +2,21 @@ export default function Testimonials() {
   const testimonials = [
     {
       quote:
-        "Endelig et budsjett som faktisk passer studentlivet mitt. Tok meg 10 minutter å sette opp, og nå vet jeg nøyaktig hvor pengene går.",
+        "Daglig Planleggeren har forandret morgenrutinen min. Jeg bruker 5 minutter på å planlegge dagen og får mye mer gjort.",
       name: "Ida M.",
       study: "Juss, UiO",
       initials: "IM",
     },
     {
       quote:
-        "Lånekassen-planleggeren åpnet øynene mine. Jeg hadde ingen aning om hvor mye gjeld jeg faktisk kom til å ha etter fem år.",
+        "Ukentlig Plan er genial for semesterplanlegging. Endelig ser jeg hele uken i ett blikk i stedet for å glemme ting.",
       name: "Thea K.",
       study: "Sykepleie, NTNU",
       initials: "TK",
     },
     {
       quote:
-        "Elsker at det finnes både PDF og regneark. Jeg printer budsjettet og henger det på kjøleskapet, men bruker regnearket på mobilen.",
+        "Elsker at jeg kan fylle inn direkte på iPaden. Slipper å skrive ut, og det ser fortsatt pent ut.",
       name: "Nora S.",
       study: "Økonomi, NHH",
       initials: "NS",

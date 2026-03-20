@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /c/Users/NickDavidson/studentplanleggeren/node_modules/next/dist/docs -type f -name *.md)",
+      "Bash(npm run:*)",
+      "Bash(npx next:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh repo:*)",
+      "Bash(git push:*)"
+    ]
+  }
+}

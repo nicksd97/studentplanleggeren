@@ -49,17 +49,16 @@ export default function NewsletterSignup() {
         </div>
 
         <h2 className="font-[family-name:var(--font-display)] text-2xl sm:text-3xl font-bold text-white mb-3">
-          Gratis pengeguide for studenter
+          Gratis tips for bedre studievaner
         </h2>
         <p className="text-brand-soft text-sm mb-8">
-          Få «Studentens pengeguide» — 10 konkrete tips for å ta kontroll over
-          økonomien som student. Rett i innboksen.
+          Få våre beste tips for planlegging, produktivitet og studieteknikk — rett i innboksen.
         </p>
 
         {status === "success" ? (
           <div className="bg-brand-accent/20 rounded-xl p-6">
             <p className="text-brand-accent font-medium">
-              Takk! Sjekk innboksen din for pengeguiden.
+              Takk! Sjekk innboksen din.
             </p>
           </div>
         ) : (
@@ -77,7 +76,7 @@ export default function NewsletterSignup() {
               disabled={status === "loading"}
               className="rounded-full bg-brand-accent px-6 py-3 text-sm font-medium text-brand-dark hover:bg-brand-accent/90 transition-colors disabled:opacity-60"
             >
-              {status === "loading" ? "Sender..." : "Send meg guiden"}
+              {status === "loading" ? "Sender..." : "Send meg tipsene"}
             </button>
           </form>
         )}

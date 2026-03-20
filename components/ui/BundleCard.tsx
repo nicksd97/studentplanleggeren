@@ -1,17 +1,14 @@
 import type { Bundle } from "@/lib/products";
-import { calculateSavings } from "@/lib/products";
 import Badge from "./Badge";
 import Button from "./Button";
 
 export default function BundleCard({ bundle }: { bundle: Bundle }) {
-  const savings = calculateSavings(bundle);
-
   if (bundle.featured) {
     return (
       <div className="relative max-w-[560px] mx-auto bg-brand-dark rounded-2xl border-2 border-brand-accent shadow-2xl overflow-hidden">
         {/* Ribbon */}
         <div className="bg-brand-accent text-brand-dark text-center py-2 text-sm font-medium">
-          ✦ Mest populær ✦
+          ✦ Best verdi ✦
         </div>
 
         <div className="p-8 md:p-10">
@@ -31,12 +28,21 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
             </span>
           </div>
           <div className="mb-8">
-            <Badge variant="accent">Spar {savings}%</Badge>
+            <Badge variant="accent">Spar {bundle.savingsPercent}%</Badge>
           </div>
 
           {/* Includes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
-            {bundle.includes.map((item) => (
+          <div className="space-y-2.5 mb-8">
+            {[
+              "5 daglige planleggere",
+              "5 ukentlige planleggere",
+              "3 månedlige planleggere",
+              "1 årlig planlegger",
+              "5 produktivitetsverktøy",
+              "3 helse og livsstil",
+              "3 sporingsverktøy",
+              "12 papirmaler",
+            ].map((item) => (
               <div key={item} className="flex items-center gap-2">
                 <svg
                   className="h-4 w-4 text-brand-accent shrink-0"
@@ -62,7 +68,7 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
             fullWidth
             className="text-base py-4"
           >
-            Kjøp Økonomipakken — {bundle.price} kr
+            Kjøp komplett pakke — {bundle.price} kr
           </Button>
           <p className="text-center text-white/30 text-xs mt-3">
             Umiddelbar nedlasting · Ingen abonnement
@@ -74,16 +80,11 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
 
   return (
     <div className="bg-white rounded-2xl border border-brand-soft p-6 md:p-8 relative">
-      {bundle.badge && (
-        <div className="absolute -top-3 left-6">
-          <Badge variant="accent">{bundle.badge}</Badge>
-        </div>
-      )}
       <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-2">
         {bundle.name}
       </h3>
       <p className="text-sm text-brand-medium mb-1">
-        {bundle.productCount} produkter · {bundle.format}
+        {bundle.productIds.length} planleggere · Fyllbar PDF
       </p>
       <div className="flex items-baseline gap-2 mb-4">
         <span className="font-[family-name:var(--font-display)] text-3xl font-bold text-brand-dark">
@@ -93,7 +94,7 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
           {bundle.originalPrice} kr
         </span>
         <Badge variant="accent" className="ml-1">
-          Spar {savings}%
+          Spar {bundle.savingsPercent}%
         </Badge>
       </div>
       <Button href="#" variant="secondary" fullWidth>

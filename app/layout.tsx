@@ -17,25 +17,26 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Studentplanleggeren — Din økonomi. Din kontroll.",
+  title: "Studentplanleggeren — Få orden på studiene",
   description:
-    "Norges finansplanlegger for studenter. Budsjett, Lånekassen-plan, sparemål og mer — som utskrivbare PDF-er og interaktive regneark.",
+    "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
   keywords: [
-    "studentbudsjett",
-    "lånekassen",
-    "økonomi student",
-    "budsjettplanlegger",
-    "sparetips studenter",
-    "norsk budsjettmal",
     "studentplanlegger",
+    "planlegger student",
+    "ukentlig plan",
+    "daglig planlegger",
+    "vane tracker",
+    "pomodoro planlegger",
+    "fyllbar pdf",
+    "studieplanlegger",
   ],
   openGraph: {
     locale: "nb_NO",
     url: "https://studentplanleggeren.no",
     siteName: "Studentplanleggeren",
-    title: "Studentplanleggeren — Din økonomi. Din kontroll.",
+    title: "Studentplanleggeren — Få orden på studiene",
     description:
-      "Norges finansplanlegger for studenter. Budsjett, Lånekassen-plan, sparemål og mer — som utskrivbare PDF-er og interaktive regneark.",
+      "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
     type: "website",
   },
 };

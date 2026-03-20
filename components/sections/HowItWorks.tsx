@@ -26,7 +26,7 @@ export default function HowItWorks() {
       number: "03",
       title: "Last ned",
       description:
-        "Last ned filene med én gang — PDF-er til utskrift og regneark til Google Sheets eller Excel. Klar på under ett minutt.",
+        "Last ned filene med én gang — fyllbare PDF-er til utskrift eller digital bruk. Klar på under ett minutt.",
       icon: (
         <svg className="h-6 w-6 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />

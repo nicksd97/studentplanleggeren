@@ -2,19 +2,19 @@ import Accordion from "@/components/ui/Accordion";
 
 const faqItems = [
   {
-    question: "Hvilke formater får jeg?",
+    question: "Hva er en fyllbar PDF?",
     answer:
-      "Finansverktøyene leveres som utskrivbar PDF og interaktivt regneark (Google Sheets/Excel). Produktivitetsplanleggerne leveres som PDF. Pakkene inkluderer alle tilgjengelige formater for hvert produkt.",
+      "En fyllbar PDF har interaktive felt du kan skrive direkte i på datamaskinen, nettbrettet eller mobilen — uten å skrive ut. Du kan også skrive ut og fylle inn for hånd hvis du foretrekker det.",
   },
   {
-    question: "Fungerer regnearkene på mobilen?",
+    question: "Kan jeg skrive ut planleggerne?",
     answer:
-      "Ja! Regnearkene er designet for å fungere godt i Google Sheets-appen på mobil. Du kan følge med på budsjettet og sparemålene dine rett fra telefonen. De fungerer også i Excel på desktop.",
+      "Absolutt! Alle planleggerne er designet for A4-utskrift med rent, lesbart design. Perfekt for å henge på veggen eller ha i studieplassen.",
   },
   {
-    question: "Kan jeg skrive ut PDF-ene?",
+    question: "Fungerer de på mobil og nettbrett?",
     answer:
-      "Absolutt — det er hele poenget! PDF-ene er designet for A4-utskrift med rent, lesbart design. Perfekt for å henge på kjøleskapet eller ha i studieplassen din.",
+      "Ja! Du kan åpne PDF-ene i en PDF-leser og fylle inn feltene direkte. Vi anbefaler Adobe Acrobat Reader (gratis) for best opplevelse.",
   },
   {
     question: "Hvordan laster jeg ned etter kjøp?",
@@ -24,22 +24,22 @@ const faqItems = [
   {
     question: "Kan jeg betale med Vipps?",
     answer:
-      "Ja! Vi støtter betaling med Vipps og vanlig bankkort (Visa/Mastercard). Du velger betalingsmetode i kassen.",
+      "Ja! Vi støtter betaling med Vipps og vanlig bankkort (Visa/Mastercard).",
   },
   {
     question: "Er det et abonnement?",
     answer:
-      "Nei — du betaler én gang og eier produktet for alltid. Ingen abonnement, ingen skjulte kostnader. Eventuelle fremtidige oppdateringer er gratis.",
+      "Nei — du betaler én gang og eier planleggerne for alltid. Ingen abonnement, ingen skjulte kostnader.",
   },
   {
     question: "Hva om jeg ikke er fornøyd?",
     answer:
-      "Siden dette er digitale produkter med umiddelbar levering har vi normalt ikke refusjon. Men er du misfornøyd, ta kontakt med oss — vi finner en løsning.",
+      "Siden dette er digitale produkter med umiddelbar levering har vi normalt ikke refusjon. Men er du misfornøyd, ta kontakt — vi finner en løsning.",
   },
   {
-    question: "Er verktøyene oppdatert for gjeldende Lånekassen-satser?",
+    question: "Hva er inkludert i den komplette pakken?",
     answer:
-      "Ja, Lånekassen-planleggeren er oppdatert med gjeldende satser for stipend og lån. Regnearket lar deg også justere beløpene manuelt om satsene endres.",
+      "Studentplanleggeren Komplett inneholder alle 25 planleggere (daglige, ukentlige, månedlige, årlige, produktivitet, helse og sporing) pluss 12 papirmaler (prikket, rutenett og linjert i ulike størrelser). Alt som fyllbare PDF-er.",
   },
 ];
 

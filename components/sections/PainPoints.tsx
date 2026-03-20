@@ -3,34 +3,32 @@ export default function PainPoints() {
     {
       icon: (
         <svg className="h-6 w-6 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <circle cx="12" cy="12" r="9" />
-          <path strokeLinecap="round" d="M12 8v4m0 0v4m0-4h4m-4 0H8" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
         </svg>
       ),
-      title: "...lurer på hvor pengene forsvinner",
+      title: "...aldri vet hvor du skal begynne",
       description:
-        "Lånekassen-pengene er plutselig borte halvveis i måneden. Med Studentbudsjettet ser du nøyaktig hvor alt går — og hva du kan justere.",
+        "Semesterstart, eksamen, prosjekter — det er mye å holde styr på. Med daglige og ukentlige planleggere får du oversikt fra dag én.",
     },
     {
       icon: (
         <svg className="h-6 w-6 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2 21h20M6 17V9m4 8V5m4 12v-6m4 6V3" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
         </svg>
       ),
-      title: "...vil ha kontroll på Lånekassen-lånet",
+      title: "...vil bygge bedre vaner",
       description:
-        "Hvor mye gjeld har du egentlig når du er ferdig? Lånekassen-planleggeren gir deg full oversikt over stipend, lån og nedbetalingsplan.",
+        "Det er lett å starte, vanskelig å holde ut. Vane Trackeren og 30-dagers utfordringen hjelper deg å faktisk holde det gående.",
     },
     {
       icon: (
         <svg className="h-6 w-6 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-          <path strokeLinecap="round" strokeLinejoin="round" d="M2 7h4l3-4h6l3 4h4v12H2V7z" />
-          <path strokeLinecap="round" d="M8 14h8M8 17h5" />
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      title: "...vil spare til noe stort",
+      title: "...vil nå målene dine",
       description:
-        "Ferie, nødfond, BSU eller bil — Sparegrisen hjelper deg å sette mål og faktisk nå dem, selv med studentbudsjett.",
+        "Enten det er karaktermål, treningsmål eller sparemål — Mål Planleggeren og Handlingsplanen bryter store mål ned til konkrete steg.",
     },
   ];
 

@@ -13,8 +13,7 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: "Økonomiverktøy", href: "#okonomi" },
-    { label: "Produktivitet", href: "#produktivitet" },
+    { label: "Planleggere", href: "#planleggere" },
     { label: "Pakker", href: "#pakker" },
     { label: "FAQ", href: "#faq" },
   ];
@@ -54,10 +53,10 @@ export default function Header() {
               </a>
             ))}
             <a
-              href="#okonomipakken"
+              href="#komplett"
               className="inline-flex items-center rounded-full bg-brand-accent px-5 py-2 text-sm font-medium text-brand-dark hover:bg-brand-accent/90 transition-colors"
             >
-              Kjøp pakke
+              Kjøp komplett
             </a>
           </nav>
 
@@ -98,11 +97,11 @@ export default function Header() {
             ))}
             <div className="px-4 pt-2">
               <a
-                href="#okonomipakken"
+                href="#komplett"
                 onClick={() => setMobileOpen(false)}
                 className="block w-full text-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-medium text-brand-dark"
               >
-                Kjøp pakke
+                Kjøp komplett
               </a>
             </div>
           </div>

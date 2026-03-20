@@ -50,7 +50,7 @@ export default function Hero() {
 
         {/* Subheading */}
         <p className="text-brand-medium text-lg sm:text-xl max-w-2xl mx-auto mb-12 md:mb-16">
-          Din økonomi. Din kontroll. Budsjett, Lånekassen-plan og sparemål — som PDF-er og interaktive regneark.
+          Få orden på studiene. 25 fyllbare PDF-planleggere for studenter. Daglig, ukentlig, månedlig — skriv ut eller fyll inn direkte på skjermen.
         </p>
 
         {/* Fanned-out product cards */}
@@ -106,7 +106,7 @@ export default function Hero() {
             {/* Card 1 - Personlig Finans Tracker */}
             <ProductCardMini title="Personlig Finans Tracker" rotation={-7} zIndex={1}>
               <div className="space-y-1">
-                {["Inntekt", "Utgifter", "Balanse"].map((l) => (
+                {["Inntekt", "Utgifter", "Sparing"].map((l) => (
                   <div key={l} className="flex items-center gap-1">
                     <span className="text-[6px] text-brand-medium w-8">{l}</span>
                     <div className="flex-1 h-1.5 bg-brand-pale rounded-full">
@@ -130,27 +130,22 @@ export default function Hero() {
               </div>
             </ProductCardMini>
 
-            {/* Card 3 - Studentbudsjettet (featured) */}
-            <ProductCardMini title="Studentbudsjettet" rotation={1} zIndex={10} featured>
+            {/* Card 3 - Daglig Planlegger (featured) */}
+            <ProductCardMini title="Daglig Planlegger" rotation={1} zIndex={10} featured>
               <div className="space-y-1">
-                {[
-                  { name: "Husleie", w: "80%" },
-                  { name: "Mat", w: "55%" },
-                  { name: "Kollektiv", w: "35%" },
-                  { name: "Trening", w: "25%" },
-                  { name: "Streaming", w: "15%" },
-                  { name: "Sparing", w: "30%" },
-                ].map((c) => (
-                  <div key={c.name} className="flex items-center gap-1">
-                    <span className="text-[5px] sm:text-[6px] text-brand-medium w-10 truncate">{c.name}</span>
-                    <div className="flex-1 h-1.5 bg-brand-pale rounded-full overflow-hidden">
-                      <div className="h-full bg-brand-accent rounded-full" style={{ width: c.w }} />
-                    </div>
+                <div className="flex items-center gap-1 mb-1">
+                  <div className="h-1.5 w-1.5 rounded-full bg-brand-accent" />
+                  <span className="text-[5px] sm:text-[6px] text-brand-medium">Fokusområder</span>
+                </div>
+                {["08:00 — Forelesning", "10:00 — Studiegruppe", "12:00 — Lunsj", "13:00 — Bibliotek", "15:00 — Trening"].map((item) => (
+                  <div key={item} className="flex items-center gap-1">
+                    <div className="h-1.5 w-1.5 rounded-sm border border-brand-soft" />
+                    <span className="text-[5px] sm:text-[6px] text-brand-medium">{item}</span>
                   </div>
                 ))}
-                <div className="flex justify-between mt-1 pt-1 border-t border-brand-soft">
-                  <span className="text-[5px] text-brand-medium">Saldo</span>
-                  <span className="text-[6px] font-medium text-brand-dark">2 450 kr</span>
+                <div className="flex items-center gap-1 mt-1 pt-1 border-t border-brand-soft">
+                  <div className="h-1.5 w-1.5 rounded-full bg-brand-accent/50" />
+                  <span className="text-[5px] text-brand-medium">Gjøremål i dag: 5</span>
                 </div>
               </div>
             </ProductCardMini>
@@ -173,18 +168,25 @@ export default function Hero() {
               </div>
             </ProductCardMini>
 
-            {/* Card 5 - Prosject Planlegger */}
-            <ProductCardMini title="Prosject Planlegger" rotation={7} zIndex={1}>
+            {/* Card 5 - Pomodoro Planlegger */}
+            <ProductCardMini title="Pomodoro Planlegger" rotation={7} zIndex={1}>
               <div className="space-y-1.5">
-                <div className="h-1 bg-brand-soft rounded w-full" />
-                <div className="h-1 bg-brand-soft rounded w-3/4" />
-                <div className="mt-1.5 space-y-1">
-                  {[60, 40, 80].map((w, i) => (
-                    <div key={i} className="h-2 bg-brand-pale rounded-full overflow-hidden">
-                      <div className="h-full bg-brand-accent/70 rounded-full" style={{ width: `${w}%` }} />
+                {[
+                  { label: "Økt 1", w: "100%" },
+                  { label: "Pause", w: "25%" },
+                  { label: "Økt 2", w: "80%" },
+                  { label: "Pause", w: "25%" },
+                ].map((s, i) => (
+                  <div key={i} className="flex items-center gap-1">
+                    <span className="text-[5px] text-brand-medium w-6">{s.label}</span>
+                    <div className="flex-1 h-2 bg-brand-pale rounded-full overflow-hidden">
+                      <div
+                        className={`h-full rounded-full ${s.label === "Pause" ? "bg-brand-soft" : "bg-brand-accent/70"}`}
+                        style={{ width: s.w }}
+                      />
                     </div>
-                  ))}
-                </div>
+                  </div>
+                ))}
               </div>
             </ProductCardMini>
           </div>
@@ -199,11 +201,11 @@ export default function Hero() {
 
         {/* CTA buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
-          <Button href="#okonomipakken" variant="primary" className="text-base px-8 py-3.5">
-            Se Økonomipakken — 399 kr
+          <Button href="#komplett" variant="primary" className="text-base px-8 py-3.5">
+            Se komplett pakke — 349 kr
           </Button>
-          <Button href="#okonomi" variant="outline" className="text-base px-8 py-3.5">
-            Utforsk verktøyene
+          <Button href="#planleggere" variant="outline" className="text-base px-8 py-3.5">
+            Utforsk planleggerne
           </Button>
         </div>
 
@@ -219,7 +221,7 @@ export default function Hero() {
             <svg className="h-4 w-4 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            PDF + regneark
+            Fyllbare PDF-er
           </span>
           <span className="flex items-center gap-1.5">
             <svg className="h-4 w-4 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
