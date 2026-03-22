@@ -7,7 +7,7 @@ export interface Product {
   category: "daglig" | "ukentlig" | "maanedlig" | "aarlig" | "produktivitet" | "helse" | "sporing";
   categoryLabel: string;
   fileName: string;
-  image: string;
+  image?: string;
   pages: number;
   features: string[];
 }
@@ -158,7 +158,6 @@ export const ukentligProdukter: Product[] = [
     category: "ukentlig",
     categoryLabel: "Ukentlig",
     fileName: "25. Ukentlig Planlegger.pdf",
-    image: "ukentlig-planlegger.jpg",
     pages: 1,
     features: ["Enkel oversikt", "Studier og hverdag", "Ukentlig plan"],
   },
@@ -218,7 +217,6 @@ export const aarligProdukter: Product[] = [
     category: "aarlig",
     categoryLabel: "Årlig",
     fileName: "26. Årlig Planlegger.pdf",
-    image: "aarlig-planlegger.jpg",
     pages: 2,
     features: ["Månedsoversikt", "Årlige mål", "2 sider"],
   },
@@ -373,7 +371,6 @@ export const sporingProdukter: Product[] = [
     category: "sporing",
     categoryLabel: "Sporing",
     fileName: "12. 30-Dagers Utfordring.pdf",
-    image: "30-dagers-utfordring.jpg",
     pages: 1,
     features: ["30-dagers sporing", "Vanemål", "Daglig sjekk"],
   },
