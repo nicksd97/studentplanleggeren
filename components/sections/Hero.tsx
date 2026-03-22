@@ -56,7 +56,7 @@ export default function Hero() {
       </div>
 
       {/* Cover photo */}
-      <div className="max-w-3xl mx-auto">
+      <div className="max-w-3xl mx-auto py-8 md:py-12">
         <img
           src="/images/brand/Front page cover photo rev.2.png"
           alt="Studentplanlegger produkter — 25 fyllbare PDF-planleggere"
