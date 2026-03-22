@@ -2,7 +2,7 @@ import Button from "@/components/ui/Button";
 
 export default function Hero() {
   return (
-    <section className="relative pt-24 pb-0 md:pt-32 overflow-hidden">
+    <section className="relative pt-24 pb-20 md:pt-32 md:pb-28 overflow-hidden">
       {/* Dot pattern background */}
       <div className="dot-pattern" />
 
@@ -21,6 +21,15 @@ export default function Hero() {
         <p className="text-brand-medium text-lg sm:text-xl max-w-2xl mx-auto mb-12 md:mb-16">
           Få orden på studiene. 25 fyllbare PDF-planleggere for studenter. Daglig, ukentlig, månedlig — skriv ut eller fyll inn direkte på skjermen.
         </p>
+
+        {/* Marketing showcase image */}
+        <div className="max-w-3xl mx-auto mb-10">
+          <img
+            src="/images/brand/cover-photo.png"
+            alt="Studentplanlegger produkter — 25 fyllbare PDF-planleggere"
+            className="w-full h-auto"
+          />
+        </div>
 
         {/* CTA buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
@@ -55,14 +64,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Marketing showcase image — full width, no gaps */}
-      <div className="relative mt-12 md:mt-16">
-        <img
-          src="/images/brand/cover-photo.png"
-          alt="Studentplanlegger produkter — 25 fyllbare PDF-planleggere"
-          className="w-full h-auto block"
-        />
-      </div>
+      {/* Gradient transition */}
+      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-b from-transparent to-white" />
     </section>
   );
 }

@@ -33,7 +33,7 @@ export default function Header() {
             <img
               src="/images/brand/Studentplanlegger_Text.png"
               alt="Studentplanlegger"
-              className="h-10 sm:h-12 w-auto mix-blend-multiply"
+              className="h-7 sm:h-8 w-auto"
             />
           </a>
 
