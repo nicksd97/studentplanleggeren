@@ -7,7 +7,7 @@ export default function Footer() {
           <div>
             <div className="mb-4">
               <img
-                src="/images/brand/Studentplanlegger_Text.png"
+                src="/images/brand/Studentplanlegger_Text-removebg-preview.png"
                 alt="Studentplanlegger"
                 className="h-6 w-auto brightness-0 invert"
               />

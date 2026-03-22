@@ -31,9 +31,9 @@ export default function Header() {
           {/* Logo */}
           <a href="#" className="flex items-center">
             <img
-              src="/images/brand/Studentplanlegger_Text.png"
+              src="/images/brand/Studentplanlegger_Text-removebg-preview.png"
               alt="Studentplanlegger"
-              className="h-7 sm:h-8 w-auto"
+              className="h-10 sm:h-12 w-auto"
             />
           </a>
 
