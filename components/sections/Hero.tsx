@@ -25,7 +25,7 @@ export default function Hero() {
         {/* Marketing showcase image */}
         <div className="max-w-3xl mx-auto mb-10">
           <img
-            src="/images/hero-showcase.png"
+            src="/images/brand/cover-photo.png"
             alt="Studentplanlegger produkter — 25 fyllbare PDF-planleggere"
             className="w-full h-auto"
           />
