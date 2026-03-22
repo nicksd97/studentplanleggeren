@@ -29,16 +29,12 @@ export default function Header() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <a href="#" className="flex items-center gap-2.5">
-            <div className="relative h-9 w-9 rounded-full bg-brand-dark flex items-center justify-center">
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <rect x="2" y="1" width="10" height="13" rx="1.5" stroke="#C4A882" strokeWidth="1.5" fill="none" />
-                <rect x="6" y="4" width="10" height="13" rx="1.5" stroke="#C4A882" strokeWidth="1.5" fill="none" />
-              </svg>
-            </div>
-            <span className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark">
-              Studentplanlegger
-            </span>
+          <a href="#" className="flex items-center">
+            <img
+              src="/images/brand/Studentplanlegger_Text.png"
+              alt="Studentplanlegger"
+              className="h-7 sm:h-8 w-auto"
+            />
           </a>
 
           {/* Desktop nav */}

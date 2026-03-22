@@ -17,6 +17,10 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  icons: {
+    icon: "/favicon.png",
+    apple: "/favicon.png",
+  },
   title: "Studentplanlegger — Få orden på studiene",
   description:
     "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",

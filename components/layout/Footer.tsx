@@ -5,16 +5,12 @@ export default function Footer() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="h-9 w-9 rounded-full bg-brand-medium/30 flex items-center justify-center">
-                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                  <rect x="2" y="1" width="10" height="13" rx="1.5" stroke="#C4A882" strokeWidth="1.5" fill="none" />
-                  <rect x="6" y="4" width="10" height="13" rx="1.5" stroke="#C4A882" strokeWidth="1.5" fill="none" />
-                </svg>
-              </div>
-              <span className="font-[family-name:var(--font-display)] text-lg font-bold">
-                Studentplanlegger
-              </span>
+            <div className="mb-4">
+              <img
+                src="/images/brand/Studentplanlegger_Text.png"
+                alt="Studentplanlegger"
+                className="h-6 w-auto brightness-0 invert"
+              />
             </div>
             <p className="text-brand-soft text-sm leading-relaxed">
               Finansplanleggere og produktivitetsverktøy laget spesielt for norske studenter.

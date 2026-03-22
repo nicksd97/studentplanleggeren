@@ -10,7 +10,11 @@
       "Bash(git push:*)",
       "Bash(mv gjoremaal-liste.jpg gjoremal-liste.jpg)",
       "Bash(mv ukentlig-gjoremaal.jpg ukentlig-gjoremal.jpg)",
-      "Bash(SRC=\"/c/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Markedsføring/Produktbilder/pages\" cp \"$SRC/hefte1_Page_02.jpg\" \"C:/Users/NickDavidson/studentplanleggeren/public/images/products/30-dagers-utfordring.jpg\" cp \"$SRC/hefte1_Page_03.jpg\" \"C:/Users/NickDavidson/studentplanleggeren/public/images/products/ukentlig-planlegger.jpg\" cp \"$SRC/hefte1_Page_16.jpg\" \"C:/Users/NickDavidson/studentplanleggeren/public/images/products/aarlig-planlegger.jpg\" echo \"Done\")"
+      "Bash(SRC=\"/c/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Markedsføring/Produktbilder/pages\" cp \"$SRC/hefte1_Page_02.jpg\" \"C:/Users/NickDavidson/studentplanleggeren/public/images/products/30-dagers-utfordring.jpg\" cp \"$SRC/hefte1_Page_03.jpg\" \"C:/Users/NickDavidson/studentplanleggeren/public/images/products/ukentlig-planlegger.jpg\" cp \"$SRC/hefte1_Page_16.jpg\" \"C:/Users/NickDavidson/studentplanleggeren/public/images/products/aarlig-planlegger.jpg\" echo \"Done\")",
+      "Bash(cp \"C:/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Oppdatert logo 22.03/Studentplanlegger_Text.png\" C:/Users/NickDavidson/studentplanleggeren/public/images/brand/)",
+      "Bash(cp \"C:/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Oppdatert logo 22.03/Studentplanlegger_Logo.png\" C:/Users/NickDavidson/studentplanleggeren/public/images/brand/)",
+      "Bash(cp \"C:/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Oppdatert logo 22.03/Front page cover photo.pdf\" C:/Users/NickDavidson/studentplanleggeren/public/images/brand/)",
+      "Bash(cp \"C:/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Oppdatert logo 22.03/Studentplanlegger_Logo_A4.pdf\" C:/Users/NickDavidson/studentplanleggeren/public/images/brand/)"
     ]
   }
 }
