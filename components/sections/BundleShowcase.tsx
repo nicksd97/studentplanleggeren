@@ -76,6 +76,29 @@ export default function BundleShowcase() {
           </p>
         </div>
 
+        {/* Product preview fan */}
+        <div className="max-w-xl mx-auto py-8 flex justify-center">
+          {[
+            { src: "daglig-planlegger.jpg", rotate: "-rotate-2" },
+            { src: "ukentlig-plan.jpg", rotate: "rotate-1" },
+            { src: "maanedlig-budsjett.jpg", rotate: "-rotate-1" },
+            { src: "pomodoro-planlegger.jpg", rotate: "rotate-2" },
+            { src: "helse-planlegger.jpg", rotate: "-rotate-1" },
+            { src: "vane-tracker.jpg", rotate: "rotate-1" },
+          ].map((item, i) => (
+            <div
+              key={item.src}
+              className={`w-28 h-36 rounded-sm border border-brand-soft shadow-sm overflow-hidden shrink-0 ${item.rotate} ${i > 0 ? "-ml-2" : ""}`}
+            >
+              <img
+                src={`/images/products/${item.src}`}
+                alt=""
+                className="w-full h-full object-cover object-top"
+              />
+            </div>
+          ))}
+        </div>
+
         {/* What's included */}
         <div className="max-w-lg mx-auto mb-10">
           <p className="text-sm font-medium text-brand-dark text-center mb-4">
