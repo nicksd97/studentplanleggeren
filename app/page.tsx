@@ -16,11 +16,11 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <DeviceShowcase />
         <PainPoints />
         <ProductGrid />
         <Bundles />
         <HowItWorks />
-        <DeviceShowcase />
         <Testimonials />
         <FAQ />
         <NewsletterSignup />
