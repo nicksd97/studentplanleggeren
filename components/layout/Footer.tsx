@@ -13,7 +13,7 @@ export default function Footer() {
               />
             </div>
             <p className="text-brand-soft text-sm leading-relaxed">
-              Finansplanleggere og produktivitetsverktøy laget spesielt for norske studenter.
+              Planleggere og produktivitetsverktøy laget for norske studenter.
             </p>
           </div>
 
@@ -21,20 +21,26 @@ export default function Footer() {
           <div>
             <h4 className="font-medium text-sm mb-4 text-white/80">Produkter</h4>
             <ul className="space-y-2.5">
-              {[
-                "Studentbudsjettet",
-                "Lånekassen-planleggeren",
-                "Sparegrisen",
-                "Sommerjobb-kalkulatoren",
-                "Etter-eksamen (FI Starter)",
-                "Økonomipakken",
-              ].map((name) => (
-                <li key={name}>
-                  <a href="#okonomi" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                    {name}
-                  </a>
-                </li>
-              ))}
+              <li>
+                <a href="/#pakker" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  Komplett pakke
+                </a>
+              </li>
+              <li>
+                <a href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  Daglig Pakke
+                </a>
+              </li>
+              <li>
+                <a href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  Ukentlig Pakke
+                </a>
+              </li>
+              <li>
+                <a href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  Alle planleggere
+                </a>
+              </li>
             </ul>
           </div>
 
