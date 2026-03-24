@@ -76,15 +76,6 @@ export default function BundleShowcase() {
           </p>
         </div>
 
-        {/* Cover photo */}
-        <div className="max-w-2xl mx-auto mb-10">
-          <img
-            src="/images/brand/cover-photo.png"
-            alt="Studentplanlegger Komplett — alle planleggere"
-            className="w-full h-auto rounded-2xl"
-          />
-        </div>
-
         {/* What's included */}
         <div className="max-w-lg mx-auto mb-10">
           <p className="text-sm font-medium text-brand-dark text-center mb-4">
