@@ -1,7 +1,31 @@
+"use client";
+
+import { useState } from "react";
 import type { Product } from "@/lib/products";
+import { useCart } from "@/lib/cart-context";
 import Button from "./Button";
 
 export default function ProductCard({ product }: { product: Product }) {
+  const { addItem, isInCart } = useCart();
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  function handleAdd() {
+    if (isInCart(product.id)) {
+      setFeedback("Allerede i handlekurven");
+      setTimeout(() => setFeedback(null), 2000);
+      return;
+    }
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      type: "product",
+      image: product.image,
+    });
+    setFeedback("Lagt til \u2713");
+    setTimeout(() => setFeedback(null), 2000);
+  }
+
   return (
     <div className="group bg-white rounded-2xl border border-brand-soft overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5">
       {/* Preview area — real product image */}
@@ -51,8 +75,12 @@ export default function ProductCard({ product }: { product: Product }) {
           <span className="font-[family-name:var(--font-display)] text-2xl font-bold text-brand-dark">
             {product.price} kr
           </span>
-          <Button href="#" variant="primary" className="text-xs px-4 py-2">
-            Kjøp nå
+          <Button
+            variant="primary"
+            className="text-xs px-4 py-2"
+            onClick={handleAdd}
+          >
+            {feedback ?? "Kjøp nå"}
           </Button>
         </div>
       </div>

@@ -1,8 +1,37 @@
+"use client";
+
+import { useState } from "react";
 import type { Bundle } from "@/lib/products";
+import { useCart } from "@/lib/cart-context";
 import Badge from "./Badge";
 import Button from "./Button";
 
+function useBundleCart(bundle: Bundle) {
+  const { addItem, isInCart } = useCart();
+  const [feedback, setFeedback] = useState<string | null>(null);
+
+  function handleAdd() {
+    if (isInCart(bundle.id)) {
+      setFeedback("Allerede i handlekurven");
+      setTimeout(() => setFeedback(null), 2000);
+      return;
+    }
+    addItem({
+      id: bundle.id,
+      name: bundle.name,
+      price: bundle.price,
+      type: "bundle",
+    });
+    setFeedback("Lagt til \u2713");
+    setTimeout(() => setFeedback(null), 2000);
+  }
+
+  return { handleAdd, feedback };
+}
+
 export default function BundleCard({ bundle }: { bundle: Bundle }) {
+  const { handleAdd, feedback } = useBundleCart(bundle);
+
   if (bundle.featured) {
     return (
       <div className="relative max-w-[560px] mx-auto bg-brand-dark rounded-2xl border-2 border-brand-accent shadow-2xl overflow-hidden">
@@ -63,12 +92,12 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
           </div>
 
           <Button
-            href="#"
             variant="primary"
             fullWidth
             className="text-base py-4"
+            onClick={handleAdd}
           >
-            Kjøp komplett pakke — {bundle.price} kr
+            {feedback ?? `Kjøp komplett pakke — ${bundle.price} kr`}
           </Button>
           <p className="text-center text-white/30 text-xs mt-3">
             Umiddelbar nedlasting · Ingen abonnement
@@ -97,8 +126,8 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
           Spar {bundle.savingsPercent}%
         </Badge>
       </div>
-      <Button href="#" variant="secondary" fullWidth>
-        Kjøp pakke
+      <Button variant="secondary" fullWidth onClick={handleAdd}>
+        {feedback ?? "Kjøp pakke"}
       </Button>
     </div>
   );
