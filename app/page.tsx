@@ -5,6 +5,7 @@ import PainPoints from "@/components/sections/PainPoints";
 import ProductGrid from "@/components/sections/ProductGrid";
 import Bundles from "@/components/sections/Bundles";
 import HowItWorks from "@/components/sections/HowItWorks";
+import DeviceShowcase from "@/components/sections/DeviceShowcase";
 import Testimonials from "@/components/sections/Testimonials";
 import FAQ from "@/components/sections/FAQ";
 import NewsletterSignup from "@/components/sections/NewsletterSignup";
@@ -19,6 +20,7 @@ export default function Home() {
         <ProductGrid />
         <Bundles />
         <HowItWorks />
+        <DeviceShowcase />
         <Testimonials />
         <FAQ />
         <NewsletterSignup />

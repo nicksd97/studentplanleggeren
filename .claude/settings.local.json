@@ -45,7 +45,8 @@
       "Bash(node --input-type=module -e \":*)",
       "Bash(npm uninstall:*)",
       "Bash(cp \"C:/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Oppdatert logo 22.03/Front page cover photo rev.2.png\" C:/Users/NickDavidson/studentplanleggeren/public/images/brand/)",
-      "Bash(cp \"C:/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Oppdatert logo 22.03/Studentplanlegger_Text-removebg-preview.png\" C:/Users/NickDavidson/studentplanleggeren/public/images/brand/)"
+      "Bash(cp \"C:/Users/NickDavidson/OneDrive - NSD holding/Studentplanlegger/Products and marketing/Oppdatert logo 22.03/Studentplanlegger_Text-removebg-preview.png\" C:/Users/NickDavidson/studentplanleggeren/public/images/brand/)",
+      "Bash(grep -r searchParams C:/Users/NickDavidson/studentplanleggeren/node_modules/next/dist/docs/01-app/01-getting-started/ --include=*.md -l)"
     ]
   }
 }
