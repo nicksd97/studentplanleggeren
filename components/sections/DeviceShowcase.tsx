@@ -1,6 +1,6 @@
 const cards = [
   {
-    image: "/images/marketing/il_1588xN.4593610809_qx25.jpg.webp",
+    image: "/images/marketing/il_1588xN.4593615381_kh5v.jpg.webp",
     alt: "Fyll inn planleggeren digitalt på PC, Mac, iPad eller nettbrett",
     label: "Fyll inn digitalt",
     subtext: "Bruk på PC, Mac, iPad eller nettbrett",
@@ -43,11 +43,11 @@ export default function DeviceShowcase() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
           {cards.map((card) => (
             <div key={card.label} className="text-center">
-              <div className="rounded-2xl overflow-hidden shadow-md mb-4">
+              <div className="rounded-2xl overflow-hidden shadow-md mb-4 bg-brand-soft">
                 <img
                   src={card.image}
                   alt={card.alt}
-                  className="w-full h-[250px] object-cover"
+                  className="w-full h-60 object-contain"
                 />
               </div>
               <h3 className="font-[family-name:var(--font-display)] text-base font-bold text-brand-dark mb-1">
