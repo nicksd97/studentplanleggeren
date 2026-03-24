@@ -17,9 +17,9 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: "Planleggere", href: "#planleggere" },
-    { label: "Pakker", href: "#pakker" },
-    { label: "FAQ", href: "#faq" },
+    { label: "Planleggere", href: "/produkter" },
+    { label: "Pakker", href: "/#pakker" },
+    { label: "FAQ", href: "/#faq" },
   ];
 
   return (

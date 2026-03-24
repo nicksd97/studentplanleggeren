@@ -24,10 +24,10 @@ export default function Hero() {
 
         {/* CTA buttons */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
-          <Button href="#komplett" variant="primary" className="text-base px-8 py-3.5">
+          <Button href="#pakker" variant="primary" className="text-base px-8 py-3.5">
             Se komplett pakke — 349 kr
           </Button>
-          <Button href="#planleggere" variant="outline" className="text-base px-8 py-3.5">
+          <Button href="/produkter" variant="outline" className="text-base px-8 py-3.5">
             Utforsk planleggerne
           </Button>
         </div>
