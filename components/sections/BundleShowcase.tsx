@@ -76,24 +76,21 @@ export default function BundleShowcase() {
           </p>
         </div>
 
-        {/* Product preview fan */}
-        <div className="max-w-xl mx-auto py-8 flex justify-center">
+        {/* Marketing category showcases */}
+        <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto py-8">
           {[
-            { src: "daglig-planlegger.jpg", rotate: "-rotate-3" },
-            { src: "ukentlig-plan.jpg", rotate: "rotate-2" },
-            { src: "maanedlig-budsjett.jpg", rotate: "-rotate-1" },
-            { src: "pomodoro-planlegger.jpg", rotate: "rotate-3" },
-            { src: "helse-planlegger.jpg", rotate: "-rotate-2" },
-            { src: "vane-tracker.jpg", rotate: "rotate-1" },
-          ].map((item, i) => (
+            "il_1588xN.4525136323_q29j.jpg.webp",
+            "il_1588xN.4546216842_csmt.jpg.webp",
+            "il_1588xN.4546224370_6i8t.jpg.webp",
+          ].map((file) => (
             <div
-              key={item.src}
-              className={`w-36 h-48 rounded-sm border border-brand-soft shadow-md overflow-hidden shrink-0 ${item.rotate} ${i > 0 ? "-ml-4" : ""}`}
+              key={file}
+              className="rounded-sm shadow-md border border-brand-soft overflow-hidden"
             >
               <img
-                src={`/images/products/${item.src}`}
-                alt=""
-                className="w-full h-full object-cover object-top"
+                src={`/images/marketing/${file}`}
+                alt="Planlegger-kategorier inkludert i pakken"
+                className="w-full h-auto"
               />
             </div>
           ))}
