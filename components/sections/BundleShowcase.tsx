@@ -76,21 +76,24 @@ export default function BundleShowcase() {
           </p>
         </div>
 
-        {/* Marketing category showcases */}
-        <div className="grid grid-cols-3 gap-4 max-w-3xl mx-auto py-8">
+        {/* Product preview fan */}
+        <div className="flex justify-center items-end py-8">
           {[
-            "il_1588xN.4525136323_q29j.jpg.webp",
-            "il_1588xN.4546216842_csmt.jpg.webp",
-            "il_1588xN.4546224370_6i8t.jpg.webp",
-          ].map((file) => (
+            { src: "daglig-planlegger.jpg", rotate: "-rotate-3" },
+            { src: "ukentlig-plan.jpg", rotate: "rotate-1" },
+            { src: "maanedlig-budsjett.jpg", rotate: "-rotate-2" },
+            { src: "pomodoro-planlegger.jpg", rotate: "rotate-2" },
+            { src: "vane-tracker.jpg", rotate: "-rotate-1" },
+            { src: "helse-planlegger.jpg", rotate: "rotate-3" },
+          ].map((item, i) => (
             <div
-              key={file}
-              className="rounded-sm shadow-md border border-brand-soft overflow-hidden"
+              key={item.src}
+              className={`w-32 h-44 rounded-sm border border-brand-soft shadow-md overflow-hidden shrink-0 bg-white ${item.rotate} ${i > 0 ? "-ml-3" : ""}`}
             >
               <img
-                src={`/images/marketing/${file}`}
-                alt="Planlegger-kategorier inkludert i pakken"
-                className="w-full h-auto"
+                src={`/images/products/${item.src}`}
+                alt=""
+                className="w-full h-full object-cover object-top"
               />
             </div>
           ))}
