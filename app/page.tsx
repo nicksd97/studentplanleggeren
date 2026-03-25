@@ -3,6 +3,7 @@ import Footer from "@/components/layout/Footer";
 import Hero from "@/components/sections/Hero";
 import PainPoints from "@/components/sections/PainPoints";
 import DeviceShowcase from "@/components/sections/DeviceShowcase";
+import CategoryBubbles from "@/components/sections/CategoryBubbles";
 import BundleShowcase from "@/components/sections/BundleShowcase";
 import HowItWorks from "@/components/sections/HowItWorks";
 import Testimonials from "@/components/sections/Testimonials";
@@ -16,6 +17,7 @@ export default function Home() {
       <main>
         <Hero />
         <DeviceShowcase />
+        <CategoryBubbles />
         <PainPoints />
         <BundleShowcase />
         <HowItWorks />

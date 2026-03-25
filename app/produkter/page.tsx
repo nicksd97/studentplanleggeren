@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { Suspense, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import ProductCard from "@/components/ui/ProductCard";
@@ -18,11 +19,19 @@ const tabs = [
 
 const komplett = pakker.find((p) => p.featured)!;
 
-export default function ProdukterPage() {
+function ProdukterContent() {
+  const searchParams = useSearchParams();
   const [active, setActive] = useState("alle");
   const [showBar, setShowBar] = useState(false);
   const { addItem, isInCart } = useCart();
   const [bundleFeedback, setBundleFeedback] = useState<string | null>(null);
+
+  useEffect(() => {
+    const kategori = searchParams.get("kategori");
+    if (kategori && tabs.some((t) => t.key === kategori)) {
+      setActive(kategori);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     const onScroll = () => setShowBar(window.scrollY > 300);
@@ -53,7 +62,6 @@ export default function ProdukterPage() {
 
   return (
     <>
-      <Header />
       <main className="min-h-screen bg-brand-cream pt-24 pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           {/* Page header */}
@@ -118,7 +126,17 @@ export default function ProdukterPage() {
           </button>
         </div>
       </div>
+    </>
+  );
+}
 
+export default function ProdukterPage() {
+  return (
+    <>
+      <Header />
+      <Suspense fallback={null}>
+        <ProdukterContent />
+      </Suspense>
       <Footer />
     </>
   );
