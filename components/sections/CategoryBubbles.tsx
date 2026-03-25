@@ -35,7 +35,7 @@ export default function CategoryBubbles() {
           Hva trenger du?
         </h2>
 
-        <div className="flex flex-wrap justify-center gap-3">
+        <div className="flex flex-wrap justify-center gap-4">
           {categories.map((cat) => (
             <div
               key={cat.slug}
@@ -45,7 +45,7 @@ export default function CategoryBubbles() {
             >
               <a
                 href={`/produkter?kategori=${cat.slug}`}
-                className={`inline-block rounded-full px-5 py-2.5 font-medium text-sm text-brand-dark transition-all hover:scale-105 hover:shadow-md ${cat.color}`}
+                className={`inline-block rounded-full px-7 py-3.5 font-medium text-base text-brand-dark transition-all hover:scale-105 hover:shadow-md ${cat.color}`}
               >
                 {cat.label}
               </a>

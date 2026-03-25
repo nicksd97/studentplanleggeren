@@ -79,16 +79,16 @@ export default function BundleShowcase() {
         {/* Product preview fan */}
         <div className="max-w-xl mx-auto py-8 flex justify-center">
           {[
-            { src: "daglig-planlegger.jpg", rotate: "-rotate-2" },
-            { src: "ukentlig-plan.jpg", rotate: "rotate-1" },
+            { src: "daglig-planlegger.jpg", rotate: "-rotate-3" },
+            { src: "ukentlig-plan.jpg", rotate: "rotate-2" },
             { src: "maanedlig-budsjett.jpg", rotate: "-rotate-1" },
-            { src: "pomodoro-planlegger.jpg", rotate: "rotate-2" },
-            { src: "helse-planlegger.jpg", rotate: "-rotate-1" },
+            { src: "pomodoro-planlegger.jpg", rotate: "rotate-3" },
+            { src: "helse-planlegger.jpg", rotate: "-rotate-2" },
             { src: "vane-tracker.jpg", rotate: "rotate-1" },
           ].map((item, i) => (
             <div
               key={item.src}
-              className={`w-28 h-36 rounded-sm border border-brand-soft shadow-sm overflow-hidden shrink-0 ${item.rotate} ${i > 0 ? "-ml-2" : ""}`}
+              className={`w-36 h-48 rounded-sm border border-brand-soft shadow-md overflow-hidden shrink-0 ${item.rotate} ${i > 0 ? "-ml-4" : ""}`}
             >
               <img
                 src={`/images/products/${item.src}`}
