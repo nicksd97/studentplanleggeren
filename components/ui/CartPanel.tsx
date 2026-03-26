@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import Button from "./Button";
 
@@ -63,13 +64,13 @@ export default function CartPanel({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               <p className="text-brand-medium mb-4">Handlekurven er tom</p>
-              <a
-                href="#planleggere"
+              <Link
+                href="/produkter"
                 onClick={onClose}
                 className="text-sm text-brand-accent hover:underline font-medium"
               >
                 Se produkter
-              </a>
+              </Link>
             </div>
           ) : (
             <ul className="space-y-4">

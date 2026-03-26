@@ -1,4 +1,5 @@
 import { type ButtonHTMLAttributes, type AnchorHTMLAttributes } from "react";
+import Link from "next/link";
 
 type Variant = "primary" | "secondary" | "outline";
 
@@ -33,6 +34,9 @@ export default function Button({
 
   if ("href" in props && props.href) {
     const { href, ...rest } = props as { href: string } & AnchorHTMLAttributes<HTMLAnchorElement>;
+    if (href.startsWith("/") || href.startsWith("#")) {
+      return <Link href={href} className={classes} {...rest} />;
+    }
     return <a href={href} className={classes} {...rest} />;
   }
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import CartPanel from "@/components/ui/CartPanel";
 
@@ -34,31 +35,31 @@ export default function Header() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <a href="/" className="flex items-center">
+            <Link href="/" className="flex items-center">
               <img
                 src="/images/brand/Studentplanlegger_Text-removebg-preview.png"
                 alt="Studentplanlegger"
                 className="h-10 sm:h-12 w-auto"
               />
-            </a>
+            </Link>
 
             {/* Desktop nav */}
             <nav className="hidden md:flex items-center gap-6">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   className="text-sm text-brand-medium hover:text-brand-dark transition-colors"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
-              <a
-                href="#komplett"
+              <Link
+                href="/#pakker"
                 className="inline-flex items-center rounded-full bg-brand-accent px-5 py-2 text-sm font-medium text-brand-dark hover:bg-brand-accent/90 transition-colors"
               >
                 Kjøp komplett
-              </a>
+              </Link>
 
               {/* Cart button */}
               <button
@@ -119,23 +120,23 @@ export default function Header() {
           {mobileOpen && (
             <div className="md:hidden bg-white rounded-b-2xl shadow-lg pb-4">
               {navLinks.map((link) => (
-                <a
+                <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
                   className="block px-4 py-3 text-sm text-brand-medium hover:text-brand-dark hover:bg-brand-pale transition-colors"
                 >
                   {link.label}
-                </a>
+                </Link>
               ))}
               <div className="px-4 pt-2">
-                <a
-                  href="#komplett"
+                <Link
+                  href="/#pakker"
                   onClick={() => setMobileOpen(false)}
                   className="block w-full text-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-medium text-brand-dark"
                 >
                   Kjøp komplett
-                </a>
+                </Link>
               </div>
             </div>
           )}

@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Footer() {
   return (
     <footer className="bg-brand-dark text-white">
@@ -22,24 +24,24 @@ export default function Footer() {
             <h4 className="font-medium text-sm mb-4 text-white/80">Produkter</h4>
             <ul className="space-y-2.5">
               <li>
-                <a href="/#pakker" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/#pakker" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Komplett pakke
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Daglig Pakke
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Ukentlig Pakke
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Alle planleggere
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -49,9 +51,9 @@ export default function Footer() {
             <h4 className="font-medium text-sm mb-4 text-white/80">Info</h4>
             <ul className="space-y-2.5">
               <li>
-                <a href="#faq" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/#faq" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   FAQ
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useState, useCallback, type ReactNode } from "react";
+import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
 
 export interface CartItem {
   id: string;
@@ -24,6 +24,19 @@ const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
   const [items, setItems] = useState<CartItem[]>([]);
+
+  useEffect(() => {
+    try {
+      const saved = sessionStorage.getItem("cart");
+      if (saved) setItems(JSON.parse(saved));
+    } catch {}
+  }, []);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("cart", JSON.stringify(items));
+    } catch {}
+  }, [items]);
 
   const addItem = useCallback((item: CartItem): boolean => {
     let added = false;
