@@ -27,22 +27,25 @@ export default function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <div className="group bg-white rounded-2xl border border-brand-soft overflow-hidden transition-all duration-200 hover:shadow-xl hover:-translate-y-0.5">
+    <div className="group bg-white rounded-2xl border border-brand-soft overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in flex flex-col h-full">
       {/* Preview area — real product image */}
-      <div className="relative aspect-[3/4] bg-brand-pale overflow-hidden">
+      <div className="relative aspect-[3/4] bg-brand-pale overflow-hidden shrink-0">
         <img
           src={`/images/products/${product.image}`}
           alt={product.name}
           className="w-full h-full object-cover object-top"
         />
-        <div className="absolute bottom-3 left-3">
-          <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-medium text-brand-medium backdrop-blur-sm">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 top-1/2 bg-gradient-to-t from-brand-pale to-transparent pointer-events-none" />
+        
+        <div className="absolute bottom-3 left-3 z-10">
+          <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold text-brand-dark backdrop-blur-sm shadow-sm">
             Fyllbar PDF
           </span>
         </div>
         {product.pages > 1 && (
-          <div className="absolute top-3 left-3">
-            <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-medium text-brand-medium backdrop-blur-sm">
+          <div className="absolute top-3 left-3 z-10">
+            <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold text-brand-dark backdrop-blur-sm shadow-sm">
               {product.pages} sider
             </span>
           </div>
@@ -50,34 +53,45 @@ export default function ProductCard({ product }: { product: Product }) {
       </div>
 
       {/* Content */}
-      <div className="p-5">
+      <div className="p-5 flex flex-col flex-grow">
         <h3 className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark mb-2">
           {product.name}
         </h3>
-        <p className="text-sm text-brand-medium line-clamp-2 mb-3">
+        <p className="text-sm text-brand-medium line-clamp-2 mb-3 flex-grow">
           {product.description}
         </p>
 
         {/* Feature tags */}
         <div className="flex flex-wrap gap-1.5 mb-4">
-          {product.features.map((feature) => (
-            <span
-              key={feature}
-              className="inline-flex items-center rounded-full bg-brand-pale px-2.5 py-1 text-[10px] font-medium text-brand-medium"
-            >
-              {feature}
-            </span>
-          ))}
+          {product.features.map((feature, idx) => {
+            // Pseudo-random but consistent tints based on index
+            const tints = [
+              "bg-[#F5E6D3]/60 text-brand-dark/80", 
+              "bg-[#E2EBD8]/60 text-brand-dark/80", 
+              "bg-[#DDE4EE]/60 text-brand-dark/80", 
+              "bg-[#F0E0EC]/60 text-brand-dark/80",
+              "bg-[#E8DDD4]/60 text-brand-dark/80"
+            ];
+            const tint = tints[idx % tints.length];
+            return (
+              <span
+                key={feature}
+                className={`inline-flex items-center rounded-full px-2.5 py-1 text-[10px] font-medium ${tint}`}
+              >
+                {feature}
+              </span>
+            );
+          })}
         </div>
 
         {/* Price + CTA */}
-        <div className="flex items-center justify-between">
-          <span className="font-[family-name:var(--font-display)] text-2xl font-bold text-brand-dark">
+        <div className="flex items-center justify-between mt-auto pt-2 border-t border-brand-soft/30">
+          <span className="font-[family-name:var(--font-display)] text-3xl font-black text-brand-dark">
             {product.price} kr
           </span>
           <Button
             variant="primary"
-            className="text-xs px-4 py-2"
+            className="text-xs px-5 py-2.5 transition-transform duration-300 group-hover:scale-[1.02] shadow-sm"
             onClick={handleAdd}
           >
             {feedback ?? "Kjøp nå"}

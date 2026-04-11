@@ -49,9 +49,42 @@ body {
   animation: fade-in 0.2s ease-out;
 }
 
+@keyframes pop {
+  0% { transform: scale(0.95); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+.animate-pop {
+  animation: pop 0.3s ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+/* Subtle text shadow for headings */
+.text-shadow-sm {
+  text-shadow: 0 2px 4px rgba(61, 50, 41, 0.06);
+}
+
+/* Smooth image loading */
+img {
+  transition: opacity 0.3s ease;
+}
+
+/* Better focus states */
+*:focus-visible {
+  outline: 2px solid var(--brand-accent);
+  outline-offset: 2px;
 }

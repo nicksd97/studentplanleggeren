@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -29,9 +31,10 @@ export default function NewsletterSignup() {
   }
 
   return (
-    <section className="bg-brand-dark py-20 md:py-28">
+    <section className="bg-gradient-to-b from-brand-dark to-[#4a3c31] py-24 md:py-32">
       <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 text-center">
-        {/* Icon */}
+        <FadeInOnScroll>
+          {/* Icon */}
         <div className="h-14 w-14 rounded-full bg-brand-medium/20 flex items-center justify-center mx-auto mb-6">
           <svg
             className="h-6 w-6 text-brand-accent"
@@ -69,12 +72,12 @@ export default function NewsletterSignup() {
               onChange={(e) => setEmail(e.target.value)}
               placeholder="din@epost.no"
               required
-              className="flex-1 rounded-full bg-white/10 border border-white/20 px-5 py-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-accent"
+              className="flex-1 rounded-full bg-white/10 border border-white/20 px-5 py-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-brand-accent/50 transition-shadow"
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="rounded-full bg-brand-accent px-6 py-3 text-sm font-medium text-brand-dark hover:bg-brand-accent/90 transition-colors disabled:opacity-60"
+              className="rounded-full bg-brand-accent px-6 py-3 text-sm font-bold text-brand-dark transition-all duration-300 hover:brightness-110 hover:shadow-md hover:-translate-y-0.5 disabled:opacity-60"
             >
               {status === "loading" ? "Sender..." : "Send meg tipsene"}
             </button>
@@ -90,6 +93,7 @@ export default function NewsletterSignup() {
         <p className="text-white/30 text-xs mt-4">
           Vi sender aldri spam. Avmeld når som helst.
         </p>
+        </FadeInOnScroll>
       </div>
     </section>
   );

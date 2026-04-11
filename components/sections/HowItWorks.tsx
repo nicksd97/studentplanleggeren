@@ -1,3 +1,5 @@
+import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+
 export default function HowItWorks() {
   const steps = [
     {
@@ -36,34 +38,41 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-white py-20 md:py-28">
+    <section className="bg-white py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-            ✦ Enkelt og raskt ✦
-          </p>
-          <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark">
-            Slik fungerer det
-          </h2>
-        </div>
+        <FadeInOnScroll>
+          <div className="text-center mb-16">
+            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
+              ✦ Enkelt og raskt ✦
+            </p>
+            <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
+              Slik fungerer det
+            </h2>
+          </div>
+        </FadeInOnScroll>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {steps.map((step) => (
-            <div key={step.number} className="text-center">
-              <div className="h-16 w-16 rounded-full bg-brand-pale border border-brand-soft flex items-center justify-center mx-auto mb-4">
-                {step.icon}
-              </div>
-              <span className="text-sm font-medium text-brand-accent mb-1 block">
-                Steg {step.number}
-              </span>
-              <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-2">
-                {step.title}
-              </h3>
-              <p className="text-sm text-brand-medium leading-relaxed">
-                {step.description}
-              </p>
-            </div>
-          ))}
+        <div className="relative max-w-4xl mx-auto">
+          {/* Connecting line for desktop */}
+          <div className="hidden md:block absolute top-8 left-[15%] right-[15%] border-t-[1.5px] border-dashed border-brand-soft -z-10" />
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative z-0">
+            {steps.map((step, index) => (
+              <FadeInOnScroll key={step.number} delay={index * 150} className="text-center bg-white px-4">
+                <div className="h-16 w-16 rounded-full bg-brand-pale border border-brand-soft flex items-center justify-center mx-auto mb-4 animate-float">
+                  {step.icon}
+                </div>
+                <span className="text-base font-bold text-brand-accent mb-1 block">
+                  Steg {step.number}
+                </span>
+                <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-2">
+                  {step.title}
+                </h3>
+                <p className="text-sm text-brand-medium leading-relaxed">
+                  {step.description}
+                </p>
+              </FadeInOnScroll>
+            ))}
+          </div>
         </div>
       </div>
     </section>

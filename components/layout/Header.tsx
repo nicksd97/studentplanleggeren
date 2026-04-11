@@ -26,20 +26,20 @@ export default function Header() {
   return (
     <>
       <header
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
+        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-sm shadow-sm"
-            : "bg-transparent"
+            ? "bg-white/95 backdrop-blur-sm shadow-sm border-b border-brand-soft/60"
+            : "bg-transparent border-b border-brand-soft/30"
         }`}
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center">
+            <Link href="/" className="flex items-center group">
               <img
                 src="/images/brand/Studentplanlegger_Text-removebg-preview.png"
                 alt="Studentplanlegger"
-                className="h-10 sm:h-12 w-auto"
+                className="h-10 sm:h-12 w-auto transition-opacity duration-300 group-hover:opacity-80"
               />
             </Link>
 
@@ -49,14 +49,14 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-sm text-brand-medium hover:text-brand-dark transition-colors"
+                  className="relative text-sm text-brand-medium hover:text-brand-dark transition-colors after:absolute after:-bottom-1 after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:bg-brand-dark after:transition-all after:duration-300 hover:after:w-full"
                 >
                   {link.label}
                 </Link>
               ))}
               <Link
                 href="/#pakker"
-                className="inline-flex items-center rounded-full bg-brand-accent px-5 py-2 text-sm font-medium text-brand-dark hover:bg-brand-accent/90 transition-colors"
+                className="inline-flex items-center rounded-full bg-brand-accent px-5 py-2 text-sm font-medium text-brand-dark hover:bg-brand-accent/90 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md"
               >
                 Kjøp komplett
               </Link>
@@ -71,7 +71,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 {itemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-accent text-[10px] font-bold text-brand-dark">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-accent text-[10px] font-bold text-brand-dark animate-pop" key={itemCount}>
                     {itemCount}
                   </span>
                 )}
@@ -89,7 +89,7 @@ export default function Header() {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 {itemCount > 0 && (
-                  <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-accent text-[10px] font-bold text-brand-dark">
+                  <span className="absolute -top-0.5 -right-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-brand-accent text-[10px] font-bold text-brand-dark animate-pop" key={itemCount}>
                     {itemCount}
                   </span>
                 )}

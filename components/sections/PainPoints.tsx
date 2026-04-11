@@ -1,3 +1,5 @@
+import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+
 export default function PainPoints() {
   const cards = [
     {
@@ -33,33 +35,36 @@ export default function PainPoints() {
   ];
 
   return (
-    <section className="bg-white py-20 md:py-28">
+    <section className="bg-white py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
-          <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-            ✦ Kjenner du deg igjen? ✦
-          </p>
-          <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark">
-            For deg som...
-          </h2>
-        </div>
+        <FadeInOnScroll>
+          <div className="text-center mb-12">
+            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
+              ✦ Kjenner du deg igjen? ✦
+            </p>
+            <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
+              For deg som...
+            </h2>
+          </div>
+        </FadeInOnScroll>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {cards.map((card, i) => (
-            <div
-              key={i}
-              className="bg-brand-cream rounded-2xl p-6 md:p-8 border border-transparent hover:border-brand-accent transition-colors"
-            >
-              <div className="h-12 w-12 rounded-full bg-brand-pale flex items-center justify-center mb-5">
-                {card.icon}
+            <FadeInOnScroll key={i} delay={i * 100}>
+              <div
+                className="bg-brand-cream rounded-2xl p-6 md:p-8 border border-transparent transition-all duration-300 hover:border-brand-accent hover:shadow-lg hover:bg-gradient-to-br hover:from-white hover:to-brand-pale/30 h-full"
+              >
+                <div className="h-16 w-16 rounded-full bg-brand-pale flex items-center justify-center mb-5 ring-1 ring-brand-accent/10">
+                  {card.icon}
+                </div>
+                <h3 className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark mb-3">
+                  {card.title}
+                </h3>
+                <p className="text-sm text-brand-medium leading-relaxed">
+                  {card.description}
+                </p>
               </div>
-              <h3 className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark mb-3">
-                {card.title}
-              </h3>
-              <p className="text-sm text-brand-medium leading-relaxed">
-                {card.description}
-              </p>
-            </div>
+            </FadeInOnScroll>
           ))}
         </div>
       </div>

@@ -96,14 +96,32 @@ export default function KassePage() {
       <Header />
       <main className="min-h-screen pt-28 pb-20 px-4">
         <div className="mx-auto max-w-5xl">
-          <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-10 text-center">
+          <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-8 text-center text-shadow-sm">
             Kasse
           </h1>
+
+          {/* Progress Indicator */}
+          <div className="flex items-center justify-center gap-3 mb-10 text-sm font-medium">
+            <span className="flex items-center gap-2 text-brand-dark font-bold">
+              <span className="h-6 w-6 rounded-full bg-brand-accent text-brand-dark flex items-center justify-center text-xs shadow-sm">1</span>
+              Info
+            </span>
+            <span className="w-8 h-[2px] bg-brand-accent/30 rounded-full"></span>
+            <span className="flex items-center gap-2 text-brand-medium">
+              <span className="h-6 w-6 rounded-full border-2 border-brand-soft flex items-center justify-center text-xs">2</span>
+              Betaling
+            </span>
+            <span className="w-8 h-[2px] bg-brand-soft rounded-full"></span>
+            <span className="flex items-center gap-2 text-brand-medium">
+              <span className="h-6 w-6 rounded-full border-2 border-brand-soft flex items-center justify-center text-xs">3</span>
+              Nedlasting
+            </span>
+          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
             {/* Left: Order form */}
             <div className="lg:col-span-3">
-              <div className="bg-white rounded-2xl border border-brand-soft p-6 md:p-8">
+              <div className="bg-white rounded-xl shadow-sm border border-brand-soft p-8">
                 <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-6">
                   Dine opplysninger
                 </h2>
@@ -117,8 +135,8 @@ export default function KassePage() {
                       type="text"
                       value={form.fornavn}
                       onChange={(e) => handleChange("fornavn", e.target.value)}
-                      className={`w-full rounded-xl border px-4 py-3 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-colors focus:border-brand-accent ${
-                        errors.fornavn ? "border-red-400" : "border-brand-soft"
+                      className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
+                        errors.fornavn ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                       }`}
                       placeholder="Ola"
                     />
@@ -134,8 +152,8 @@ export default function KassePage() {
                       type="text"
                       value={form.etternavn}
                       onChange={(e) => handleChange("etternavn", e.target.value)}
-                      className={`w-full rounded-xl border px-4 py-3 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-colors focus:border-brand-accent ${
-                        errors.etternavn ? "border-red-400" : "border-brand-soft"
+                      className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
+                        errors.etternavn ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                       }`}
                       placeholder="Nordmann"
                     />
@@ -153,8 +171,8 @@ export default function KassePage() {
                     type="email"
                     value={form.epost}
                     onChange={(e) => handleChange("epost", e.target.value)}
-                    className={`w-full rounded-xl border px-4 py-3 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-colors focus:border-brand-accent ${
-                      errors.epost ? "border-red-400" : "border-brand-soft"
+                    className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
+                      errors.epost ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                     }`}
                     placeholder="ola@example.com"
                   />
@@ -171,8 +189,8 @@ export default function KassePage() {
                     type="email"
                     value={form.epostBekreft}
                     onChange={(e) => handleChange("epostBekreft", e.target.value)}
-                    className={`w-full rounded-xl border px-4 py-3 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-colors focus:border-brand-accent ${
-                      errors.epostBekreft ? "border-red-400" : "border-brand-soft"
+                    className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
+                      errors.epostBekreft ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                     }`}
                     placeholder="ola@example.com"
                   />
@@ -185,7 +203,7 @@ export default function KassePage() {
 
             {/* Right: Order summary */}
             <div className="lg:col-span-2">
-              <div className="bg-white rounded-2xl border border-brand-soft p-6 md:p-8 sticky top-24">
+              <div className="bg-white rounded-xl shadow-sm border border-brand-soft p-8 sticky top-24">
                 <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-6">
                   Ordresammendrag
                 </h2>
@@ -238,7 +256,7 @@ export default function KassePage() {
                   <button
                     onClick={handlePay}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-medium text-white transition-colors cursor-pointer disabled:opacity-70"
+                    className="w-full flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold text-white transition-all hover:brightness-110 shadow-sm hover:-translate-y-0.5 cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
                     style={{ backgroundColor: "#FF5B24" }}
                   >
                     {loading ? (
@@ -253,7 +271,7 @@ export default function KassePage() {
                   <button
                     onClick={handlePay}
                     disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-medium text-white hover:bg-brand-dark/90 transition-colors cursor-pointer disabled:opacity-70"
+                    className="w-full flex items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-bold text-white hover:brightness-110 shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
                   >
                     {loading ? (
                       <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
