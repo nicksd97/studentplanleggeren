@@ -2,19 +2,19 @@ import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 
 const cards = [
   {
-    image: "/images/marketing/il_1588xN.4593615381_kh5v.jpg.webp",
+    image: "/images/marketing/3.png",
     alt: "Fyll inn planleggeren digitalt på PC, Mac, iPad eller nettbrett",
     label: "Fyll inn digitalt",
     subtext: "Bruk på PC, Mac, iPad eller nettbrett",
   },
   {
-    image: "/images/marketing/il_1588xN.4546213582_d4qb.jpg.webp",
+    image: "/images/marketing/1.png",
     alt: "Årlig, månedlig, ukentlig og daglig planleggere",
     label: "Årlig, månedlig, ukentlig og daglig",
     subtext: "Planleggere for alle behov",
   },
   {
-    image: "/images/marketing/il_1588xN.4593614661_13gt.jpg.webp",
+    image: "/images/marketing/2.png",
     alt: "Tilgjengelig i flere størrelser: A4, A5, Letter og Half Letter",
     label: "Flere størrelser",
     subtext: "A4, A5, Letter og Half Letter",
