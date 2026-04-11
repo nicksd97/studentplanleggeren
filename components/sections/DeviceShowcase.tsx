@@ -2,13 +2,13 @@ import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 
 const cards = [
   {
-    image: "/images/marketing/3.png",
+    image: "/images/marketing/1.png",
     alt: "Fyll inn planleggeren digitalt på PC, Mac, iPad eller nettbrett",
     label: "Fyll inn digitalt",
     subtext: "Bruk på PC, Mac, iPad eller nettbrett",
   },
   {
-    image: "/images/marketing/1.png",
+    image: "/images/marketing/3.png",
     alt: "Årlig, månedlig, ukentlig og daglig planleggere",
     label: "Årlig, månedlig, ukentlig og daglig",
     subtext: "Planleggere for alle behov",
