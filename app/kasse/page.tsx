@@ -9,7 +9,7 @@ import { pakker } from "@/lib/products";
 import Button from "@/components/ui/Button";
 
 export default function KassePage() {
-  const { items, totalPrice, removeItem } = useCart();
+  const { items, totalPrice, removeItem, clearCart } = useCart();
   const router = useRouter();
 
   const [form, setForm] = useState({
@@ -20,6 +20,7 @@ export default function KassePage() {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(false);
+  const [paymentError, setPaymentError] = useState("");
 
   const bundleItems = items.filter((i) => i.type === "bundle");
   const totalSavings = bundleItems.reduce((sum, item) => {
@@ -44,15 +45,46 @@ export default function KassePage() {
     return errs;
   }
 
-  function handlePay() {
+  async function handlePayment(provider: "vipps" | "stripe") {
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
     setLoading(true);
-    setTimeout(() => {
-      router.push(`/takk?order=demo&email=${encodeURIComponent(form.epost)}`);
-    }, 1000);
+    setPaymentError("");
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: form.epost,
+          firstName: form.fornavn,
+          lastName: form.etternavn,
+          items: items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            type: item.type,
+          })),
+          amountNok: totalPrice,
+          paymentProvider: provider,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        clearCart();
+        router.push(`/takk?token=${data.downloadToken}`);
+      } else {
+        setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
+      }
+    } catch {
+      setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   function handleChange(field: string, value: string) {
@@ -254,7 +286,7 @@ export default function KassePage() {
                 {/* Payment buttons */}
                 <div className="space-y-3 mb-4">
                   <button
-                    onClick={handlePay}
+                    onClick={() => handlePayment("vipps")}
                     disabled={loading}
                     className="w-full flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold text-white transition-all hover:brightness-110 shadow-sm hover:-translate-y-0.5 cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
                     style={{ backgroundColor: "#FF5B24" }}
@@ -269,7 +301,7 @@ export default function KassePage() {
                     )}
                   </button>
                   <button
-                    onClick={handlePay}
+                    onClick={() => handlePayment("stripe")}
                     disabled={loading}
                     className="w-full flex items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-bold text-white hover:brightness-110 shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
                   >
@@ -288,6 +320,10 @@ export default function KassePage() {
                     )}
                   </button>
                 </div>
+
+                {paymentError && (
+                  <p className="text-center text-sm text-red-500 mb-3">{paymentError}</p>
+                )}
 
                 <p className="text-center text-xs text-brand-medium mb-2">
                   Trygg betaling · Umiddelbar nedlasting
