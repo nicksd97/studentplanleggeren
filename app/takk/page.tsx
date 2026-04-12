@@ -97,7 +97,7 @@ function TakkContent() {
       </div>
 
       <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-3">
-        Takk for kj&#248;pet!
+        Takk for kjøpet!
       </h1>
       <p className="text-brand-medium mb-10">
         En bekreftelse er sendt til{" "}
@@ -142,7 +142,7 @@ function TakkContent() {
               })}
             </ul>
             <p className="text-xs text-brand-medium/60 mt-4 text-center">
-              {downloadsLeft} nedlastinger gjensT&#229;r &middot; Lenken utl&#248;per{" "}
+              {downloadsLeft} nedlastinger gjenstår &middot; Lenken utløper{" "}
               {expiryDate.toLocaleDateString("nb-NO", {
                 day: "numeric",
                 month: "long",

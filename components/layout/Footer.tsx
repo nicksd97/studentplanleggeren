@@ -56,14 +56,14 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/personvern" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Personvern
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/vilkar" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Vilkår
-                </a>
+                </Link>
               </li>
             </ul>
           </div>

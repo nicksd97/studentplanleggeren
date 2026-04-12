@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { supabaseAdmin } from '@/lib/supabase';
 import { generateDownloadToken, getTokenExpiry } from '@/lib/tokens';
+import { sendOrderConfirmation } from '@/lib/email';
 
 export async function POST(request: NextRequest) {
   try {
@@ -35,6 +36,11 @@ export async function POST(request: NextRequest) {
       console.error('Order creation error:', error);
       return NextResponse.json({ error: 'Kunne ikke opprette ordre' }, { status: 500 });
     }
+
+    // Send order confirmation email (non-blocking)
+    sendOrderConfirmation({ email, firstName, items, downloadToken }).catch((err) =>
+      console.error('Failed to send confirmation email:', err)
+    );
 
     return NextResponse.json({
       success: true,
