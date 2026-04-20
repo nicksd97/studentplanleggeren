@@ -12,6 +12,9 @@ export default function PersonvernPage() {
       <Header />
       <main className="min-h-screen bg-white">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+          <p className="text-sm text-brand-muted mb-4">
+            Studentplanlegger Davidson · Org.nr: 937416156
+          </p>
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-dark mb-8">
             Personvernerklæring
           </h1>

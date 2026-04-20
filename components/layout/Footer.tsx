@@ -97,7 +97,7 @@ export default function Footer() {
         {/* Bottom line */}
         <div className="mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-2 relative before:absolute before:top-0 before:left-0 before:w-full before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent">
           <p className="text-sm text-white/40">
-            &copy; 2026 Studentplanlegger · NSD Drift
+            &copy; 2026 Studentplanlegger · Studentplanlegger Davidson · Org.nr: 937416156
           </p>
           <p className="text-sm text-white/40">
             Laget med kjærlighet for norske studenter
