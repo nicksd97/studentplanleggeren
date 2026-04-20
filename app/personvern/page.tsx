@@ -24,7 +24,7 @@ export default function PersonvernPage() {
             <section>
               <h2 className="text-xl font-semibold text-brand-dark mb-3">Hvem vi er</h2>
               <p>
-                Studentplanlegger.no drives av et enkeltpersonforetak (registrering pågår via Altinn).
+                Studentplanlegger.no drives av Studentplanlegger Davidson, org.nr 937416156.
                 Vi selger fyllbare PDF-planleggere som digitale nedlastinger.
               </p>
               <p>
