@@ -22,8 +22,20 @@ export default function Hero() {
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap
           .timeline({ defaults: { ease: "power3.out" } })
-          .from("[data-hero-line]", { yPercent: 110, duration: 1.1, stagger: 0.12 }, 0.15)
-          .from("[data-hero-fade]", { autoAlpha: 0, y: 24, duration: 0.8, stagger: 0.1 }, 0.55);
+          // fromTo (not from): the start state matches the CSS pre-hide in globals.css,
+          // so the server-rendered hero never flashes visible and snaps away at hydration
+          .fromTo(
+            "[data-hero-line]",
+            { yPercent: 110 },
+            { yPercent: 0, duration: 1.1, stagger: 0.12 },
+            0.15
+          )
+          .fromTo(
+            "[data-hero-fade]",
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.8, stagger: 0.1 },
+            0.55
+          );
       });
     },
     { scope: ref }
@@ -44,7 +56,7 @@ export default function Hero() {
                 <span data-hero-line className="block italic font-normal text-ink/80">
                   Få orden på
                 </span>
-              </span>
+              </span>{" "}
               <span className="block overflow-hidden pb-[0.12em]">
                 <span data-hero-line className="block">
                   studiene.

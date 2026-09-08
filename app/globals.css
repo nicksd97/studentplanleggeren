@@ -90,10 +90,23 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Reveal: start hidden only for users who will get the scroll animation */
+/* Reveal + hero entrance: start hidden only for users who will get the animation.
+   GSAP takes over from exactly this state, so nothing flashes at hydration. */
 @media (prefers-reduced-motion: no-preference) {
-  [data-reveal] {
+  [data-reveal],
+  [data-hero-fade] {
     opacity: 0;
+  }
+  [data-hero-line] {
+    transform: translateY(110%);
+  }
+}
+
+/* Phones: the glass cards sit over a live canvas; skip the per-frame backdrop blur */
+@media (max-width: 767px) {
+  .theme-dark main [class*="backdrop-blur"] {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
 }
 
@@ -195,6 +208,9 @@ img {
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
   .animate-float,
   .animate-pulse,
   .animate-pop {

@@ -26,6 +26,7 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
             <button
               type="button"
               aria-expanded={isOpen}
+              aria-controls={`faq-panel-${index}`}
               onClick={() => setOpenIndex(isOpen ? null : index)}
               className="group flex w-full items-center justify-between gap-4 py-5 text-left cursor-pointer"
             >
@@ -50,6 +51,10 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
               </svg>
             </button>
             <div
+              id={`faq-panel-${index}`}
+              role="region"
+              aria-hidden={!isOpen}
+              inert={!isOpen}
               className={`overflow-hidden transition-all duration-300 ease-out ${
                 isOpen ? "max-h-96 pb-5 opacity-100" : "max-h-0 opacity-0"
               }`}

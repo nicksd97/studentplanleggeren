@@ -83,7 +83,7 @@ export default function NewsletterSignup() {
                     placeholder="din@epost.no"
                     required
                     aria-label="E-postadresse"
-                    className="flex-1 min-h-[44px] rounded-full bg-white/[0.06] border border-white/10 px-5 py-3 text-sm text-ink placeholder:text-ink-muted/60 focus:outline-none focus:ring-2 focus:ring-brand-accent/50 transition-shadow"
+                    className="flex-1 min-h-[44px] rounded-full bg-white/[0.06] border border-white/10 px-5 py-3 text-sm text-ink placeholder:text-ink-muted focus:outline-none focus:ring-2 focus:ring-brand-accent/50 transition-shadow"
                   />
                   <Button
                     type="submit"
@@ -100,7 +100,7 @@ export default function NewsletterSignup() {
                 <p className="mt-3 text-sm text-red-400">Noe gikk galt. Prøv igjen.</p>
               )}
 
-              <p className="mt-4 text-xs text-ink-muted/70">
+              <p className="mt-4 text-xs text-ink-muted">
                 Vi sender aldri spam. Avmeld når som helst.
               </p>
             </div>

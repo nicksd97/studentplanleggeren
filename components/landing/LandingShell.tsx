@@ -39,6 +39,10 @@ export default function LandingShell({ children }: { children: ReactNode }) {
         </span>
       </div>
 
+      {/* Without JavaScript the reveal pre-hide would never be undone */}
+      <noscript>
+        <style>{`[data-reveal],[data-hero-fade]{opacity:1!important}[data-hero-line]{transform:none!important}`}</style>
+      </noscript>
       <div className="relative z-10">{children}</div>
     </div>
   );
