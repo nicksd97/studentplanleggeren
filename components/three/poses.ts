@@ -117,7 +117,7 @@ const D_CATEGORIES = t([6.2, 0.2, -5], [-0.1, -0.5, 0.1], 0.5);
 const D_PAIN = t([5.3, 2.3, -4.5], [0, -0.15, 0.05], 0.55);
 const D_BUNDLE_HEAD = t([-5.6, -1.4, -5.5], [-0.15, 0.45, -0.05], 0.45);
 const D_BUNDLE_PRICE = t([-5.4, -1.6, -5.5], [-0.2, 0.5, -0.06], 0.45);
-const D_STEPS = t([1.2, -6.5, -5], [-0.35, -0.35, 0.05], 0.7);
+const D_STEPS = t([-4.2, -6.2, -5], [-0.3, 0.35, -0.05], 0.7);
 const D_TESTIMONIALS = t([4.6, -3.7, -4.5], [-0.3, -0.5, 0.05], 0.5);
 const D_FAQ = t([-3.6, -1.9, -4.5], [-0.2, 0.5, -0.05], 0.55);
 const D_NEWSLETTER = t([-4.6, -3.1, -5], [-0.2, 0.5, -0.05], 0.45);
@@ -143,7 +143,7 @@ export const POSES_DESKTOP: Pose[] = [
   { p: 0.46, notebook: D_BUNDLE_HEAD, sheets: pile([-3.0, -1.2, -5.5], 0.7, SHEET_COUNT) },
   // Price: everything cascades into one neat stack beside the notebook, away from the price column
   { p: 0.55, notebook: D_BUNDLE_PRICE, sheets: stack([-2.8, -1.4, -5.5], SHEET_COUNT, 0.6) },
-  // Slik fungerer det: the stack slides into the notebook
+  // Slik fungerer det: the stack slides straight down into the notebook, bottom-left
   { p: 0.63, notebook: D_STEPS, sheets: inside(D_STEPS) },
   // Testimonials: notebook rests small, bottom right
   { p: 0.72, notebook: D_TESTIMONIALS, sheets: inside(D_TESTIMONIALS) },
