@@ -115,9 +115,9 @@ const D_HERO = t([3.7, -0.6, -2.4], [-0.2, -0.75, 0.12], 0.78);
 const D_DEVICES = t([5.6, 1.6, -4.5], [-0.15, -0.6, 0.1], 0.55);
 const D_CATEGORIES = t([6.2, 0.2, -5], [-0.1, -0.5, 0.1], 0.5);
 const D_PAIN = t([5.3, 2.3, -4.5], [0, -0.15, 0.05], 0.55);
-const D_BUNDLE_HEAD = t([-5.4, -2.8, -4.2], [-0.15, 0.45, -0.05], 0.5);
-const D_BUNDLE_PRICE = t([-5.0, -3.1, -3.6], [-0.2, 0.5, -0.06], 0.55);
-const D_STEPS = t([1.2, -5.4, -5], [-0.35, -0.35, 0.05], 0.7);
+const D_BUNDLE_HEAD = t([-5.6, -1.4, -5.5], [-0.15, 0.45, -0.05], 0.45);
+const D_BUNDLE_PRICE = t([-5.4, -1.6, -5.5], [-0.2, 0.5, -0.06], 0.45);
+const D_STEPS = t([1.2, -6.5, -5], [-0.35, -0.35, 0.05], 0.7);
 const D_TESTIMONIALS = t([4.6, -3.7, -4.5], [-0.3, -0.5, 0.05], 0.5);
 const D_FAQ = t([-3.6, -1.9, -4.5], [-0.2, 0.5, -0.05], 0.55);
 const D_NEWSLETTER = t([-4.6, -3.1, -5], [-0.2, 0.5, -0.05], 0.45);
@@ -140,9 +140,9 @@ export const POSES_DESKTOP: Pose[] = [
   // For deg som: the fan drifts back and down, the notebook turns to face you
   { p: 0.37, notebook: D_PAIN, sheets: [...fan([2.5, -5.0, -5], 3.2, -0.6, 0.6, 7), ...tucked(D_PAIN).slice(7)] },
   // Komplett heading: a loose pile gathers bottom-left, under the product fan
-  { p: 0.46, notebook: D_BUNDLE_HEAD, sheets: pile([-2.6, -3.8, -3.5], 0.9, SHEET_COUNT) },
+  { p: 0.46, notebook: D_BUNDLE_HEAD, sheets: pile([-3.0, -1.2, -5.5], 0.7, SHEET_COUNT) },
   // Price: everything cascades into one neat stack beside the notebook, away from the price column
-  { p: 0.55, notebook: D_BUNDLE_PRICE, sheets: stack([-2.4, -3.6, -3], SHEET_COUNT, 0.8) },
+  { p: 0.55, notebook: D_BUNDLE_PRICE, sheets: stack([-2.8, -1.4, -5.5], SHEET_COUNT, 0.6) },
   // Slik fungerer det: the stack slides into the notebook
   { p: 0.63, notebook: D_STEPS, sheets: inside(D_STEPS) },
   // Testimonials: notebook rests small, bottom right
@@ -150,8 +150,8 @@ export const POSES_DESKTOP: Pose[] = [
   // FAQ: left column, under the sticky heading
   { p: 0.83, notebook: D_FAQ, sheets: inside(D_FAQ) },
   // Newsletter: one page floats up behind the glass panel like a letter
-  { p: 0.94, notebook: D_NEWSLETTER, sheets: [t([3.4, -0.2, -5], [0.05, -0.2, 0.08], 1), ...inside(D_NEWSLETTER).slice(1)] },
-  { p: 1, notebook: D_NEWSLETTER, sheets: [t([3.2, 1.2, -5.5], [0.05, -0.15, 0.05], 1), ...inside(D_NEWSLETTER).slice(1)] },
+  { p: 0.94, notebook: D_NEWSLETTER, sheets: [t([5.4, -0.4, -5], [0.05, -0.25, 0.08], 1), ...inside(D_NEWSLETTER).slice(1)] },
+  { p: 1, notebook: D_NEWSLETTER, sheets: [t([5.2, 1.0, -5.5], [0.05, -0.2, 0.05], 1), ...inside(D_NEWSLETTER).slice(1)] },
 ];
 
 /* --------------------------------------------------------------------------
@@ -160,9 +160,9 @@ export const POSES_DESKTOP: Pose[] = [
 const M_HERO = t([2.7, 4.6, -4.5], [-0.15, -0.6, 0.1], 0.5);
 const M_DEVICES = t([3.0, 4.2, -6], [-0.1, -0.5, 0.1], 0.4);
 const M_CATEGORIES = t([3.2, 0.5, -6.5], [-0.1, -0.5, 0.1], 0.4);
-const M_BUNDLE = t([3.2, 2.0, -6], [-0.1, -0.4, 0.06], 0.4);
+const M_BUNDLE = t([3.9, 2.0, -6], [-0.1, -0.4, 0.06], 0.4);
 const M_STEPS = t([-2.4, -3.9, -5], [-0.3, 0.4, -0.05], 0.55);
-const M_TESTIMONIALS = t([3.6, -4.2, -6], [-0.3, -0.5, 0.05], 0.45);
+const M_TESTIMONIALS = t([4.1, -4.7, -6], [-0.3, -0.5, 0.05], 0.45);
 const M_FAQ = t([-3.4, -2.5, -6.5], [-0.2, 0.5, -0.05], 0.45);
 const M_NEWSLETTER = t([-3.4, -3.2, -6.5], [-0.2, 0.5, -0.05], 0.4);
 
@@ -178,7 +178,7 @@ export const POSES_MOBILE: Pose[] = [
     ],
   },
   { p: 0.15, notebook: M_DEVICES, sheets: [...row([0.2, -4.4, -5], 5.2, 4, -0.35), ...tucked(M_DEVICES).slice(4)] },
-  { p: 0.33, notebook: M_CATEGORIES, sheets: [...fan([3.9, -4.9, -5], 2.0, -0.55, 0.35, 4), ...tucked(M_CATEGORIES).slice(4)] },
+  { p: 0.33, notebook: M_CATEGORIES, sheets: [...fan([4.3, -5.0, -5], 2.0, -0.55, 0.35, 4), ...tucked(M_CATEGORIES).slice(4)] },
   { p: 0.5, notebook: M_BUNDLE, sheets: stack([3.4, -3.2, -5.5], SHEET_COUNT, 0.6) },
   { p: 0.63, notebook: M_STEPS, sheets: inside(M_STEPS) },
   { p: 0.75, notebook: M_TESTIMONIALS, sheets: inside(M_TESTIMONIALS) },
