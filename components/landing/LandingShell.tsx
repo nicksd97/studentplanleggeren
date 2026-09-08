@@ -32,6 +32,17 @@ export default function LandingShell({ children }: { children: ReactNode }) {
       <HeroScene />
       <div className="vignette" aria-hidden="true" />
       <div className="grain" aria-hidden="true" />
+
+      {/* Side rail (desktop only) */}
+      <div
+        aria-hidden="true"
+        className="hidden lg:flex fixed left-5 top-0 bottom-0 z-20 pointer-events-none items-center"
+      >
+        <span className="[writing-mode:vertical-rl] rotate-180 text-[10px] uppercase tracking-[0.35em] text-ink-muted/60">
+          Studentplanlegger — Laget for norske studenter
+        </span>
+      </div>
+
       <div className="relative z-10">{children}</div>
     </div>
   );

@@ -12,7 +12,7 @@ type Layout = { offset: number[]; spread: number; ring: number; glow: number };
 
 // Where the cluster sits and how it is arranged as the page scrolls
 const DESKTOP_KEYS: Keyframe<Layout>[] = [
-  { p: 0.0, offset: [2.6, 0.1, 0], spread: 0, ring: 0, glow: 0.9 },
+  { p: 0.0, offset: [3.6, -0.2, -1.2], spread: 0, ring: 0, glow: 0.9 },
   { p: 0.15, offset: [-2.2, -0.8, -1], spread: 0.35, ring: 0, glow: 0.7 },
   { p: 0.35, offset: [0, -0.8, -3.5], spread: 1, ring: 0, glow: 0.5 },
   { p: 0.55, offset: [0, -1.4, -1.5], spread: 0.2, ring: 1, glow: 1.1 },
@@ -20,14 +20,14 @@ const DESKTOP_KEYS: Keyframe<Layout>[] = [
   { p: 1.0, offset: [0, 8, -6], spread: 0.8, ring: 0, glow: 0.4 },
 ];
 
-// Phones: keep the cluster above and behind the copy so text stays legible
+// Phones: the cluster peeks in from the edges so the copy stays legible
 const MOBILE_KEYS: Keyframe<Layout>[] = [
-  { p: 0.0, offset: [0.4, 2.6, -3], spread: 0, ring: 0, glow: 0.9 },
-  { p: 0.15, offset: [-1.5, -0.5, -3], spread: 0.3, ring: 0, glow: 0.7 },
-  { p: 0.35, offset: [0, -0.5, -5], spread: 0.9, ring: 0, glow: 0.5 },
-  { p: 0.55, offset: [0, -1, -3], spread: 0.2, ring: 1, glow: 1.0 },
-  { p: 0.75, offset: [0, 4, -5], spread: 0.6, ring: 0, glow: 0.6 },
-  { p: 1.0, offset: [0, 7, -7], spread: 0.8, ring: 0, glow: 0.4 },
+  { p: 0.0, offset: [2.3, 4.2, -3], spread: 0, ring: 0, glow: 0.9 },
+  { p: 0.15, offset: [-2.6, -1, -4], spread: 0.3, ring: 0, glow: 0.7 },
+  { p: 0.35, offset: [2.6, 0, -6], spread: 0.9, ring: 0, glow: 0.5 },
+  { p: 0.55, offset: [0, -1.5, -5], spread: 0.2, ring: 1, glow: 1.0 },
+  { p: 0.75, offset: [0, 5, -6], spread: 0.6, ring: 0, glow: 0.6 },
+  { p: 1.0, offset: [0, 8, -8], spread: 0.8, ring: 0, glow: 0.4 },
 ];
 
 type ShapeDef = {
@@ -160,7 +160,11 @@ export default function FloatingShapes({
   });
 
   return (
-    <group ref={group} position={[keys[0].offset[0], keys[0].offset[1], keys[0].offset[2]]}>
+    <group
+      ref={group}
+      position={[keys[0].offset[0], keys[0].offset[1], keys[0].offset[2]]}
+      scale={low ? 0.6 : 0.85}
+    >
       {defs.map((def, i) => (
         <Float
           key={i}

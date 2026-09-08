@@ -1,84 +1,105 @@
+"use client";
+
+import { useRef } from "react";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
 import Button from "@/components/ui/Button";
-import Reveal from "@/components/landing/Reveal";
+import Eyebrow from "@/components/landing/Eyebrow";
+import Tag from "@/components/landing/Tag";
+import Parallax from "@/components/landing/Parallax";
+
+if (typeof window !== "undefined") {
+  gsap.registerPlugin(useGSAP);
+}
 
 export default function Hero() {
+  const ref = useRef<HTMLElement>(null);
+
+  // Entrance: heading lines slide up out of their masks, then the rest fades in
+  useGSAP(
+    () => {
+      const mm = gsap.matchMedia();
+      mm.add("(prefers-reduced-motion: no-preference)", () => {
+        gsap
+          .timeline({ defaults: { ease: "power3.out" } })
+          .from("[data-hero-line]", { yPercent: 110, duration: 1.1, stagger: 0.12 }, 0.15)
+          .from("[data-hero-fade]", { autoAlpha: 0, y: 24, duration: 0.8, stagger: 0.1 }, 0.55);
+      });
+    },
+    { scope: ref }
+  );
+
   return (
-    <section className="relative pt-24 pb-0 md:pt-32 overflow-hidden">
-      {/* Dot pattern background */}
-      <div className="dot-pattern" />
+    <section ref={ref} className="relative">
+      {/* Full-height opening */}
+      <div className="relative min-h-[100svh] flex flex-col justify-center pt-28 pb-20 md:pt-32">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-3xl lg:max-w-[60%]">
+            <div data-hero-fade>
+              <Eyebrow n="01">Laget for norske studenter</Eyebrow>
+            </div>
 
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-        {/* Section label */}
-        <Reveal delay={0}>
-          <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-4">
-            ✦ Laget for norske studenter ✦
-          </p>
-        </Reveal>
+            <h1 className="mt-6 font-[family-name:var(--font-display)] font-bold leading-[0.92] tracking-[-0.02em] text-[clamp(3.25rem,9.5vw,8.5rem)] text-ink">
+              <span className="block overflow-hidden pb-[0.08em]">
+                <span data-hero-line className="block italic font-normal text-ink/80">
+                  Få orden på
+                </span>
+              </span>
+              <span className="block overflow-hidden pb-[0.12em]">
+                <span data-hero-line className="block">
+                  studiene.
+                </span>
+              </span>
+            </h1>
 
-        {/* Heading */}
-        <Reveal delay={100}>
-          <h1 
-            className="font-[family-name:var(--font-display)] text-5xl sm:text-6xl lg:text-7xl font-bold text-brand-dark mb-4"
-            style={{ textShadow: '0 2px 4px rgba(61,50,41,0.08)' }}
-          >
-            Studentplanlegger
-          </h1>
-        </Reveal>
+            <p data-hero-fade className="mt-8 max-w-xl text-lg sm:text-xl leading-relaxed text-ink-muted">
+              Studentplanlegger: 25 fyllbare PDF-planleggere for studenter. Daglig, ukentlig,
+              månedlig — skriv ut eller fyll inn direkte på skjermen.
+            </p>
 
-        {/* Subheading */}
-        <Reveal delay={200}>
-          <p className="text-brand-medium text-lg sm:text-xl max-w-2xl mx-auto mb-12 md:mb-16">
-            Få orden på studiene. 25 fyllbare PDF-planleggere for studenter. Daglig, ukentlig, månedlig — skriv ut eller fyll inn direkte på skjermen.
-          </p>
-        </Reveal>
+            <div data-hero-fade className="mt-10 flex flex-col sm:flex-row sm:items-center gap-3">
+              <Button
+                href="#pakker"
+                variant="primary"
+                className="text-base px-8 py-3.5 shadow-[0_0_32px_rgba(196,168,130,0.35)]"
+              >
+                Se komplett pakke — 349 kr
+              </Button>
+              <Button href="/produkter" variant="ghost" className="text-base px-8 py-3.5">
+                Utforsk planleggerne
+              </Button>
+            </div>
 
-        {/* CTA buttons */}
-        <Reveal delay={300}>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
-            <Button href="#pakker" variant="primary" className="text-base px-8 py-3.5 animate-pulse shadow-[0_0_15px_rgba(196,168,130,0.4)]">
-              Se komplett pakke — 349 kr
-            </Button>
-            <Button href="/produkter" variant="outline" className="text-base px-8 py-3.5">
-              Utforsk planleggerne
-            </Button>
+            <div data-hero-fade className="mt-10 flex flex-wrap gap-x-6 gap-y-3">
+              <Tag>Betal med Vipps eller kort</Tag>
+              <Tag>Fyllbare PDF-er</Tag>
+              <Tag>Umiddelbar nedlasting</Tag>
+            </div>
           </div>
-        </Reveal>
+        </div>
 
-        {/* Trust signals */}
-        <Reveal delay={400}>
-          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-brand-medium">
-            <span className="flex items-center gap-1.5">
-              <svg className="h-4 w-4 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              Betal med Vipps eller kort
-            </span>
-            <span className="flex items-center gap-1.5">
-              <svg className="h-4 w-4 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              Fyllbare PDF-er
-            </span>
-            <span className="flex items-center gap-1.5">
-              <svg className="h-4 w-4 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-              </svg>
-              Umiddelbar nedlasting
-            </span>
-          </div>
-        </Reveal>
+        {/* Scroll cue */}
+        <div
+          data-hero-fade
+          className="hidden md:flex absolute bottom-8 left-8 lg:left-16 items-center gap-3 text-[10px] uppercase tracking-[0.3em] text-ink-muted"
+        >
+          <span className="h-px w-10 bg-ink-muted/50" />
+          Scroll
+        </div>
       </div>
 
-      {/* Cover photo */}
-      <Reveal delay={500}>
-        <div className="max-w-3xl mx-auto py-8 md:py-12 px-4 sm:px-6">
+      {/* Cover photo as a floating card */}
+      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-8 md:pb-16">
+        <Parallax amount={90} className="max-w-3xl mx-auto">
           <img
             src="/images/brand/Front page cover photo rev.2.png"
             alt="Studentplanlegger produkter — 25 fyllbare PDF-planleggere"
-            className="w-full h-auto block rounded-lg shadow-xl transition-transform duration-500 hover:scale-[1.01]"
+            width={1320}
+            height={972}
+            className="w-full h-auto block rounded-xl -rotate-1 ring-1 ring-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.65)] transition-transform duration-700 hover:rotate-0"
           />
-        </div>
-      </Reveal>
+        </Parallax>
+      </div>
     </section>
   );
 }
