@@ -5,7 +5,7 @@ import { pakker } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 const includes = [
   "5 daglige planleggere",
@@ -65,7 +65,7 @@ export default function BundleShowcase() {
       <div className="dot-pattern" />
       <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <FadeInOnScroll>
+        <Reveal>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
               ✦ Alt du trenger ✦
@@ -77,10 +77,10 @@ export default function BundleShowcase() {
               {featured.description}
             </p>
           </div>
-        </FadeInOnScroll>
+        </Reveal>
 
         {/* Product preview fan */}
-        <FadeInOnScroll delay={100}>
+        <Reveal delay={100}>
           <div className="flex justify-center items-center py-12 max-w-2xl mx-auto group">
             {[
               { src: "daglig-planlegger.jpg", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
@@ -100,10 +100,10 @@ export default function BundleShowcase() {
               </div>
             ))}
           </div>
-        </FadeInOnScroll>
+        </Reveal>
 
         {/* What's included */}
-        <FadeInOnScroll delay={200}>
+        <Reveal delay={200}>
           <div className="max-w-lg mx-auto mb-10 mt-6">
             <p className="text-sm font-bold text-brand-dark text-center mb-5">
               25 planleggere inkludert:
@@ -129,10 +129,10 @@ export default function BundleShowcase() {
               ))}
             </div>
           </div>
-        </FadeInOnScroll>
+        </Reveal>
 
         {/* Price block */}
-        <FadeInOnScroll delay={300}>
+        <Reveal delay={300}>
           <div className="text-center mb-16">
             <div className="flex items-baseline justify-center gap-3 mb-3">
               <span className="font-[family-name:var(--font-display)] text-6xl md:text-7xl font-bold text-brand-dark text-shadow-sm">
@@ -164,10 +164,10 @@ export default function BundleShowcase() {
               </Button>
             </div>
           </div>
-        </FadeInOnScroll>
+        </Reveal>
 
         {/* Category bundles — compact row */}
-        <FadeInOnScroll delay={400}>
+        <Reveal delay={400}>
           <div className="border-t border-brand-soft/60 pt-10">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium text-center mb-6">
               ✦ Eller velg en pakke ✦
@@ -196,7 +196,7 @@ export default function BundleShowcase() {
               ))}
             </div>
           </div>
-        </FadeInOnScroll>
+        </Reveal>
       </div>
     </section>
   );

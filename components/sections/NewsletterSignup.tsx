@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 export default function NewsletterSignup() {
   const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ export default function NewsletterSignup() {
   return (
     <section className="bg-gradient-to-b from-brand-dark to-[#4a3c31] py-24 md:py-32">
       <div className="mx-auto max-w-xl px-4 sm:px-6 lg:px-8 text-center">
-        <FadeInOnScroll>
+        <Reveal>
           {/* Icon */}
         <div className="h-14 w-14 rounded-full bg-brand-medium/20 flex items-center justify-center mx-auto mb-6">
           <svg
@@ -93,7 +93,7 @@ export default function NewsletterSignup() {
         <p className="text-white/30 text-xs mt-4">
           Vi sender aldri spam. Avmeld når som helst.
         </p>
-        </FadeInOnScroll>
+        </Reveal>
       </div>
     </section>
   );

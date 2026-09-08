@@ -1,4 +1,4 @@
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 export default function HowItWorks() {
   const steps = [
@@ -40,7 +40,7 @@ export default function HowItWorks() {
   return (
     <section className="bg-white py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeInOnScroll>
+        <Reveal>
           <div className="text-center mb-16">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
               ✦ Enkelt og raskt ✦
@@ -49,7 +49,7 @@ export default function HowItWorks() {
               Slik fungerer det
             </h2>
           </div>
-        </FadeInOnScroll>
+        </Reveal>
 
         <div className="relative max-w-4xl mx-auto">
           {/* Connecting line for desktop */}
@@ -57,7 +57,7 @@ export default function HowItWorks() {
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative z-0">
             {steps.map((step, index) => (
-              <FadeInOnScroll key={step.number} delay={index * 150} className="text-center bg-white px-4">
+              <Reveal key={step.number} delay={index * 150} className="text-center bg-white px-4">
                 <div className="h-16 w-16 rounded-full bg-brand-pale border border-brand-soft flex items-center justify-center mx-auto mb-4 animate-float">
                   {step.icon}
                 </div>
@@ -70,7 +70,7 @@ export default function HowItWorks() {
                 <p className="text-sm text-brand-medium leading-relaxed">
                   {step.description}
                 </p>
-              </FadeInOnScroll>
+              </Reveal>
             ))}
           </div>
         </div>

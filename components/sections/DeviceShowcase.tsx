@@ -1,4 +1,4 @@
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 const cards = [
   {
@@ -25,7 +25,7 @@ export default function DeviceShowcase() {
   return (
     <section className="py-24 md:py-32 bg-brand-cream">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
-        <FadeInOnScroll>
+        <Reveal>
           {/* Label */}
           <p className="text-center text-sm font-medium text-brand-accent mb-3">
             ✦ Bruk den overalt ✦
@@ -41,12 +41,12 @@ export default function DeviceShowcase() {
             Fyll ut planleggerne digitalt på PC, Mac, iPad eller nettbrett — eller
             skriv ut på papir. Du velger.
           </p>
-        </FadeInOnScroll>
+        </Reveal>
 
         {/* Three image cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-6">
           {cards.map((card, index) => (
-            <FadeInOnScroll key={card.label} delay={index * 150} className="text-center group">
+            <Reveal key={card.label} delay={index * 150} className="text-center group">
               <div className="rounded-lg overflow-hidden shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:scale-[1.02] mb-6 bg-brand-soft">
                 <img
                   src={card.image}
@@ -58,7 +58,7 @@ export default function DeviceShowcase() {
                 {card.label}
               </h3>
               <p className="text-sm text-brand-medium mt-1">{card.subtext}</p>
-            </FadeInOnScroll>
+            </Reveal>
           ))}
         </div>
       </div>

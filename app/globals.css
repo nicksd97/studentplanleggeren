@@ -93,6 +93,13 @@ html.lenis body {
   pointer-events: none;
 }
 
+/* Reveal: start hidden only for users who will get the scroll animation */
+@media (prefers-reduced-motion: no-preference) {
+  [data-reveal] {
+    opacity: 0;
+  }
+}
+
 /* Film grain + vignette overlays for the dark landing page */
 .grain {
   position: fixed;

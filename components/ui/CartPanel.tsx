@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
+import { scrollStore } from "@/lib/scroll-store";
 import Button from "./Button";
 
 export default function CartPanel({
@@ -14,12 +15,14 @@ export default function CartPanel({
 }) {
   const { items, removeItem, clearCart, totalPrice } = useCart();
 
-  // Lock body scroll when open
+  // Lock body scroll when open (and pause smooth scroll on the landing page)
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
+      scrollStore.lenis?.stop();
       return () => {
         document.body.style.overflow = "";
+        scrollStore.lenis?.start();
       };
     }
   }, [open]);
@@ -57,7 +60,7 @@ export default function CartPanel({
         </div>
 
         {/* Items */}
-        <div className="flex-1 overflow-y-auto px-6 py-4">
+        <div className="flex-1 overflow-y-auto px-6 py-4" data-lenis-prevent>
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center">
               <svg className="h-16 w-16 text-brand-soft mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>

@@ -1,4 +1,4 @@
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 export default function Testimonials() {
   const testimonials = [
@@ -28,7 +28,7 @@ export default function Testimonials() {
   return (
     <section className="bg-brand-cream py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeInOnScroll>
+        <Reveal>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
               ✦ Fra studenter som deg ✦
@@ -37,11 +37,11 @@ export default function Testimonials() {
               Hva andre sier
             </h2>
           </div>
-        </FadeInOnScroll>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <FadeInOnScroll key={i} delay={i * 150}>
+            <Reveal key={i} delay={i * 150}>
               <div
                 className="bg-white rounded-2xl p-6 md:p-8 border-l-[4px] border-brand-accent/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-full flex flex-col"
               >
@@ -70,7 +70,7 @@ export default function Testimonials() {
                   </div>
                 </div>
               </div>
-            </FadeInOnScroll>
+            </Reveal>
           ))}
         </div>
       </div>

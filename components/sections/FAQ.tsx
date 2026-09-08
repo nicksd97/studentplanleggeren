@@ -1,5 +1,5 @@
 import Accordion from "@/components/ui/Accordion";
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 const faqItems = [
   {
@@ -48,7 +48,7 @@ export default function FAQ() {
   return (
     <section id="faq" className="bg-white py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeInOnScroll>
+        <Reveal>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
               ✦ Spørsmål? ✦
@@ -57,10 +57,10 @@ export default function FAQ() {
               Ofte stilte spørsmål
             </h2>
           </div>
-        </FadeInOnScroll>
-        <FadeInOnScroll delay={150}>
+        </Reveal>
+        <Reveal delay={150}>
           <Accordion items={faqItems} />
-        </FadeInOnScroll>
+        </Reveal>
       </div>
     </section>
   );

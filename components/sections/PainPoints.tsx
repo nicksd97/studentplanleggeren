@@ -1,4 +1,4 @@
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 export default function PainPoints() {
   const cards = [
@@ -37,7 +37,7 @@ export default function PainPoints() {
   return (
     <section className="bg-white py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <FadeInOnScroll>
+        <Reveal>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
               ✦ Kjenner du deg igjen? ✦
@@ -46,11 +46,11 @@ export default function PainPoints() {
               For deg som...
             </h2>
           </div>
-        </FadeInOnScroll>
+        </Reveal>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {cards.map((card, i) => (
-            <FadeInOnScroll key={i} delay={i * 100}>
+            <Reveal key={i} delay={i * 100}>
               <div
                 className="bg-brand-cream rounded-2xl p-6 md:p-8 border border-transparent transition-all duration-300 hover:border-brand-accent hover:shadow-lg hover:bg-gradient-to-br hover:from-white hover:to-brand-pale/30 h-full"
               >
@@ -64,7 +64,7 @@ export default function PainPoints() {
                   {card.description}
                 </p>
               </div>
-            </FadeInOnScroll>
+            </Reveal>
           ))}
         </div>
       </div>

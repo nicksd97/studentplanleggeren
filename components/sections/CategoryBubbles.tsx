@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { categoryGroups } from "@/lib/products";
-import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import Reveal from "@/components/landing/Reveal";
 
 const categories = [
   { slug: "daglig", label: "Daglig", color: "bg-[#F5E6D3]" },
@@ -29,16 +29,16 @@ export default function CategoryBubbles() {
   return (
     <section className="bg-brand-cream py-24 md:py-32">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-        <FadeInOnScroll>
+        <Reveal>
           <p className="text-center text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
             ✦ Utforsk kategoriene ✦
           </p>
           <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark text-center mb-10 text-shadow-sm">
             Hva trenger du?
           </h2>
-        </FadeInOnScroll>
+        </Reveal>
 
-        <FadeInOnScroll delay={100}>
+        <Reveal delay={100}>
           <div className="flex flex-wrap justify-center gap-4">
             {categories.map((cat) => (
               <div
@@ -74,7 +74,7 @@ export default function CategoryBubbles() {
               </div>
             ))}
           </div>
-        </FadeInOnScroll>
+        </Reveal>
       </div>
     </section>
   );
