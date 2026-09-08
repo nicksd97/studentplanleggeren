@@ -62,6 +62,7 @@ export default function HowItWorks() {
                 >
                   {step.number}
                 </span>
+                <span className="sr-only">Steg {step.number}</span>
                 <div className="h-12 w-12 shrink-0 rounded-full bg-brand-accent/10 ring-1 ring-brand-accent/25 flex items-center justify-center">
                   {step.icon}
                 </div>

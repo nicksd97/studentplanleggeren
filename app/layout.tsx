@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import { CartProvider } from "@/lib/cart-context";
 import "./globals.css";
@@ -59,6 +60,10 @@ export default function RootLayout({
       className={`${playfair.variable} ${dmSans.variable} antialiased`}
     >
       <body className="min-h-screen">
+        {/* Marks that scripts run, so CSS-only pre-hides (landing reveals) never strand a page without JS */}
+        <Script id="js-flag" strategy="beforeInteractive">
+          {`document.documentElement.setAttribute("data-js","")`}
+        </Script>
         <CartProvider>{children}</CartProvider>
       </body>
     </html>

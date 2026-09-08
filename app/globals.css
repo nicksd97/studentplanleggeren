@@ -90,14 +90,15 @@ html.lenis body {
   pointer-events: none;
 }
 
-/* Reveal + hero entrance: start hidden only for users who will get the animation.
-   GSAP takes over from exactly this state, so nothing flashes at hydration. */
+/* Reveal + hero entrance: start hidden only when scripts run (html[data-js], set by
+   a beforeInteractive script) and the user will get the animation. GSAP takes over
+   from exactly this state, so nothing flashes at hydration. */
 @media (prefers-reduced-motion: no-preference) {
-  [data-reveal],
-  [data-hero-fade] {
+  html[data-js] [data-reveal],
+  html[data-js] [data-hero-fade] {
     opacity: 0;
   }
-  [data-hero-line] {
+  html[data-js] [data-hero-line] {
     transform: translateY(110%);
   }
 }

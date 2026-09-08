@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import { scrollStore } from "@/lib/scroll-store";
 import { particleVertex, particleFragment } from "./shaders";
 
@@ -50,6 +50,13 @@ export default function Particles({
   const material = useRef<THREE.ShaderMaterial>(null);
 
   const geometry = useMemo(() => buildGeometry(count), [count]);
+  const gl = useThree((s) => s.gl);
+
+  // Point size depends on the pixel ratio; set it once so the static
+  // (reduced-motion) scene is right even though useFrame never runs
+  useLayoutEffect(() => {
+    if (material.current) material.current.uniforms.uPixelRatio.value = gl.getPixelRatio();
+  }, [gl]);
 
   const uniforms = useMemo(
     () => ({

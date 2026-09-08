@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import * as THREE from "three";
-import { SHEET_H, SHEET_W, type Transform } from "./poses";
+import { SHEET_H, SHEET_W } from "./poses";
 
 /** Shared, slightly curled paper geometry (edges bend gently backwards) */
 function makeSheetGeometry() {
@@ -24,13 +24,14 @@ function getSheetGeometry() {
 }
 
 /**
- * One planner page: the product image on the front, plain paper on the back.
+* One planner page: the product image on the front, plain paper on the back.
+ * Rendered at the origin; the parent group carries the pose.
  */
-export default function Sheet({ texture, transform }: { texture: THREE.Texture; transform: Transform }) {
+export default function Sheet({ texture }: { texture: THREE.Texture }) {
   const geometry = useMemo(() => getSheetGeometry(), []);
 
   return (
-    <group position={transform.pos} rotation={transform.rot} scale={transform.scale}>
+    <group>
       <mesh geometry={geometry}>
         <meshStandardMaterial map={texture} roughness={0.85} metalness={0} />
       </mesh>

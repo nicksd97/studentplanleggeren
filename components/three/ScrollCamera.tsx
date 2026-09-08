@@ -11,11 +11,10 @@ type CamKey = { pos: number[]; look: number[] };
 // Gentle drift and tilt; the shapes do most of the travelling
 const CAMERA_KEYS: Keyframe<CamKey>[] = [
   { p: 0.0, pos: [0, 0, 9], look: [0, 0, 0] },
-  { p: 0.15, pos: [-0.8, -0.4, 8.5], look: [0.3, 0, 0] },
-  { p: 0.35, pos: [0.6, -0.6, 11], look: [0, -0.4, 0] },
-  { p: 0.55, pos: [0, -0.3, 8.5], look: [0, -1, -1] },
-  { p: 0.75, pos: [0.4, 0.8, 10], look: [0, 1.5, -2] },
-  { p: 1.0, pos: [0, 1.2, 12], look: [0, 2.5, -3] },
+  { p: 0.2, pos: [-0.4, -0.2, 9], look: [0.2, 0, 0] },
+  { p: 0.5, pos: [0.3, -0.3, 9.6], look: [0, -0.3, 0] },
+  { p: 0.75, pos: [0.2, 0.3, 9.4], look: [0, 0.4, -1] },
+  { p: 1.0, pos: [0, 0.6, 10], look: [0, 1, -2] },
 ];
 
 export default function ScrollCamera({

@@ -3,7 +3,6 @@
 import { useLayoutEffect, useRef } from "react";
 import * as THREE from "three";
 import { RoundedBox } from "@react-three/drei";
-import type { Transform } from "./poses";
 
 const COVER_W = 2.15;
 const COVER_H = 2.95;
@@ -12,17 +11,10 @@ const RING_COUNT = 14;
 /**
  * A closed spiral-bound planner built from primitives: cream page block,
  * two rounded covers in dark bronze, gold rings along the spine and the
- * wordmark as a softly glowing gold decal on the front.
+ * wordmark as a softly glowing gold decal on the front. Rendered at the
+ * origin; the parent group carries the pose.
  */
-export default function Notebook({
-  logo,
-  transform,
-  low,
-}: {
-  logo: THREE.Texture;
-  transform: Transform;
-  low: boolean;
-}) {
+export default function Notebook({ logo, low }: { logo: THREE.Texture; low: boolean }) {
   const rings = useRef<THREE.InstancedMesh>(null);
 
   // Lay the rings out along the left edge (the spine), wrapping around it
@@ -43,7 +35,7 @@ export default function Notebook({
   const segments = low ? 2 : 4;
 
   return (
-    <group position={transform.pos} rotation={transform.rot} scale={transform.scale}>
+    <group>
       {/* Page block */}
       <mesh position={[0.06, 0, 0]}>
         <boxGeometry args={[COVER_W - 0.12, COVER_H - 0.1, 0.3]} />

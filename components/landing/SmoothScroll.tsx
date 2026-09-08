@@ -12,6 +12,15 @@ if (typeof window !== "undefined") {
 
 const HEADER_OFFSET = -64;
 
+/** Element for a "#id" hash; ids need no selector escaping, bad hashes are ignored */
+function elementForHash(hash: string): HTMLElement | null {
+  try {
+    return document.getElementById(decodeURIComponent(hash.slice(1)));
+  } catch {
+    return null;
+  }
+}
+
 /**
  * Scroll plumbing for the landing page. Renders nothing.
  * - Always (unless reduced motion): a ScrollTrigger that writes page progress
@@ -57,6 +66,7 @@ export default function SmoothScroll() {
         pendingImages.forEach((img) => img.removeEventListener("load", scheduleRefresh));
         progressTrigger.kill();
         scrollStore.progress = 0;
+        document.documentElement.style.removeProperty("--glow");
       },
     ];
 
@@ -71,12 +81,14 @@ export default function SmoothScroll() {
 
       // Route same-page anchor links (#pakker, /#faq …) through Lenis
       const onClick = (e: MouseEvent) => {
+        // Leave modified clicks and new-tab links to the browser
+        if (e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
         const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[href]");
-        if (!anchor) return;
+        if (!anchor || (anchor.target && anchor.target !== "_self") || anchor.hasAttribute("download")) return;
         const href = anchor.getAttribute("href") ?? "";
         const hash = href.startsWith("#") ? href : href.startsWith("/#") ? href.slice(1) : null;
         if (!hash || hash === "#") return;
-        const target = document.querySelector<HTMLElement>(hash);
+        const target = elementForHash(hash);
         if (!target) return;
         e.preventDefault();
         lenis.scrollTo(target, { offset: HEADER_OFFSET });
@@ -85,10 +97,11 @@ export default function SmoothScroll() {
       document.addEventListener("click", onClick, true);
 
       // Honour a hash present on load (e.g. arriving from /produkter via /#pakker)
+      let hashRaf = 0;
       if (location.hash) {
-        const target = document.querySelector<HTMLElement>(location.hash);
+        const target = elementForHash(location.hash);
         if (target) {
-          requestAnimationFrame(() => {
+          hashRaf = requestAnimationFrame(() => {
             ScrollTrigger.refresh();
             lenis.scrollTo(target, { offset: HEADER_OFFSET, immediate: true });
           });
@@ -96,9 +109,16 @@ export default function SmoothScroll() {
       }
 
       cleanups.push(() => {
+        cancelAnimationFrame(hashRaf);
         document.removeEventListener("click", onClick, true);
         gsap.ticker.remove(tick);
         lenis.destroy();
+        // Lenis arms a 400ms timer on native scroll (Next scrolls to top on
+        // navigation) that re-adds its class after destroy; clear it and sweep up
+        window.clearTimeout((lenis as unknown as { _resetVelocityTimeout?: number })._resetVelocityTimeout);
+        window.setTimeout(() => {
+          document.documentElement.classList.remove("lenis", "lenis-smooth", "lenis-scrolling", "lenis-stopped");
+        }, 500);
         scrollStore.lenis = null;
       });
     }

@@ -11,10 +11,16 @@ import ScrollCamera from "./ScrollCamera";
 const SHOW_NOTEBOOK = true;
 
 /** If a texture fails to load, drop the scene instead of taking the page down */
-class SceneErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+class SceneErrorBoundary extends Component<
+  { children: ReactNode; onError: () => void },
+  { failed: boolean }
+> {
   state = { failed: false };
   static getDerivedStateFromError() {
     return { failed: true };
+  }
+  componentDidCatch() {
+    this.props.onError();
   }
   render() {
     return this.state.failed ? null : this.props.children;
@@ -31,6 +37,7 @@ export default function HeroScene() {
   const [ready, setReady] = useState(false);
   const [lost, setLost] = useState(false);
   const onReady = useCallback(() => setReady(true), []);
+  const onSceneError = useCallback(() => setLost(true), []);
 
   if (!tier.webgl || lost) return null;
 
@@ -62,7 +69,7 @@ export default function HeroScene() {
         }}
       >
         <Particles count={tier.low ? 500 : 1800} animate={animate} />
-        <SceneErrorBoundary>
+        <SceneErrorBoundary onError={onSceneError}>
           <Suspense fallback={null}>
             <PlannerScene low={tier.low} animate={animate} notebook={SHOW_NOTEBOOK} onReady={onReady} />
           </Suspense>

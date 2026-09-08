@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Playwright MCP session logs
 .playwright-mcp/
+
+# Review/debug screenshots must not live at the repo root
+/*.png
