@@ -27,7 +27,7 @@ if (typeof window !== "undefined") {
 }
 
 /** How far the front cover swings open (radians about the spine) */
-const COVER_OPEN_ANGLE = -2.8;
+const COVER_OPEN_ANGLE = -2.1;
 
 /** Flat, tweenable copy of a Transform (GSAP animates plain numbers) */
 type Live = { x: number; y: number; z: number; rx: number; ry: number; rz: number; s: number };
