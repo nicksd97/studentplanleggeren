@@ -27,9 +27,6 @@ if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
 }
 
-/** Device models are built but not choreographed yet; flip to preview them in the hero */
-const DEVICES_PREVIEW = false;
-
 /** How far the front cover swings open (radians about the spine) */
 const COVER_OPEN_ANGLE = -2.1;
 
@@ -47,8 +44,9 @@ function apply(group: THREE.Object3D | null, l: Live) {
 }
 
 /**
- * The product scene: a spiral planner notebook and floating planner sheets
- * textured with real product pages.
+ * The product scene: a spiral planner notebook, floating planner sheets
+ * textured with real product pages, and a laptop and tablet showing pages on
+ * their screens in the "alle enheter" section.
  * - On load the notebook opens its cover and the first pages slide out (~1.4s).
  * - Then a scroll-scrubbed GSAP timeline (lagged, eased, sheets staggered)
  *   plays one pose per section from poses.ts, so nothing ever snaps.
@@ -98,9 +96,13 @@ export default function PlannerScene({
     notebook: toLive(poses[0].notebook),
     cover: { open: poses[0].cover },
     sheets: poses[0].sheets.map(toLive),
+    laptop: toLive(poses[0].devices.laptop),
+    tablet: toLive(poses[0].devices.tablet),
   }));
   const notebookRef = useRef<THREE.Group>(null);
   const coverRef = useRef<THREE.Group>(null);
+  const laptopRef = useRef<THREE.Group>(null);
+  const tabletRef = useRef<THREE.Group>(null);
   const sheetRefs = useRef<(THREE.Group | null)[]>([]);
 
   useGSAP(
@@ -126,6 +128,8 @@ export default function PlannerScene({
           const dur = to.p - from.p;
           tl.to(live.notebook, { ...toLive(to.notebook), duration: dur * 0.85 }, from.p);
           tl.to(live.cover, { open: to.cover, duration: dur * 0.6 }, from.p);
+          tl.to(live.laptop, { ...toLive(to.devices.laptop), duration: dur * 0.75 }, from.p);
+          tl.to(live.tablet, { ...toLive(to.devices.tablet), duration: dur * 0.75 }, from.p + dur * 0.08);
           for (let i = 0; i < sheetCount; i++) {
             tl.to(live.sheets[i], { ...toLive(to.sheets[i]), duration: dur * 0.6 }, from.p + i * dur * 0.05);
           }
@@ -160,6 +164,8 @@ export default function PlannerScene({
   useFrame(() => {
     apply(notebookRef.current, live.notebook);
     if (coverRef.current) coverRef.current.rotation.y = COVER_OPEN_ANGLE * live.cover.open;
+    apply(laptopRef.current, live.laptop);
+    apply(tabletRef.current, live.tablet);
     for (let i = 0; i < sheetCount; i++) apply(sheetRefs.current[i], live.sheets[i]);
   });
 
@@ -178,15 +184,18 @@ export default function PlannerScene({
         </Float>
       )}
 
-      {DEVICES_PREVIEW && textures.length > 1 && (
-        <>
-          <group position={[-4.3, -1.2, -3]} rotation={[0.12, 0.45, 0]}>
+      {/* Devices: tablet on every tier, laptop on desktop only */}
+      <Float enabled={animate} speed={0.9} rotationIntensity={0.08} floatIntensity={0.3}>
+        <group ref={tabletRef}>
+          <Tablet texture={textures[0]} low={low} />
+        </group>
+      </Float>
+      {!low && textures.length > 1 && (
+        <Float enabled={animate} speed={0.8} rotationIntensity={0.06} floatIntensity={0.25}>
+          <group ref={laptopRef}>
             <Laptop texture={textures[1]} low={low} />
           </group>
-          <group position={[-0.5, -0.1, -2.2]} rotation={[0.05, -0.2, 0.04]}>
-            <Tablet texture={textures[0]} low={low} />
-          </group>
-        </>
+        </Float>
       )}
 
       {textures.map((texture, i) => (
