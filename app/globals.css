@@ -35,9 +35,12 @@
   --color-line: #E5E2DD;
 }
 
+:root {
+  --landing-bg: #0A0908;
+}
+
 .theme-dark,
 html[data-theme="dark"] {
-  --landing-bg: #0A0908;
   --color-ink: #F5F0EA;
   --color-ink-muted: #A89B8C;
   --color-surface: rgba(255, 255, 255, 0.04);
@@ -47,7 +50,6 @@ html[data-theme="dark"] {
 }
 
 /* Temporary comparison switch (/?bg=warm) — removed once a background is chosen */
-.theme-dark[data-bg="warm"],
 html[data-bg="warm"] {
   --landing-bg: #1A1410;
 }
