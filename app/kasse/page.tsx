@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useCart } from "@/lib/cart-context";
@@ -10,7 +9,6 @@ import Button from "@/components/ui/Button";
 
 export default function KassePage() {
   const { items, totalPrice, removeItem, clearCart } = useCart();
-  const router = useRouter();
 
   const [form, setForm] = useState({
     fornavn: "",
@@ -54,7 +52,10 @@ export default function KassePage() {
     setPaymentError("");
 
     try {
-      const response = await fetch("/api/orders", {
+      const endpoint =
+        provider === "stripe" ? "/api/checkout/stripe" : "/api/checkout/vipps";
+
+      const response = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -68,18 +69,18 @@ export default function KassePage() {
             type: item.type,
           })),
           amountNok: totalPrice,
-          paymentProvider: provider,
         }),
       });
 
       const data = await response.json();
 
-      if (data.success) {
+      if (response.ok && data.checkoutUrl) {
         clearCart();
-        router.push(`/takk?token=${data.downloadToken}`);
-      } else {
-        setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
+        window.location.href = data.checkoutUrl;
+        return;
       }
+
+      setPaymentError(data.error || "Noe gikk galt. Pr\u00f8v igjen.");
     } catch {
       setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
     } finally {

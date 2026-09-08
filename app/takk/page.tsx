@@ -20,30 +20,72 @@ interface OrderData {
 
 function TakkContent() {
   const searchParams = useSearchParams();
-  const token = searchParams.get("token");
+  const tokenParam = searchParams.get("token");
+  const provider = searchParams.get("provider");
+  const sessionId = searchParams.get("session_id");
+  const reference = searchParams.get("reference");
+  const [token, setToken] = useState<string | null>(tokenParam);
   const [order, setOrder] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    if (!token) {
-      setLoading(false);
-      setError(true);
-      return;
+    let cancelled = false;
+
+    async function resolveToken(): Promise<string | null> {
+      if (tokenParam) return tokenParam;
+      if (provider === "stripe" && sessionId) {
+        const res = await fetch(
+          `/api/checkout/stripe/verify?session_id=${encodeURIComponent(sessionId)}`
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.downloadToken ?? null;
+      }
+      if (provider === "vipps" && reference) {
+        const res = await fetch(
+          `/api/checkout/vipps/verify?reference=${encodeURIComponent(reference)}`
+        );
+        if (!res.ok) return null;
+        const data = await res.json();
+        return data.downloadToken ?? null;
+      }
+      return null;
     }
 
-    fetch(`/api/orders/verify?token=${token}`)
-      .then((res) => res.json())
-      .then((data) => {
+    async function load() {
+      const resolved = await resolveToken();
+      if (cancelled) return;
+      if (!resolved) {
+        setError(true);
+        setLoading(false);
+        return;
+      }
+      setToken(resolved);
+      try {
+        const res = await fetch(
+          `/api/orders/verify?token=${encodeURIComponent(resolved)}`
+        );
+        const data = await res.json();
+        if (cancelled) return;
         if (data.error) {
           setError(true);
         } else {
           setOrder(data);
         }
-      })
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, [token]);
+      } catch {
+        if (!cancelled) setError(true);
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [tokenParam, provider, sessionId, reference]);
 
   if (loading) {
     return (
