@@ -10,6 +10,7 @@ import { Float, useTexture } from "@react-three/drei";
 import { scrollStore } from "@/lib/scroll-store";
 import Notebook from "./Notebook";
 import Sheet from "./Sheet";
+import { Laptop, Tablet } from "./Devices";
 import {
   LOGO_TEXTURE,
   NEAR_SHEETS,
@@ -25,6 +26,9 @@ import {
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP, ScrollTrigger);
 }
+
+/** Device models are built but not choreographed yet; flip to preview them in the hero */
+const DEVICES_PREVIEW = false;
 
 /** How far the front cover swings open (radians about the spine) */
 const COVER_OPEN_ANGLE = -2.1;
@@ -172,6 +176,17 @@ export default function PlannerScene({
             <Notebook logo={logo} low={low} coverRef={coverRef} />
           </group>
         </Float>
+      )}
+
+      {DEVICES_PREVIEW && textures.length > 1 && (
+        <>
+          <group position={[-4.3, -1.2, -3]} rotation={[0.12, 0.45, 0]}>
+            <Laptop texture={textures[1]} low={low} />
+          </group>
+          <group position={[-0.5, -0.1, -2.2]} rotation={[0.05, -0.2, 0.04]}>
+            <Tablet texture={textures[0]} low={low} />
+          </group>
+        </>
       )}
 
       {textures.map((texture, i) => (
