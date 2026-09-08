@@ -1,12 +1,17 @@
-// Generates small WebP textures for the landing-page 3D scene from the full-size
-// product images. Run once after adding/changing products:  node scripts/generate-3d-textures.mjs
+// Generates WebP textures for the landing-page 3D scene from the full-size
+// product images. Two tiers: 640px for far sheets and phones, 1280px ("-lg")
+// for the sheets nearest the camera on desktop.
+// Run once after adding/changing products:  node scripts/generate-3d-textures.mjs
 import sharp from "sharp";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
 
 const SRC = "public/images/products";
 const OUT = "public/images/products/3d";
-const WIDTH = 640;
+const TIERS = [
+  { width: 640, suffix: "", quality: 80 },
+  { width: 1280, suffix: "-lg", quality: 82 },
+];
 
 const products = [
   "daglig-planlegger",
@@ -22,12 +27,14 @@ const products = [
 await mkdir(OUT, { recursive: true });
 
 for (const name of products) {
-  const out = path.join(OUT, `${name}.webp`);
-  const info = await sharp(path.join(SRC, `${name}.jpg`))
-    .resize({ width: WIDTH })
-    .webp({ quality: 80 })
-    .toFile(out);
-  console.log(`${name}.webp ${info.width}x${info.height} ${Math.round(info.size / 1024)}KB`);
+  for (const tier of TIERS) {
+    const out = path.join(OUT, `${name}${tier.suffix}.webp`);
+    const info = await sharp(path.join(SRC, `${name}.jpg`))
+      .resize({ width: tier.width })
+      .webp({ quality: tier.quality })
+      .toFile(out);
+    console.log(`${name}${tier.suffix}.webp ${info.width}x${info.height} ${Math.round(info.size / 1024)}KB`);
+  }
 }
 
 // Brand wordmark for the notebook cover as a white alpha mask, so the 3D
