@@ -1,4 +1,5 @@
 import Reveal from "@/components/landing/Reveal";
+import Eyebrow from "@/components/landing/Eyebrow";
 
 export default function HowItWorks() {
   const steps = [
@@ -38,42 +39,43 @@ export default function HowItWorks() {
   ];
 
   return (
-    <section className="bg-white py-24 md:py-32">
+    <section className="relative py-24 md:py-36">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="text-center mb-16">
-            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Enkelt og raskt ✦
-            </p>
-            <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
-              Slik fungerer det
-            </h2>
-          </div>
+          <Eyebrow n="06">Enkelt og raskt</Eyebrow>
+          <h2 className="mt-4 font-[family-name:var(--font-display)] font-bold leading-[0.95] tracking-[-0.02em] text-[clamp(2.5rem,6vw,5.5rem)] text-ink">
+            Slik <span className="italic font-normal text-ink/80">fungerer</span> det
+          </h2>
         </Reveal>
 
-        <div className="relative max-w-4xl mx-auto">
-          {/* Connecting line for desktop */}
-          <div className="hidden md:block absolute top-8 left-[15%] right-[15%] border-t-[1.5px] border-dashed border-brand-soft -z-10" />
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-4 relative z-0">
-            {steps.map((step, index) => (
-              <Reveal key={step.number} delay={index * 150} className="text-center bg-white px-4">
-                <div className="h-16 w-16 rounded-full bg-brand-pale border border-brand-soft flex items-center justify-center mx-auto mb-4 animate-float">
+        {/* Editorial numbered list: hairline, display numeral, icon disc, title, copy */}
+        <Reveal
+          stagger={0.12}
+          className="mt-16 md:mt-24 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8 lg:gap-12"
+        >
+          {steps.map((step) => (
+            <div key={step.number} className="border-t border-line pt-8">
+              <div className="flex items-start justify-between gap-4">
+                <span
+                  aria-hidden="true"
+                  className="font-[family-name:var(--font-display)] leading-none text-5xl md:text-6xl text-brand-accent/60"
+                >
+                  {step.number}
+                </span>
+                <div className="h-12 w-12 shrink-0 rounded-full bg-brand-accent/10 ring-1 ring-brand-accent/25 flex items-center justify-center">
                   {step.icon}
                 </div>
-                <span className="text-base font-bold text-brand-accent mb-1 block">
-                  Steg {step.number}
-                </span>
-                <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-sm text-brand-medium leading-relaxed">
-                  {step.description}
-                </p>
-              </Reveal>
-            ))}
-          </div>
-        </div>
+              </div>
+
+              <h3 className="mt-8 font-[family-name:var(--font-display)] text-2xl font-bold text-ink">
+                {step.title}
+              </h3>
+              <p className="mt-3 max-w-sm text-base text-ink-muted leading-relaxed">
+                {step.description}
+              </p>
+            </div>
+          ))}
+        </Reveal>
       </div>
     </section>
   );

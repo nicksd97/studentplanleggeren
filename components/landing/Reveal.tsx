@@ -37,6 +37,8 @@ export default function Reveal({
       const mm = gsap.matchMedia();
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         const targets = stagger ? Array.from(el.children) : el;
+        // In stagger mode the children animate, so the wrapper itself must be shown
+        if (stagger) gsap.set(el, { autoAlpha: 1 });
         gsap.fromTo(
           targets,
           { autoAlpha: 0, y },

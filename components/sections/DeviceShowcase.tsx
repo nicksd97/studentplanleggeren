@@ -1,3 +1,4 @@
+import Eyebrow from "@/components/landing/Eyebrow";
 import Reveal from "@/components/landing/Reveal";
 
 const cards = [
@@ -23,44 +24,46 @@ const cards = [
 
 export default function DeviceShowcase() {
   return (
-    <section className="py-24 md:py-32 bg-brand-cream">
-      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section className="relative py-24 md:py-36">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {/* Section header */}
         <Reveal>
-          {/* Label */}
-          <p className="text-center text-sm font-medium text-brand-accent mb-3">
-            ✦ Bruk den overalt ✦
-          </p>
+          <Eyebrow n="02">Bruk den overalt</Eyebrow>
 
-          {/* Heading */}
-          <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark text-center mb-4 text-shadow-sm">
-            Fungerer på alle enheter
+          <h2 className="mt-4 font-[family-name:var(--font-display)] font-bold leading-[0.95] tracking-[-0.02em] text-[clamp(2.5rem,6vw,5.5rem)] text-ink">
+            Fungerer på <span className="italic font-normal text-ink/80">alle</span> enheter
           </h2>
 
-          {/* Subtext */}
-          <p className="text-brand-medium text-center max-w-xl mx-auto mb-16">
+          <p className="mt-6 max-w-xl text-lg text-ink-muted leading-relaxed">
             Fyll ut planleggerne digitalt på PC, Mac, iPad eller nettbrett — eller
             skriv ut på papir. Du velger.
           </p>
         </Reveal>
 
         {/* Three image cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 md:gap-6">
-          {cards.map((card, index) => (
-            <Reveal key={card.label} delay={index * 150} className="text-center group">
-              <div className="rounded-lg overflow-hidden shadow-sm transition-all duration-500 group-hover:shadow-xl group-hover:scale-[1.02] mb-6 bg-brand-soft">
+        <Reveal
+          stagger={0.12}
+          className="mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6"
+        >
+          {cards.map((card) => (
+            <div
+              key={card.label}
+              className="group rounded-2xl border border-line bg-surface backdrop-blur-sm p-6 md:p-8 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1 transition-all duration-500"
+            >
+              <div className="overflow-hidden rounded-xl bg-white/[0.04] ring-1 ring-white/10">
                 <img
                   src={card.image}
                   alt={card.alt}
-                  className="w-full h-60 object-contain"
+                  className="w-full h-60 object-contain transition-transform duration-500 group-hover:scale-[1.02]"
                 />
               </div>
-              <h3 className="font-[family-name:var(--font-display)] text-lg font-black text-brand-dark mb-2">
+              <h3 className="mt-6 font-[family-name:var(--font-display)] text-xl font-bold text-ink">
                 {card.label}
               </h3>
-              <p className="text-sm text-brand-medium mt-1">{card.subtext}</p>
-            </Reveal>
+              <p className="mt-2 text-sm text-ink-muted">{card.subtext}</p>
+            </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

@@ -3,8 +3,8 @@
 import { useState } from "react";
 import { pakker } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
-import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
+import Eyebrow from "@/components/landing/Eyebrow";
 import Reveal from "@/components/landing/Reveal";
 
 const includes = [
@@ -18,6 +18,13 @@ const includes = [
   "12 papirmaler",
 ];
 
+const fan = [
+  { src: "daglig-planlegger.jpg", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
+  { src: "ukentlig-plan.jpg", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
+  { src: "pomodoro-planlegger.jpg", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
+  { src: "vane-tracker.jpg", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
+];
+
 function BundleButton({
   bundleId,
   label,
@@ -26,7 +33,7 @@ function BundleButton({
 }: {
   bundleId: string;
   label: string;
-  variant?: "primary" | "secondary";
+  variant?: "primary" | "ghost";
   className?: string;
 }) {
   const { addItem, isInCart } = useCart();
@@ -45,7 +52,7 @@ function BundleButton({
       price: bundle.price,
       type: "bundle",
     });
-    setFeedback("Lagt til \u2713");
+    setFeedback("Lagt til ✓");
     setTimeout(() => setFeedback(null), 2000);
   }
 
@@ -56,147 +63,152 @@ function BundleButton({
   );
 }
 
+function Check() {
+  return (
+    <svg
+      className="h-5 w-5 shrink-0 text-brand-accent"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+      strokeWidth={2.5}
+      aria-hidden="true"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
 export default function BundleShowcase() {
   const featured = pakker.find((p) => p.featured)!;
   const categoryBundles = pakker.filter((p) => !p.featured);
 
   return (
-    <section id="pakker" className="relative bg-brand-pale py-24 md:py-32">
-      <div className="dot-pattern" />
-      <div className="relative mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <section id="pakker" className="relative py-24 md:py-36">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <Reveal>
-          <div className="text-center mb-12">
-            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Alt du trenger ✦
-            </p>
-            <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-brand-dark mb-4 text-shadow-sm">
-              Studentplanlegger Komplett
-            </h2>
-            <p className="text-brand-medium max-w-2xl mx-auto">
-              {featured.description}
-            </p>
-          </div>
+          <Eyebrow n="05">Alt du trenger</Eyebrow>
+          <h2 className="mt-4 font-[family-name:var(--font-display)] font-bold leading-[0.95] tracking-[-0.02em] text-[clamp(2.5rem,6vw,5.5rem)] text-ink">
+            Studentplanlegger <span className="italic font-normal text-ink/80">Komplett</span>
+          </h2>
+          <p className="mt-6 max-w-xl text-lg text-ink-muted leading-relaxed">
+            {featured.description}
+          </p>
         </Reveal>
 
-        {/* Product preview fan */}
-        <Reveal delay={100}>
-          <div className="flex justify-center items-center py-12 max-w-2xl mx-auto group">
-            {[
-              { src: "daglig-planlegger.jpg", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
-              { src: "ukentlig-plan.jpg", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
-              { src: "pomodoro-planlegger.jpg", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
-              { src: "vane-tracker.jpg", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
-            ].map((item, i) => (
-              <div
-                key={item.src}
-                className={`w-52 h-72 rounded-md border-[3px] border-white shadow-xl overflow-hidden shrink-0 bg-white transition-all duration-500 ease-out ${item.rotate} ${item.hover} ${i > 0 ? "-ml-8" : ""}`}
-              >
-                <img
-                  src={`/images/products/${item.src}`}
-                  alt=""
-                  className="w-full h-full object-cover object-top"
-                />
-              </div>
-            ))}
-          </div>
-        </Reveal>
-
-        {/* What's included */}
-        <Reveal delay={200}>
-          <div className="max-w-lg mx-auto mb-10 mt-6">
-            <p className="text-sm font-bold text-brand-dark text-center mb-5">
-              25 planleggere inkludert:
-            </p>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-              {includes.map((item) => (
-                <div key={item} className="flex items-center gap-2">
-                  <svg
-                    className="h-5 w-5 text-brand-accent shrink-0"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="text-base font-medium text-brand-dark">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
-
-        {/* Price block */}
-        <Reveal delay={300}>
-          <div className="text-center mb-16">
-            <div className="flex items-baseline justify-center gap-3 mb-3">
-              <span className="font-[family-name:var(--font-display)] text-6xl md:text-7xl font-bold text-brand-dark text-shadow-sm">
-                {featured.price}
-              </span>
-              <span className="text-brand-dark/70 text-2xl font-bold">kr</span>
-              <span className="text-brand-medium/60 line-through text-xl">
-                {featured.originalPrice} kr
-              </span>
-            </div>
-            <div className="mb-8">
-              <span className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-brand-accent text-brand-dark font-bold shadow-sm">Spar {featured.savingsPercent}%</span>
-            </div>
-
-            {/* CTAs */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <BundleButton
-                bundleId="komplett"
-                label={`Kjøp komplett pakke — ${featured.price} kr`}
-                variant="primary"
-                className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-              />
-              <Button
-                href="/produkter"
-                variant="outline"
-                className="text-lg px-10 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 bg-white/50"
-              >
-                Se alle 25 planleggere
-              </Button>
-            </div>
-          </div>
-        </Reveal>
-
-        {/* Category bundles — compact row */}
-        <Reveal delay={400}>
-          <div className="border-t border-brand-soft/60 pt-10">
-            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium text-center mb-6">
-              ✦ Eller velg en pakke ✦
-            </p>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-              {categoryBundles.map((bundle) => (
+        {/* Product fan + what's included / price */}
+        <div className="mt-16 grid grid-cols-1 gap-14 md:mt-20 lg:grid-cols-2 lg:items-center lg:gap-16">
+          {/* Product preview fan */}
+          <Reveal delay={100} className="relative">
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute left-1/2 top-1/2 h-[55%] w-[70%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-brand-accent/10 blur-3xl"
+            />
+            <div className="group relative flex items-center justify-center py-6 lg:py-10">
+              {fan.map((item, i) => (
                 <div
-                  key={bundle.id}
-                  className="flex items-center justify-between gap-3 bg-white rounded-xl border border-brand-soft px-5 py-4 transition-all duration-300 hover:border-brand-accent hover:shadow-md hover:-translate-y-0.5 group"
+                  key={item.src}
+                  className={`aspect-[13/18] w-[31%] shrink-0 overflow-hidden rounded-lg border-[3px] border-white/10 bg-white/[0.04] shadow-2xl transition-all duration-500 ease-out ${item.rotate} ${item.hover} ${i > 0 ? "-ml-[8%]" : ""}`}
                 >
-                  <div className="min-w-0">
-                    <p className="text-sm font-bold text-brand-dark truncate group-hover:text-brand-medium transition-colors">
-                      {bundle.name}
-                    </p>
-                    <p className="text-xs text-brand-medium mt-0.5">
-                      {bundle.productIds.length} planleggere · {bundle.price} kr
-                    </p>
-                  </div>
-                  <BundleButton
-                    bundleId={bundle.id}
-                    label="Kjøp"
-                    variant="secondary"
-                    className="text-xs px-5 py-2 shrink-0 transition-transform duration-300 group-hover:scale-105"
+                  <img
+                    src={`/images/products/${item.src}`}
+                    alt=""
+                    className="h-full w-full object-cover object-top"
                   />
                 </div>
               ))}
             </div>
-          </div>
-        </Reveal>
+          </Reveal>
+
+          {/* What's included + price */}
+          <Reveal delay={200} stagger={0.12}>
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.25em] text-ink-muted">
+                25 planleggere inkludert:
+              </p>
+              <ul className="mt-6 grid grid-cols-1 gap-x-8 gap-y-3 sm:grid-cols-2">
+                {includes.map((item) => (
+                  <li key={item} className="flex items-center gap-3">
+                    <Check />
+                    <span className="text-base text-ink">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="my-10 h-px bg-line" />
+
+            {/* Price block */}
+            <div className="flex flex-wrap items-end gap-x-5 gap-y-3">
+              <div className="flex items-baseline gap-2">
+                <span className="font-[family-name:var(--font-display)] font-bold leading-none tracking-[-0.03em] text-[clamp(4rem,10vw,8rem)] text-ink">
+                  {featured.price}
+                </span>
+                <span className="font-[family-name:var(--font-display)] text-2xl text-ink/80 md:text-3xl">
+                  kr
+                </span>
+              </div>
+              <div className="flex items-center gap-3 pb-2 md:pb-4">
+                <span className="text-lg text-ink-muted line-through md:text-xl">
+                  {featured.originalPrice} kr
+                </span>
+                <span className="inline-flex items-center justify-center rounded-full bg-brand-accent px-3.5 py-1.5 text-sm font-bold text-brand-dark">
+                  Spar {featured.savingsPercent}%
+                </span>
+              </div>
+            </div>
+
+            {/* CTAs */}
+            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+              <BundleButton
+                bundleId="komplett"
+                label={`Kjøp komplett pakke — ${featured.price} kr`}
+                variant="primary"
+                className="px-8 py-4 text-base shadow-[0_0_32px_rgba(196,168,130,0.35)] hover:-translate-y-0.5 sm:px-10"
+              />
+              <Button
+                href="/produkter"
+                variant="ghost"
+                className="px-8 py-4 text-base hover:-translate-y-0.5 sm:px-10"
+              >
+                Se alle 25 planleggere
+              </Button>
+            </div>
+          </Reveal>
+        </div>
+
+        {/* Category bundles */}
+        <div className="mt-20 md:mt-28">
+          <Reveal>
+            <div className="flex items-center gap-5">
+              <p className="shrink-0 text-[11px] uppercase tracking-[0.25em] text-ink-muted">
+                Eller velg en pakke
+              </p>
+              <div className="h-px flex-1 bg-line" />
+            </div>
+          </Reveal>
+          <Reveal stagger={0.12} className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
+            {categoryBundles.map((bundle) => (
+              <div
+                key={bundle.id}
+                className="group flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-5 py-4 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-brand-accent/40 hover:bg-surface-2"
+              >
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-ink">{bundle.name}</p>
+                  <p className="mt-0.5 text-xs text-ink-muted">
+                    {bundle.productIds.length} planleggere · {bundle.price} kr
+                  </p>
+                </div>
+                <BundleButton
+                  bundleId={bundle.id}
+                  label="Kjøp"
+                  variant="ghost"
+                  className="min-h-11 shrink-0 px-5 py-2 text-xs"
+                />
+              </div>
+            ))}
+          </Reveal>
+        </div>
       </div>
     </section>
   );

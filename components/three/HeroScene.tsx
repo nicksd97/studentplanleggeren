@@ -24,7 +24,9 @@ export default function HeroScene() {
   return (
     <div
       aria-hidden="true"
-      className="fixed inset-0 z-0 pointer-events-none transition-opacity duration-1000"
+      // Fixed backdrop normally; under reduced motion the scene is static, so it
+      // scrolls away with the hero instead of sitting behind every section.
+      className={`${animate ? "fixed" : "absolute"} left-0 right-0 top-0 z-0 pointer-events-none transition-opacity duration-1000`}
       style={{ height: "100lvh", opacity: ready ? 1 : 0 }}
     >
       <Canvas

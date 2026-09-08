@@ -1,5 +1,6 @@
 import Accordion from "@/components/ui/Accordion";
 import Reveal from "@/components/landing/Reveal";
+import Eyebrow from "@/components/landing/Eyebrow";
 
 const faqItems = [
   {
@@ -46,21 +47,23 @@ const faqItems = [
 
 export default function FAQ() {
   return (
-    <section id="faq" className="bg-white py-24 md:py-32">
+    <section id="faq" className="relative py-24 md:py-36">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal>
-          <div className="text-center mb-12">
-            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Spørsmål? ✦
-            </p>
-            <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
-              Ofte stilte spørsmål
-            </h2>
+        <div className="grid gap-12 lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] lg:gap-20">
+          {/* Header — pinned while the questions scroll past on large screens */}
+          <div className="lg:sticky lg:top-32 self-start">
+            <Reveal>
+              <Eyebrow n="08">Spørsmål?</Eyebrow>
+              <h2 className="mt-4 font-[family-name:var(--font-display)] font-bold leading-[0.95] tracking-[-0.02em] text-[clamp(2.5rem,6vw,5.5rem)] text-ink">
+                Ofte stilte <span className="italic font-normal text-ink/80">spørsmål</span>
+              </h2>
+            </Reveal>
           </div>
-        </Reveal>
-        <Reveal delay={150}>
-          <Accordion items={faqItems} />
-        </Reveal>
+
+          <Reveal delay={150}>
+            <Accordion items={faqItems} />
+          </Reveal>
+        </div>
       </div>
     </section>
   );

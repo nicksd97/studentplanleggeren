@@ -1,4 +1,5 @@
 import Reveal from "@/components/landing/Reveal";
+import Eyebrow from "@/components/landing/Eyebrow";
 
 export default function PainPoints() {
   const cards = [
@@ -35,38 +36,33 @@ export default function PainPoints() {
   ];
 
   return (
-    <section className="bg-white py-24 md:py-32">
+    <section className="relative py-24 md:py-36">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="text-center mb-12">
-            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Kjenner du deg igjen? ✦
-            </p>
-            <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
-              For deg som...
-            </h2>
-          </div>
+          <Eyebrow n="04">Kjenner du deg igjen?</Eyebrow>
+          <h2 className="mt-4 font-[family-name:var(--font-display)] font-bold leading-[0.95] tracking-[-0.02em] text-[clamp(2.5rem,6vw,5.5rem)] text-ink">
+            For deg <span className="italic font-normal text-ink/80">som...</span>
+          </h2>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Reveal stagger={0.12} className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
           {cards.map((card, i) => (
-            <Reveal key={i} delay={i * 100}>
-              <div
-                className="bg-brand-cream rounded-2xl p-6 md:p-8 border border-transparent transition-all duration-300 hover:border-brand-accent hover:shadow-lg hover:bg-gradient-to-br hover:from-white hover:to-brand-pale/30 h-full"
-              >
-                <div className="h-16 w-16 rounded-full bg-brand-pale flex items-center justify-center mb-5 ring-1 ring-brand-accent/10">
-                  {card.icon}
-                </div>
-                <h3 className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark mb-3">
-                  {card.title}
-                </h3>
-                <p className="text-sm text-brand-medium leading-relaxed">
-                  {card.description}
-                </p>
+            <div
+              key={i}
+              className="h-full rounded-2xl border border-line bg-surface backdrop-blur-sm p-6 md:p-8 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1 transition-all duration-500"
+            >
+              <div className="h-12 w-12 rounded-full bg-brand-accent/10 ring-1 ring-brand-accent/25 flex items-center justify-center">
+                {card.icon}
               </div>
-            </Reveal>
+              <h3 className="mt-6 font-[family-name:var(--font-display)] text-2xl leading-tight text-ink">
+                {card.title}
+              </h3>
+              <p className="mt-3 text-ink-muted leading-relaxed">
+                {card.description}
+              </p>
+            </div>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );

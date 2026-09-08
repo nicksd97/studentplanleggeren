@@ -1,4 +1,5 @@
 import Reveal from "@/components/landing/Reveal";
+import Eyebrow from "@/components/landing/Eyebrow";
 
 export default function Testimonials() {
   const testimonials = [
@@ -26,53 +27,47 @@ export default function Testimonials() {
   ];
 
   return (
-    <section className="bg-brand-cream py-24 md:py-32">
+    <section className="relative py-24 md:py-36">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
-          <div className="text-center mb-12">
-            <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Fra studenter som deg ✦
-            </p>
-            <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
-              Hva andre sier
-            </h2>
-          </div>
+          <Eyebrow n="07">Fra studenter som deg</Eyebrow>
+          <h2 className="mt-4 font-[family-name:var(--font-display)] font-bold leading-[0.95] tracking-[-0.02em] text-[clamp(2.5rem,6vw,5.5rem)] text-ink">
+            Hva <span className="italic font-normal text-ink/80">andre</span> sier
+          </h2>
         </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <Reveal stagger={0.12} className="mt-14 md:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
           {testimonials.map((t, i) => (
-            <Reveal key={i} delay={i * 150}>
-              <div
-                className="bg-white rounded-2xl p-6 md:p-8 border-l-[4px] border-brand-accent/40 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md h-full flex flex-col"
+            <figure
+              key={i}
+              className="h-full flex flex-col rounded-2xl border border-line bg-surface backdrop-blur-sm p-6 md:p-8 transition-all duration-500 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1"
+            >
+              {/* Opening quote mark */}
+              <span
+                aria-hidden="true"
+                className="block h-10 font-[family-name:var(--font-display)] text-[6rem] leading-[0.5] text-brand-accent/40 select-none"
               >
-                {/* Quote mark */}
-                <svg
-                  className="h-10 w-10 text-brand-accent/40 mb-4 shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10H14.017zM0 21v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151C7.563 6.068 6 8.789 6 11h4v10H0z" />
-                </svg>
-                <p className="text-brand-dark text-sm leading-relaxed mb-6 flex-grow">
+                &ldquo;
+              </span>
+
+              <blockquote className="mt-4 flex-grow">
+                <p className="font-[family-name:var(--font-display)] italic text-xl text-ink leading-snug">
                   {t.quote}
                 </p>
-                <div className="flex items-center gap-3">
-                  <div className="h-10 w-10 rounded-full bg-brand-pale flex items-center justify-center ring-2 ring-brand-accent/20">
-                    <span className="text-xs font-bold text-brand-medium">
-                      {t.initials}
-                    </span>
-                  </div>
-                  <div>
-                    <p className="text-sm font-bold text-brand-dark">
-                      {t.name}
-                    </p>
-                    <p className="text-xs text-brand-medium">{t.study}</p>
-                  </div>
+              </blockquote>
+
+              <figcaption className="mt-8 pt-6 border-t border-line flex items-center gap-3">
+                <div className="h-11 w-11 shrink-0 rounded-full bg-surface-2 ring-1 ring-brand-accent/30 flex items-center justify-center">
+                  <span className="text-xs font-bold text-brand-accent">{t.initials}</span>
                 </div>
-              </div>
-            </Reveal>
+                <div>
+                  <p className="text-sm font-medium text-ink">{t.name}</p>
+                  <p className="text-xs text-ink-muted">{t.study}</p>
+                </div>
+              </figcaption>
+            </figure>
           ))}
-        </div>
+        </Reveal>
       </div>
     </section>
   );
