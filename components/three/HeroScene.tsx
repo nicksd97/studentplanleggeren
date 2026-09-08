@@ -1,11 +1,25 @@
 "use client";
 
-import { useState } from "react";
+import { Component, Suspense, useCallback, useState, type ReactNode } from "react";
 import { Canvas } from "@react-three/fiber";
 import { detectTier } from "./useDeviceTier";
 import Particles from "./Particles";
-import FloatingShapes from "./FloatingShapes";
+import PlannerScene from "./PlannerScene";
 import ScrollCamera from "./ScrollCamera";
+
+/** Flip to false to judge the floating sheets without the notebook */
+const SHOW_NOTEBOOK = true;
+
+/** If a texture fails to load, drop the scene instead of taking the page down */
+class SceneErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {
+  state = { failed: false };
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+  render() {
+    return this.state.failed ? null : this.props.children;
+  }
+}
 
 /**
  * Fixed full-viewport WebGL backdrop for the landing page.
@@ -16,6 +30,7 @@ export default function HeroScene() {
   const [tier] = useState(detectTier);
   const [ready, setReady] = useState(false);
   const [lost, setLost] = useState(false);
+  const onReady = useCallback(() => setReady(true), []);
 
   if (!tier.webgl || lost) return null;
 
@@ -32,24 +47,26 @@ export default function HeroScene() {
       <Canvas
         dpr={[1, tier.low ? 1.25 : 1.5]}
         gl={{
-          antialias: false,
+          antialias: !tier.low,
           alpha: true,
           stencil: false,
           powerPreference: "high-performance",
         }}
         camera={{ fov: 45, near: 0.1, far: 60, position: [0, 0, 9] }}
         frameloop={animate ? "always" : "demand"}
-        flat
         onCreated={({ gl }) => {
           gl.domElement.addEventListener("webglcontextlost", (e) => {
             e.preventDefault();
             setLost(true);
           });
-          setReady(true);
         }}
       >
-        <Particles count={tier.low ? 600 : 2500} animate={animate} />
-        <FloatingShapes low={tier.low} animate={animate} />
+        <Particles count={tier.low ? 500 : 1800} animate={animate} />
+        <SceneErrorBoundary>
+          <Suspense fallback={null}>
+            <PlannerScene low={tier.low} animate={animate} notebook={SHOW_NOTEBOOK} onReady={onReady} />
+          </Suspense>
+        </SceneErrorBoundary>
         <ScrollCamera animate={animate} parallax={!tier.low && !tier.coarse} />
       </Canvas>
     </div>

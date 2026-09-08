@@ -6,7 +6,6 @@ import { useGSAP } from "@gsap/react";
 import Button from "@/components/ui/Button";
 import Eyebrow from "@/components/landing/Eyebrow";
 import Tag from "@/components/landing/Tag";
-import Parallax from "@/components/landing/Parallax";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(useGSAP);
@@ -26,8 +25,9 @@ export default function Hero() {
           // so the server-rendered hero never flashes visible and snaps away at hydration
           .fromTo(
             "[data-hero-line]",
-            { yPercent: 110 },
-            { yPercent: 0, duration: 1.1, stagger: 0.12 },
+            // y: 0 on both sides overrides the px translate GSAP parses from the CSS pre-hide
+            { yPercent: 110, y: 0 },
+            { yPercent: 0, y: 0, duration: 1.1, stagger: 0.12 },
             0.15
           )
           .fromTo(
@@ -98,19 +98,6 @@ export default function Hero() {
           <span className="h-px w-10 bg-ink-muted/50" />
           Scroll
         </div>
-      </div>
-
-      {/* Cover photo as a floating card */}
-      <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 pb-8 md:pb-16">
-        <Parallax amount={90} className="max-w-3xl mx-auto">
-          <img
-            src="/images/brand/Front page cover photo rev.2.png"
-            alt="Studentplanlegger produkter — 25 fyllbare PDF-planleggere"
-            width={1320}
-            height={972}
-            className="w-full h-auto block rounded-xl -rotate-1 ring-1 ring-white/10 shadow-[0_40px_100px_rgba(0,0,0,0.65)] transition-transform duration-700 hover:rotate-0"
-          />
-        </Parallax>
       </div>
     </section>
   );
