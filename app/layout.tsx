@@ -7,6 +7,7 @@ const playfair = Playfair_Display({
   variable: "--font-display",
   subsets: ["latin"],
   weight: ["400", "700"],
+  style: ["normal", "italic"],
   display: "swap",
 });
 
@@ -54,6 +55,7 @@ export default function RootLayout({
   return (
     <html
       lang="nb"
+      data-scroll-behavior="smooth"
       className={`${playfair.variable} ${dmSans.variable} antialiased`}
     >
       <body className="min-h-screen">

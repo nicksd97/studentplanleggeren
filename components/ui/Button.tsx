@@ -1,7 +1,7 @@
 import { type ButtonHTMLAttributes, type AnchorHTMLAttributes } from "react";
 import Link from "next/link";
 
-type Variant = "primary" | "secondary" | "outline";
+type Variant = "primary" | "secondary" | "outline" | "outlineLight" | "ghost";
 
 const variantClasses: Record<Variant, string> = {
   primary:
@@ -10,6 +10,11 @@ const variantClasses: Record<Variant, string> = {
     "bg-brand-dark text-white hover:bg-brand-dark/90 font-medium",
   outline:
     "border-2 border-brand-dark text-brand-dark hover:bg-brand-dark hover:text-white font-medium",
+  // Dark-background variants (landing page)
+  outlineLight:
+    "border-2 border-white/30 text-white hover:border-white hover:bg-white hover:text-brand-black font-medium",
+  ghost:
+    "bg-white/[0.06] border border-white/10 text-white hover:bg-white/[0.12] backdrop-blur-sm font-medium",
 };
 
 const baseClasses =

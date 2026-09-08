@@ -5,11 +5,49 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import CartPanel from "@/components/ui/CartPanel";
 
-export default function Header() {
+type Variant = "light" | "dark";
+
+const styles: Record<
+  Variant,
+  {
+    scrolled: string;
+    top: string;
+    logo: string;
+    link: string;
+    icon: string;
+    mobileIcon: string;
+    menu: string;
+    menuLink: string;
+  }
+> = {
+  light: {
+    scrolled: "bg-white/95 backdrop-blur-sm shadow-sm border-b border-brand-soft/60",
+    top: "bg-transparent border-b border-brand-soft/30",
+    logo: "",
+    link: "text-brand-medium hover:text-brand-dark after:bg-brand-dark",
+    icon: "text-brand-medium hover:text-brand-dark",
+    mobileIcon: "text-brand-dark",
+    menu: "bg-white shadow-lg",
+    menuLink: "text-brand-medium hover:text-brand-dark hover:bg-brand-pale",
+  },
+  dark: {
+    scrolled: "backdrop-blur-md border-b border-white/10",
+    top: "bg-transparent border-b border-transparent",
+    logo: "brightness-0 invert",
+    link: "text-white/70 hover:text-white after:bg-white",
+    icon: "text-white/70 hover:text-white",
+    mobileIcon: "text-white",
+    menu: "bg-[#14110E] border border-white/10 shadow-2xl",
+    menuLink: "text-white/70 hover:text-white hover:bg-white/5",
+  },
+};
+
+export default function Header({ variant = "light" }: { variant?: Variant }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const { itemCount } = useCart();
+  const s = styles[variant];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -27,10 +65,13 @@ export default function Header() {
     <>
       <header
         className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
-          scrolled
-            ? "bg-white/95 backdrop-blur-sm shadow-sm border-b border-brand-soft/60"
-            : "bg-transparent border-b border-brand-soft/30"
+          scrolled ? s.scrolled : s.top
         }`}
+        style={
+          variant === "dark" && scrolled
+            ? { backgroundColor: "color-mix(in srgb, var(--landing-bg, #0A0908) 85%, transparent)" }
+            : undefined
+        }
       >
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
@@ -39,7 +80,7 @@ export default function Header() {
               <img
                 src="/images/brand/Studentplanlegger_Text-removebg-preview.png"
                 alt="Studentplanlegger"
-                className="h-10 sm:h-12 w-auto transition-opacity duration-300 group-hover:opacity-80"
+                className={`h-10 sm:h-12 w-auto transition-opacity duration-300 group-hover:opacity-80 ${s.logo}`}
               />
             </Link>
 
@@ -49,7 +90,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="relative text-sm text-brand-medium hover:text-brand-dark transition-colors after:absolute after:-bottom-1 after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:bg-brand-dark after:transition-all after:duration-300 hover:after:w-full"
+                  className={`relative text-sm transition-colors after:absolute after:-bottom-1 after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:transition-all after:duration-300 hover:after:w-full ${s.link}`}
                 >
                   {link.label}
                 </Link>
@@ -64,7 +105,7 @@ export default function Header() {
               {/* Cart button */}
               <button
                 onClick={() => setCartOpen(true)}
-                className="relative p-2 text-brand-medium hover:text-brand-dark transition-colors cursor-pointer"
+                className={`relative p-2 transition-colors cursor-pointer ${s.icon}`}
                 aria-label="Handlekurv"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -82,7 +123,7 @@ export default function Header() {
             <div className="flex items-center gap-2 md:hidden">
               <button
                 onClick={() => setCartOpen(true)}
-                className="relative p-2 text-brand-dark cursor-pointer"
+                className={`relative p-2 cursor-pointer ${s.mobileIcon}`}
                 aria-label="Handlekurv"
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
@@ -96,7 +137,7 @@ export default function Header() {
               </button>
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
-                className="p-2 text-brand-dark cursor-pointer"
+                className={`p-2 cursor-pointer ${s.mobileIcon}`}
                 aria-label="Meny"
               >
                 <svg
@@ -118,13 +159,13 @@ export default function Header() {
 
           {/* Mobile menu */}
           {mobileOpen && (
-            <div className="md:hidden bg-white rounded-b-2xl shadow-lg pb-4">
+            <div className={`md:hidden rounded-b-2xl pb-4 ${s.menu}`} data-lenis-prevent>
               {navLinks.map((link) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setMobileOpen(false)}
-                  className="block px-4 py-3 text-sm text-brand-medium hover:text-brand-dark hover:bg-brand-pale transition-colors"
+                  className={`block px-4 py-3 text-sm transition-colors ${s.menuLink}`}
                 >
                   {link.label}
                 </Link>

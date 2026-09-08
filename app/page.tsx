@@ -1,5 +1,6 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import LandingShell from "@/components/landing/LandingShell";
 import Hero from "@/components/sections/Hero";
 import PainPoints from "@/components/sections/PainPoints";
 import DeviceShowcase from "@/components/sections/DeviceShowcase";
@@ -12,8 +13,8 @@ import NewsletterSignup from "@/components/sections/NewsletterSignup";
 
 export default function Home() {
   return (
-    <>
-      <Header />
+    <LandingShell>
+      <Header variant="dark" />
       <main>
         <Hero />
         <DeviceShowcase />
@@ -26,6 +27,6 @@ export default function Home() {
         <NewsletterSignup />
       </main>
       <Footer />
-    </>
+    </LandingShell>
   );
 }
