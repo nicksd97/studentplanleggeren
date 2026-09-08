@@ -40,7 +40,7 @@ export default function Testimonials() {
           {testimonials.map((t, i) => (
             <figure
               key={i}
-              className="h-full flex flex-col rounded-2xl border border-line bg-surface backdrop-blur-sm p-6 md:p-8 transition-all duration-500 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1"
+              className="h-full flex flex-col rounded-2xl border border-line bg-surface md:backdrop-blur-sm p-6 md:p-8 transition-all duration-500 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1"
             >
               {/* Opening quote mark */}
               <span

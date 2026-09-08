@@ -55,7 +55,7 @@ export default function CategoryBubbles() {
 
                 {hovered === cat.slug && cat.previewImage && (
                   <div className="absolute bottom-full left-0 mb-4 animate-fade-in pointer-events-none z-10 hidden sm:block">
-                    <div className="relative w-48 rounded-lg border border-line bg-[#1A1410]/95 backdrop-blur-sm p-2 text-ink shadow-2xl after:absolute after:top-full after:left-8 after:border-solid after:border-t-[#1A1410] after:border-t-[8px] after:border-x-transparent after:border-x-[8px] after:border-b-0">
+                    <div className="relative w-48 rounded-lg border border-line bg-[#1A1410]/95 md:backdrop-blur-sm p-2 text-ink shadow-2xl after:absolute after:top-full after:left-8 after:border-solid after:border-t-[#1A1410] after:border-t-[8px] after:border-x-transparent after:border-x-[8px] after:border-b-0">
                       <img
                         src={cat.previewImage}
                         alt={cat.label}

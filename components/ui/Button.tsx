@@ -14,7 +14,7 @@ const variantClasses: Record<Variant, string> = {
   outlineLight:
     "border-2 border-white/30 text-white hover:border-white hover:bg-white hover:text-brand-black font-medium",
   ghost:
-    "bg-white/[0.06] border border-white/10 text-white hover:bg-white/[0.12] backdrop-blur-sm font-medium",
+    "bg-white/[0.06] border border-white/10 text-white hover:bg-white/[0.12] md:backdrop-blur-sm font-medium",
 };
 
 const baseClasses =

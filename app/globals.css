@@ -102,14 +102,6 @@ html.lenis body {
   }
 }
 
-/* Phones: the glass cards sit over a live canvas; skip the per-frame backdrop blur */
-@media (max-width: 767px) {
-  .theme-dark main [class*="backdrop-blur"] {
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-}
-
 /* Soft gold glow behind the hero; fades out with scroll via --glow (set by SmoothScroll) */
 .glow {
   position: fixed;

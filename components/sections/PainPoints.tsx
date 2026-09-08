@@ -49,7 +49,7 @@ export default function PainPoints() {
           {cards.map((card, i) => (
             <div
               key={i}
-              className="h-full rounded-2xl border border-line bg-surface backdrop-blur-sm p-6 md:p-8 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1 transition-all duration-500"
+              className="h-full rounded-2xl border border-line bg-surface md:backdrop-blur-sm p-6 md:p-8 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1 transition-all duration-500"
             >
               <div className="h-12 w-12 rounded-full bg-brand-accent/10 ring-1 ring-brand-accent/25 flex items-center justify-center">
                 {card.icon}

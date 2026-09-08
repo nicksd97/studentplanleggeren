@@ -37,7 +37,7 @@ export default function NewsletterSignup() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <Reveal>
           {/* Centred glass panel */}
-          <div className="mx-auto max-w-3xl rounded-3xl border border-line bg-surface backdrop-blur-sm p-8 md:p-16 text-center">
+          <div className="mx-auto max-w-3xl rounded-3xl border border-line bg-surface md:backdrop-blur-sm p-8 md:p-16 text-center">
             {/* Icon disc */}
             <div className="mx-auto h-12 w-12 rounded-full bg-brand-accent/10 ring-1 ring-brand-accent/25 flex items-center justify-center">
               <svg

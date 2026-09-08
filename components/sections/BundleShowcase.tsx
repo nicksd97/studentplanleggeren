@@ -191,7 +191,7 @@ export default function BundleShowcase() {
             {categoryBundles.map((bundle) => (
               <div
                 key={bundle.id}
-                className="group flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-5 py-4 backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-brand-accent/40 hover:bg-surface-2"
+                className="group flex items-center justify-between gap-4 rounded-2xl border border-line bg-surface px-5 py-4 md:backdrop-blur-sm transition-all duration-500 hover:-translate-y-1 hover:border-brand-accent/40 hover:bg-surface-2"
               >
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-ink">{bundle.name}</p>

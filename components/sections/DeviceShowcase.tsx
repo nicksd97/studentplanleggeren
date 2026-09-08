@@ -48,7 +48,7 @@ export default function DeviceShowcase() {
           {cards.map((card) => (
             <div
               key={card.label}
-              className="group rounded-2xl border border-line bg-surface backdrop-blur-sm p-6 md:p-8 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1 transition-all duration-500"
+              className="group rounded-2xl border border-line bg-surface md:backdrop-blur-sm p-6 md:p-8 hover:border-brand-accent/40 hover:bg-surface-2 hover:-translate-y-1 transition-all duration-500"
             >
               <div className="overflow-hidden rounded-xl bg-white/[0.04] ring-1 ring-white/10">
                 <img
