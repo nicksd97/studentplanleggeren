@@ -69,7 +69,7 @@ export default function Header({ variant = "light" }: { variant?: Variant }) {
         }`}
         style={
           variant === "dark" && scrolled
-            ? { backgroundColor: "color-mix(in srgb, var(--landing-bg, #0A0908) 85%, transparent)" }
+            ? { backgroundColor: "color-mix(in srgb, var(--landing-bg, #1A1410) 85%, transparent)" }
             : undefined
         }
       >

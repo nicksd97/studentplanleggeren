@@ -36,7 +36,7 @@
 }
 
 :root {
-  --landing-bg: #0A0908;
+  --landing-bg: #1A1410;
 }
 
 .theme-dark,
@@ -47,11 +47,6 @@ html[data-theme="dark"] {
   --color-surface-2: rgba(255, 255, 255, 0.08);
   --color-line: rgba(255, 255, 255, 0.1);
   color-scheme: dark;
-}
-
-/* Temporary comparison switch (/?bg=warm) — removed once a background is chosen */
-html[data-bg="warm"] {
-  --landing-bg: #1A1410;
 }
 
 .theme-dark {

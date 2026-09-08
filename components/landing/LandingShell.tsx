@@ -16,12 +16,8 @@ export default function LandingShell({ children }: { children: ReactNode }) {
   useEffect(() => {
     const html = document.documentElement;
     html.dataset.theme = "dark";
-    // Temporary background comparison switch: /?bg=warm
-    const bg = new URLSearchParams(window.location.search).get("bg");
-    if (bg) html.dataset.bg = bg;
     return () => {
       delete html.dataset.theme;
-      delete html.dataset.bg;
     };
   }, []);
 
