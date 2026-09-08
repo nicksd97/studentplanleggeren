@@ -29,6 +29,20 @@ export default function SmoothScroll() {
     gsap.ticker.lagSmoothing(0);
     ScrollTrigger.config({ ignoreMobileResize: true });
 
+    // Page progress (0..1) for the 3D scene and the hero glow
+    const progressTrigger = ScrollTrigger.create({
+      trigger: document.body,
+      start: "top top",
+      end: "bottom bottom",
+      onUpdate: (self) => {
+        scrollStore.progress = self.progress;
+        document.documentElement.style.setProperty(
+          "--glow",
+          String(Math.max(0, 1 - self.progress * 4))
+        );
+      },
+    });
+
     // Route same-page anchor links (#pakker, /#faq …) through Lenis
     const onClick = (e: MouseEvent) => {
       const anchor = (e.target as HTMLElement).closest<HTMLAnchorElement>("a[href]");
@@ -69,6 +83,8 @@ export default function SmoothScroll() {
       window.clearTimeout(refreshTimer);
       pendingImages.forEach((img) => img.removeEventListener("load", scheduleRefresh));
       document.removeEventListener("click", onClick, true);
+      progressTrigger.kill();
+      scrollStore.progress = 0;
       gsap.ticker.remove(tick);
       lenis.destroy();
       scrollStore.lenis = null;

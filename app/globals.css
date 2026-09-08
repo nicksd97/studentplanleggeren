@@ -100,6 +100,28 @@ html.lenis body {
   }
 }
 
+/* Soft gold glow behind the hero; fades out with scroll via --glow (set by SmoothScroll) */
+.glow {
+  position: fixed;
+  z-index: 0;
+  pointer-events: none;
+  left: 50%;
+  top: 38%;
+  width: 90vw;
+  height: 90vw;
+  max-width: 1000px;
+  max-height: 1000px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(196, 168, 130, 0.22) 0%,
+    rgba(196, 168, 130, 0.07) 32%,
+    transparent 68%
+  );
+  opacity: var(--glow, 1);
+}
+
 /* Film grain + vignette overlays for the dark landing page */
 .grain {
   position: fixed;
