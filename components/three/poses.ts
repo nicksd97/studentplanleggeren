@@ -64,13 +64,13 @@ function tucked(nb: Transform): Transform[] {
 }
 
 /** A row of `count` sheets tilted back like screens on a desk */
-function row(center: Vec3, width: number, count: number, tilt: number): Transform[] {
+function row(center: Vec3, width: number, count: number, tilt: number, scale = 0.9): Transform[] {
   return Array.from({ length: count }, (_, i) => {
     const f = count === 1 ? 0.5 : i / (count - 1);
     return t(
-      [center[0] - width / 2 + f * width, center[1] + JITTER[i] * 0.6, center[2] + Math.abs(f - 0.5) * -0.6],
-      [tilt, (0.5 - f) * 0.5, JITTER[i] * 0.4],
-      0.9
+      [center[0] - width / 2 + f * width, center[1] + JITTER[i] * 0.4, center[2] + Math.abs(f - 0.5) * -0.6],
+      [tilt, (0.5 - f) * 0.5, JITTER[i] * 0.3],
+      scale
     );
   });
 }
@@ -126,7 +126,7 @@ function pile(center: Vec3, spread: number, count: number): Transform[] {
  * book is open and the pages are out, 0 once they have slid back in.
  * ------------------------------------------------------------------------ */
 const D_HERO = t([3.7, -0.6, -2.4], [-0.2, -0.75, 0.12], 0.78);
-const D_DEVICES = t([6.0, -2.6, -4.2], [-0.15, -0.6, 0.1], 0.5);
+const D_DEVICES = t([5.4, 0.3, -3.5], [-0.15, -0.6, 0.1], 0.42);
 const D_CATEGORIES = t([6.2, 0.2, -5], [-0.1, -0.5, 0.1], 0.5);
 const D_PAIN = t([5.3, 2.3, -4.5], [0, -0.15, 0.05], 0.55);
 const D_BUNDLE_HEAD = t([-5.6, -1.4, -5.5], [-0.15, 0.45, -0.05], 0.45);
@@ -137,8 +137,8 @@ const D_FAQ = t([-3.6, -1.9, -4.5], [-0.2, 0.5, -0.05], 0.55);
 const D_NEWSLETTER = t([-4.6, -3.1, -5], [-0.2, 0.5, -0.05], 0.45);
 // Devices only appear in the "alle enheter" section: laptop left, tablet centre-left
 const D_DEVICE_POSE: Devices = {
-  laptop: t([-5.4, -3.0, -3.2], [0.12, 0.42, 0], 1),
-  tablet: t([-2.0, -2.9, -2.9], [0.06, 0.12, 0.03], 1),
+  laptop: t([-5.0, 0.15, -3.2], [0.12, 0.42, 0], 0.62),
+  tablet: t([-2.3, 0.35, -2.9], [0.06, 0.12, 0.03], 0.6),
 };
 const D_PARKED = parked(D_DEVICE_POSE);
 
@@ -155,8 +155,10 @@ export const POSES_DESKTOP: Pose[] = [
     ],
     devices: D_PARKED,
   },
-  // Fungerer på alle enheter: laptop and tablet rise in on the left, four pages in a row, notebook right
-  { p: 0.16, notebook: D_DEVICES, cover: 1, sheets: [...row([2.4, -3.2, -3], 4.6, 4, -0.35), ...tucked(D_DEVICES).slice(4)], devices: D_DEVICE_POSE },
+  // Fungerer på alle enheter: laptop and tablet rise in on the left, four pages in a row, notebook right,
+  // all in the band under the device cards; held until the categories section takes over
+  { p: 0.13, notebook: D_DEVICES, cover: 1, sheets: [...row([1.1, 0.25, -3], 4.0, 4, -0.3, 0.62), ...tucked(D_DEVICES).slice(4)], devices: D_DEVICE_POSE },
+  { p: 0.19, notebook: D_DEVICES, cover: 1, sheets: [...row([1.1, 0.25, -3], 4.0, 4, -0.3, 0.62), ...tucked(D_DEVICES).slice(4)], devices: D_DEVICE_POSE },
   // Hva trenger du: a fan of seven, bottom right, next to the category pills
   { p: 0.29, notebook: D_CATEGORIES, cover: 1, sheets: [...fan([3.0, -3.6, -2.5], 2.6, -0.75, 0.75, 7), ...tucked(D_CATEGORIES).slice(7)], devices: D_PARKED },
   // For deg som: the fan drifts back and down, the notebook turns to face you
@@ -180,7 +182,7 @@ export const POSES_DESKTOP: Pose[] = [
  * Phones: four sheets, everything hugs the edges so the copy stays clear.
  * ------------------------------------------------------------------------ */
 const M_HERO = t([2.7, 4.6, -4.5], [-0.15, -0.6, 0.1], 0.5);
-const M_DEVICES = t([3.3, -3.8, -6], [-0.1, -0.5, 0.1], 0.4);
+const M_DEVICES = t([3.6, 4.6, -6], [-0.1, -0.5, 0.1], 0.3);
 const M_CATEGORIES = t([3.2, 0.5, -6.5], [-0.1, -0.5, 0.1], 0.4);
 const M_BUNDLE = t([3.9, 2.0, -6], [-0.1, -0.4, 0.06], 0.4);
 const M_STEPS = t([-2.4, -3.9, -5], [-0.3, 0.4, -0.05], 0.55);
@@ -190,7 +192,7 @@ const M_NEWSLETTER = t([-3.4, -3.2, -6.5], [-0.2, 0.5, -0.05], 0.4);
 // Phones show the tablet only; the laptop stays parked (and is not rendered)
 const M_DEVICE_POSE: Devices = {
   laptop: t([-9, -9, -6], [0, 0, 0], 0),
-  tablet: t([-1.7, -4.3, -5], [0.06, 0.15, 0.03], 0.75),
+  tablet: t([3.0, -1.2, -5], [0.05, -0.25, 0.04], 0.6),
 };
 const M_PARKED = parked(M_DEVICE_POSE);
 
@@ -207,7 +209,9 @@ export const POSES_MOBILE: Pose[] = [
     ],
     devices: M_PARKED,
   },
-  { p: 0.15, notebook: M_DEVICES, cover: 1, sheets: [...row([1.5, -4.6, -5], 2.2, 2, -0.35), ...tucked(M_DEVICES).slice(2)], devices: M_DEVICE_POSE },
+  // Phones: tablet peeks in from the right edge, two pages at the left edge, notebook tucked top-right
+  { p: 0.12, notebook: M_DEVICES, cover: 1, sheets: [...row([-3.0, -3.6, -5], 1.4, 2, -0.3, 0.5), ...tucked(M_DEVICES).slice(2)], devices: M_DEVICE_POSE },
+  { p: 0.18, notebook: M_DEVICES, cover: 1, sheets: [...row([-3.0, -3.6, -5], 1.4, 2, -0.3, 0.5), ...tucked(M_DEVICES).slice(2)], devices: M_DEVICE_POSE },
   { p: 0.33, notebook: M_CATEGORIES, cover: 1, sheets: [...fan([4.3, -5.0, -5], 2.0, -0.55, 0.35, 4), ...tucked(M_CATEGORIES).slice(4)], devices: M_PARKED },
   { p: 0.5, notebook: M_BUNDLE, cover: 1, sheets: stack([3.4, -3.2, -5.5], SHEET_COUNT, 0.6), devices: M_PARKED },
   { p: 0.63, notebook: M_STEPS, cover: 0, sheets: inside(M_STEPS), devices: M_PARKED },
