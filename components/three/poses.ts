@@ -140,10 +140,9 @@ const D_CATEGORIES = t([6.2, 0.2, -5], [-0.1, -0.5, 0.1], 0.5);
 const D_PAIN = t([5.3, 2.3, -4.5], [0, -0.15, 0.05], 0.55);
 const D_BUNDLE_HEAD = t([-5.6, -1.4, -5.5], [-0.15, 0.45, -0.05], 0.45);
 const D_BUNDLE_PRICE = t([-5.4, -1.6, -5.5], [-0.2, 0.5, -0.06], 0.45);
-const D_STEPS = t([-6.8, -5.6, -5], [-0.3, 0.35, -0.05], 0.7);
-const D_TESTIMONIALS = t([4.6, -3.7, -4.5], [-0.3, -0.5, 0.05], 0.5);
-const D_FAQ = t([-3.6, -1.9, -4.5], [-0.2, 0.5, -0.05], 0.55);
-const D_NEWSLETTER = t([-4.6, -3.1, -5], [-0.2, 0.5, -0.05], 0.45);
+/** Once the pages are behind the Komplett fan the scene has said its piece: the closed
+ *  notebook rides off the bottom with the page and stays there for the rest of the site. */
+const D_GONE = t([-5.4, -11, -5.5], [-0.2, 0.5, -0.06], 0.45);
 /** The "alle enheter" band: laptop, tablet, four pages and the notebook lined up in the
  *  open space under the heading. `dy` lifts the whole row so it follows the band as it
  *  scrolls up, instead of sitting still while the cards come up over it. */
@@ -188,15 +187,11 @@ export const POSES_DESKTOP: Pose[] = [
   { at: { section: 4, offset: 0.15 }, notebook: D_BUNDLE_HEAD, cover: 1, sheets: pile([-3.0, -1.2, -5.5], 0.7, SHEET_COUNT), devices: D_PARKED },
   // Price: everything cascades into one neat stack beside the notebook, away from the price column
   { at: { section: 4, offset: 0.55 }, notebook: D_BUNDLE_PRICE, cover: 1, sheets: stack([-2.8, -1.4, -5.5], SHEET_COUNT, 0.6), devices: D_PARKED },
-  // Slik fungerer det: the stack slides into the notebook and the cover closes
-  { at: { section: 5, offset: 0.35 }, notebook: D_STEPS, cover: 0, sheets: inside(D_STEPS), devices: D_PARKED },
-  // Testimonials: notebook rests small, bottom right
-  { at: { section: 6, offset: 0.5 }, notebook: D_TESTIMONIALS, cover: 0, sheets: inside(D_TESTIMONIALS), devices: D_PARKED },
-  // FAQ: left column, under the sticky heading
-  { at: { section: 7, offset: 0.5 }, notebook: D_FAQ, cover: 0, sheets: inside(D_FAQ), devices: D_PARKED },
-  // Newsletter: one page floats up beside the glass panel like a letter
-  { at: { section: 8, offset: 0.5 }, notebook: D_NEWSLETTER, cover: 0, sheets: [t([5.4, -0.4, -5], [0.05, -0.25, 0.08], 1), ...inside(D_NEWSLETTER).slice(1)], devices: D_PARKED },
-  { at: { section: 8, offset: 1.2 }, notebook: D_NEWSLETTER, cover: 0, sheets: [t([5.2, 1.0, -5.5], [0.05, -0.2, 0.05], 1), ...inside(D_NEWSLETTER).slice(1)], devices: D_PARKED },
+  // The pages slide into the notebook, the cover closes and the whole thing rides off
+  // the bottom with the page — the steps, testimonials, FAQ and newsletter stay clear
+  { at: { section: 5, offset: 0.15 }, notebook: D_GONE, cover: 0, sheets: inside(D_GONE), devices: D_PARKED },
+  // Same pose at the foot of the page: nothing moves once it has left
+  { at: { section: 8, offset: 1.2 }, notebook: D_GONE, cover: 0, sheets: inside(D_GONE), devices: D_PARKED },
 ];
 
 /* --------------------------------------------------------------------------
@@ -205,10 +200,8 @@ export const POSES_DESKTOP: Pose[] = [
 const M_HERO = t([2.7, 4.6, -4.5], [-0.15, -0.6, 0.1], 0.5);
 const M_CATEGORIES = t([3.2, 0.5, -6.5], [-0.1, -0.5, 0.1], 0.4);
 const M_BUNDLE = t([3.9, 2.0, -6], [-0.1, -0.4, 0.06], 0.4);
-const M_STEPS = t([-2.4, -3.9, -5], [-0.3, 0.4, -0.05], 0.55);
-const M_TESTIMONIALS = t([4.1, -4.7, -6], [-0.3, -0.5, 0.05], 0.45);
-const M_FAQ = t([-3.4, -2.5, -6.5], [-0.2, 0.5, -0.05], 0.45);
-const M_NEWSLETTER = t([-3.4, -3.2, -6.5], [-0.2, 0.5, -0.05], 0.4);
+/** Rides off the bottom after the Komplett stack and stays gone (see D_GONE) */
+const M_GONE = t([3.9, -11, -6], [-0.1, -0.4, 0.06], 0.4);
 /** Phones: tablet left, two pages and the notebook right; the laptop stays parked (never rendered) */
 function deviceBandMobile(dy: number) {
   const nb = t([2.3, -0.9 + dy, -6], [-0.1, -0.5, 0.1], 0.32);
@@ -242,9 +235,6 @@ export const POSES_MOBILE: Pose[] = [
   { at: { section: 1, selector: BAND, offset: 0.5, anchor: 0.04 }, ...deviceBandMobile(5.0), devices: parked(deviceBandMobile(0).devices, true) },
   { at: { section: 2, offset: 0.5 }, notebook: M_CATEGORIES, cover: 1, sheets: [...fan([4.3, -5.0, -5], 2.0, -0.55, 0.35, 4), ...tucked(M_CATEGORIES).slice(4)], devices: M_PARKED },
   { at: { section: 4, offset: 0.55 }, notebook: M_BUNDLE, cover: 1, sheets: stack([3.4, -3.2, -5.5], SHEET_COUNT, 0.6), devices: M_PARKED },
-  { at: { section: 5, offset: 0.35 }, notebook: M_STEPS, cover: 0, sheets: inside(M_STEPS), devices: M_PARKED },
-  { at: { section: 6, offset: 0.5 }, notebook: M_TESTIMONIALS, cover: 0, sheets: inside(M_TESTIMONIALS), devices: M_PARKED },
-  { at: { section: 7, offset: 0.5 }, notebook: M_FAQ, cover: 0, sheets: inside(M_FAQ), devices: M_PARKED },
-  { at: { section: 8, offset: 0.5 }, notebook: M_NEWSLETTER, cover: 0, sheets: [t([0.2, 4.3, -7], [0.05, -0.1, 0.06], 0.9), ...inside(M_NEWSLETTER).slice(1)], devices: M_PARKED },
-  { at: { section: 8, offset: 1.2 }, notebook: M_NEWSLETTER, cover: 0, sheets: [t([0.2, 5.2, -7.5], [0.05, -0.1, 0.04], 0.9), ...inside(M_NEWSLETTER).slice(1)], devices: M_PARKED },
+  { at: { section: 5, offset: 0.15 }, notebook: M_GONE, cover: 0, sheets: inside(M_GONE), devices: M_PARKED },
+  { at: { section: 8, offset: 1.2 }, notebook: M_GONE, cover: 0, sheets: inside(M_GONE), devices: M_PARKED },
 ];
