@@ -3,12 +3,6 @@ import Reveal from "@/components/landing/Reveal";
 
 const cards = [
   {
-    image: "/images/marketing/1.png",
-    alt: "Fyll inn planleggeren digitalt på PC, Mac, iPad eller nettbrett",
-    label: "Fyll inn digitalt",
-    subtext: "Bruk på PC, Mac, iPad eller nettbrett",
-  },
-  {
     image: "/images/marketing/3.png",
     alt: "Årlig, månedlig, ukentlig og daglig planleggere",
     label: "Årlig, månedlig, ukentlig og daglig",
@@ -40,10 +34,13 @@ export default function DeviceShowcase() {
           </p>
         </Reveal>
 
-        {/* Three image cards */}
+        {/* Open band: the 3D laptop, tablet, pages and notebook float here (see components/three/poses.ts) */}
+        <div data-devices-band aria-hidden="true" className="h-[300px] md:h-[440px]" />
+
+        {/* Two image cards */}
         <Reveal
           stagger={0.12}
-          className="mt-16 md:mt-20 grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6"
+          className="mt-8 md:mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 max-w-4xl"
         >
           {cards.map((card) => (
             <div

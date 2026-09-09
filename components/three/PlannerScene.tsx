@@ -20,6 +20,7 @@ import {
   SHEET_PRODUCTS,
   inside,
   sheetTexture,
+  type Pose,
   type Transform,
 } from "./poses";
 
@@ -41,6 +42,27 @@ function apply(group: THREE.Object3D | null, l: Live) {
   group.position.set(l.x, l.y, l.z);
   group.rotation.set(l.rx, l.ry, l.rz);
   group.scale.setScalar(l.s);
+}
+
+/**
+ * Turn section-relative pose keys into page progress (0..1) from the live
+ * layout, so the scene lands where each section actually is.
+ */
+function resolveProgress(poses: Pose[]): number[] {
+  const sections = Array.from(document.querySelectorAll<HTMLElement>("main > section"));
+  const vh = window.innerHeight;
+  const total = Math.max(1, document.documentElement.scrollHeight - vh);
+  let last = -1;
+  return poses.map(({ at }) => {
+    const section = sections[Math.min(at.section, sections.length - 1)];
+    const el = (at.selector && section.querySelector<HTMLElement>(at.selector)) || section;
+    const rect = el.getBoundingClientRect();
+    const top = rect.top + window.scrollY;
+    const y = top + at.offset * rect.height - (at.anchor ?? 0.5) * vh;
+    const p = Math.min(1, Math.max(0, y / total));
+    last = Math.max(p, last + 0.001);
+    return Math.min(last, 1);
+  });
 }
 
 /**
@@ -111,8 +133,13 @@ export default function PlannerScene({
 
       // Scroll choreography: timeline time == page progress. Each segment eases
       // from one pose to the next; the notebook leads and the sheets follow in a
-      // short stagger. Built after the entrance so the two never fight.
+      // short stagger. Built after the entrance so the two never fight, and
+      // rebuilt when the viewport size changes (section positions move).
+      let scrollTl: gsap.core.Timeline | null = null;
       const buildScrollTimeline = () => {
+        scrollTl?.scrollTrigger?.kill();
+        scrollTl?.kill();
+        const progress = resolveProgress(poses);
         const tl = gsap.timeline({
           defaults: { ease: "power2.inOut" },
           scrollTrigger: {
@@ -123,17 +150,34 @@ export default function PlannerScene({
           },
         });
         for (let k = 1; k < poses.length; k++) {
-          const from = poses[k - 1];
           const to = poses[k];
-          const dur = to.p - from.p;
-          tl.to(live.notebook, { ...toLive(to.notebook), duration: dur * 0.85 }, from.p);
-          tl.to(live.cover, { open: to.cover, duration: dur * 0.6 }, from.p);
-          tl.to(live.laptop, { ...toLive(to.devices.laptop), duration: dur * 0.75 }, from.p);
-          tl.to(live.tablet, { ...toLive(to.devices.tablet), duration: dur * 0.75 }, from.p + dur * 0.08);
+          const from = progress[k - 1];
+          const dur = Math.max(0.001, progress[k] - from);
+          tl.to(live.notebook, { ...toLive(to.notebook), duration: dur * 0.85 }, from);
+          tl.to(live.cover, { open: to.cover, duration: dur * 0.6 }, from);
+          tl.to(live.laptop, { ...toLive(to.devices.laptop), duration: dur * 0.75 }, from);
+          tl.to(live.tablet, { ...toLive(to.devices.tablet), duration: dur * 0.75 }, from + dur * 0.08);
           for (let i = 0; i < sheetCount; i++) {
-            tl.to(live.sheets[i], { ...toLive(to.sheets[i]), duration: dur * 0.6 }, from.p + i * dur * 0.05);
+            tl.to(live.sheets[i], { ...toLive(to.sheets[i]), duration: dur * 0.6 }, from + i * dur * 0.05);
           }
         }
+        scrollTl = tl;
+      };
+
+      let resizeTimer = 0;
+      let lastWidth = window.innerWidth;
+      const onResize = () => {
+        if (!scrollTl || Math.abs(window.innerWidth - lastWidth) < 80) return;
+        window.clearTimeout(resizeTimer);
+        resizeTimer = window.setTimeout(() => {
+          lastWidth = window.innerWidth;
+          buildScrollTimeline();
+        }, 250);
+      };
+      window.addEventListener("resize", onResize);
+      const cleanup = () => {
+        window.clearTimeout(resizeTimer);
+        window.removeEventListener("resize", onResize);
       };
 
       // Entrance: closed book, cover opens, the first pages slide out. Skipped
@@ -141,7 +185,7 @@ export default function PlannerScene({
       const scrolledAway = scrollStore.progress > 0.02 || window.scrollY > 40;
       if (scrolledAway) {
         buildScrollTimeline();
-        return;
+        return cleanup;
       }
       const hero = poses[0];
       const start = inside(hero.notebook);
@@ -157,6 +201,7 @@ export default function PlannerScene({
           0.35 + i * 0.12
         );
       }
+      return cleanup;
     },
     { dependencies: [animate, poses, sheetCount, live] }
   );
