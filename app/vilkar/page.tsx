@@ -1,10 +1,13 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { pageMeta } from "@/lib/site";
 
-export const metadata = {
+export const metadata = pageMeta({
   title: "Kjøpsvilkår — Studentplanlegger",
-  description: "Kjøpsvilkår for Studentplanlegger.no",
-};
+  description:
+    "Kjøpsvilkår for fyllbare PDF-planleggere hos Studentplanlegger. Priser, levering, angrerett og bruksvilkår.",
+  path: "/vilkar",
+});
 
 export default function VilkarPage() {
   return (

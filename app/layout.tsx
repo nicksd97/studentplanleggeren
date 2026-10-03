@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
 import { CartProvider } from "@/lib/cart-context";
+import { OG_IMAGE_ALT, OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
 
 const playfair = Playfair_Display({
@@ -18,31 +19,16 @@ const dmSans = DM_Sans({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_ORIGIN),
   icons: {
     icon: "/favicon.png",
     apple: "/favicon.png",
   },
-  title: "Studentplanlegger — Få orden på studiene",
-  description:
-    "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
-  keywords: [
-    "studentplanlegger",
-    "planlegger student",
-    "ukentlig plan",
-    "daglig planlegger",
-    "vane tracker",
-    "pomodoro planlegger",
-    "fyllbar pdf",
-    "studieplanlegger",
-  ],
   openGraph: {
+    siteName: SITE_NAME,
     locale: "nb_NO",
-    url: "https://studentplanlegger.no",
-    siteName: "Studentplanlegger",
-    title: "Studentplanlegger — Få orden på studiene",
-    description:
-      "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
     type: "website",
+    images: [{ url: OG_IMAGE_PATH, alt: OG_IMAGE_ALT }],
   },
 };
 

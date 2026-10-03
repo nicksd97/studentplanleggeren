@@ -17,18 +17,21 @@ export default function Hero() {
 
         {/* Heading */}
         <FadeInOnScroll delay={100}>
-          <h1 
+          <h1
             className="font-[family-name:var(--font-display)] text-5xl sm:text-6xl lg:text-7xl font-bold text-brand-dark mb-4"
             style={{ textShadow: '0 2px 4px rgba(61,50,41,0.08)' }}
           >
             Studentplanlegger
+            <span className="block mt-4 font-[family-name:var(--font-body)] text-lg sm:text-xl font-normal text-brand-medium max-w-2xl mx-auto">
+              Få orden på studiene.
+            </span>
           </h1>
         </FadeInOnScroll>
 
         {/* Subheading */}
         <FadeInOnScroll delay={200}>
           <p className="text-brand-medium text-lg sm:text-xl max-w-2xl mx-auto mb-12 md:mb-16">
-            Få orden på studiene. 25 fyllbare PDF-planleggere for studenter. Daglig, ukentlig, månedlig — skriv ut eller fyll inn direkte på skjermen.
+            25 fyllbare PDF-planleggere for studenter. Daglig, ukentlig, månedlig — skriv ut eller fyll inn direkte på skjermen.
           </p>
         </FadeInOnScroll>
 
