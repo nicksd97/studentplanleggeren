@@ -263,6 +263,50 @@ describe("Vipps payment confirmation", () => {
     assert.equal(harness.emails.length, 1);
   });
 
+  it("does not treat AUTHORIZED as paid when Vipps has not reserved the order amount", async () => {
+    const harness = await pendingOrder();
+    harness.setPayment(
+      payment({
+        state: "AUTHORIZED",
+        aggregate: {
+          authorizedAmount: { currency: "NOK", value: 0 },
+          capturedAmount: { currency: "NOK", value: 0 },
+          cancelledAmount: { currency: "NOK", value: 0 },
+          refundedAmount: { currency: "NOK", value: 0 },
+        },
+      }),
+    );
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+
+    assert.equal(result.ok, false);
+    assert.equal(harness.orders[0].payment_status, "pending");
+    assert.equal(harness.emails.length, 0);
+  });
+
+  it("keeps a completed order paid if a later Vipps status is expired", async () => {
+    const harness = await pendingOrder();
+    harness.setPayment(
+      payment({
+        state: "AUTHORIZED",
+        aggregate: {
+          authorizedAmount: { currency: "NOK", value: product.price * 100 },
+          capturedAmount: { currency: "NOK", value: product.price * 100 },
+          cancelledAmount: { currency: "NOK", value: 0 },
+          refundedAmount: { currency: "NOK", value: 0 },
+        },
+      }),
+    );
+    await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+    harness.setPayment(payment({ state: "EXPIRED" }));
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+
+    assert.equal(result.ok, true);
+    assert.equal(harness.orders[0].payment_status, "completed");
+    assert.equal(harness.emails.length, 1);
+  });
+
   it("does not complete when the Vipps amount does not match the order", async () => {
     const harness = await pendingOrder();
     harness.setPayment(

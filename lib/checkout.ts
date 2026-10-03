@@ -147,10 +147,9 @@ export function isReservedOrCaptured(payment: VippsPayment, expectedOre: number)
   if (payment.amount?.currency !== "NOK" || payment.amount.value !== expectedOre) {
     return false;
   }
-  if (payment.state === "AUTHORIZED") {
-    return true;
-  }
-  return (payment.aggregate?.capturedAmount?.value ?? 0) >= expectedOre;
+  const authorized = payment.aggregate?.authorizedAmount?.value ?? 0;
+  const captured = payment.aggregate?.capturedAmount?.value ?? 0;
+  return captured >= expectedOre || (payment.state === "AUTHORIZED" && authorized >= expectedOre);
 }
 
 function tokenExpiry(now: Date): Date {
@@ -238,6 +237,10 @@ export async function confirmVippsPayment(
     return { ok: false, status: 404, error: "Ordre ikke funnet", reason: "not_found" };
   }
 
+  if (order.payment_status === "completed") {
+    return { ok: true, downloadToken: order.download_token };
+  }
+
   let payment: VippsPayment;
   try {
     payment = await deps.vipps.getPayment(reference);
@@ -252,6 +255,11 @@ export async function confirmVippsPayment(
   }
 
   const expectedOre = order.amount_nok * 100;
+  const captured = payment.aggregate?.capturedAmount?.value ?? 0;
+  if (payment.amount?.currency === "NOK" && captured >= expectedOre && payment.amount.value === expectedOre) {
+    return finalizePaidOrder(order, deps);
+  }
+
   if (payment.amount?.currency !== "NOK" || payment.amount.value !== expectedOre) {
     return {
       ok: false,
@@ -291,13 +299,20 @@ export async function confirmVippsPayment(
     }
   }
 
+  return finalizePaidOrder(order, deps);
+}
+
+async function finalizePaidOrder(
+  order: OrderRecord,
+  deps: CheckoutDependencies,
+): Promise<ConfirmVippsResult> {
   if (order.payment_status === "completed") {
     return { ok: true, downloadToken: order.download_token };
   }
 
   const completed = await deps.orders.completeIfPending(order.id);
   if (!completed) {
-    const latest = await deps.orders.findByPaymentId(reference);
+    const latest = await deps.orders.findByPaymentId(order.payment_id ?? "");
     if (latest?.payment_status === "completed") {
       return { ok: true, downloadToken: latest.download_token };
     }
@@ -310,12 +325,16 @@ export async function confirmVippsPayment(
     };
   }
 
-  await deps.mailer.sendOrderConfirmation({
-    email: completed.email,
-    firstName: completed.first_name,
-    items: completed.items,
-    downloadToken: completed.download_token,
-  });
+  try {
+    await deps.mailer.sendOrderConfirmation({
+      email: completed.email,
+      firstName: completed.first_name,
+      items: completed.items,
+      downloadToken: completed.download_token,
+    });
+  } catch {
+    // Payment is already captured/reserved; do not roll back fulfillment.
+  }
 
   return { ok: true, downloadToken: completed.download_token };
 }

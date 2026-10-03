@@ -56,14 +56,17 @@ function TakkContent() {
       return;
     }
 
-    let cancelled = false;
+    let stopped = false;
     const poll = async () => {
       try {
         const response = await fetch(`/api/vipps/status?token=${encodeURIComponent(token)}`);
         const data = await response.json();
-        if (!cancelled && data.paymentStatus === "completed") {
+        if (
+          !stopped &&
+          (data.paymentStatus === "completed" || data.paymentStatus === "cancelled")
+        ) {
           setOrder((current) =>
-            current ? { ...current, paymentStatus: "completed" } : current,
+            current ? { ...current, paymentStatus: data.paymentStatus } : current,
           );
         }
       } catch {
@@ -74,7 +77,7 @@ function TakkContent() {
     const interval = window.setInterval(poll, 2000);
     const timeout = window.setTimeout(() => window.clearInterval(interval), 30000);
     return () => {
-      cancelled = true;
+      stopped = true;
       window.clearInterval(interval);
       window.clearTimeout(timeout);
     };
@@ -119,24 +122,40 @@ function TakkContent() {
   const expiryDate = new Date(order.expiresAt);
   const isExpired = expiryDate < new Date();
   const downloadsLeft = order.maxDownloads - order.downloadCount;
+  const isPaid = order.paymentStatus === "completed";
+  const isCancelled = order.paymentStatus === "cancelled";
 
   return (
     <div className="max-w-lg mx-auto text-center">
       {/* Checkmark */}
       <div className="flex items-center justify-center mb-6">
-        <div className="h-20 w-20 rounded-full bg-green-100 flex items-center justify-center">
-          <svg className="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
+        <div className={`h-20 w-20 rounded-full flex items-center justify-center ${isPaid ? "bg-green-100" : "bg-brand-soft"}`}>
+          {isPaid ? (
+            <svg className="h-10 w-10 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+          ) : (
+            <svg className="h-10 w-10 text-brand-medium" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          )}
         </div>
       </div>
 
       <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-3">
-        Takk for kjøpet!
+        {isPaid ? "Takk for kjøpet!" : isCancelled ? "Betalingen ble avbrutt" : "Venter på betaling"}
       </h1>
       <p className="text-brand-medium mb-10">
-        En bekreftelse er sendt til{" "}
-        <span className="font-medium text-brand-dark">{order.email}</span>
+        {isPaid ? (
+          <>
+            En bekreftelse er sendt til{" "}
+            <span className="font-medium text-brand-dark">{order.email}</span>
+          </>
+        ) : isCancelled ? (
+          "Vipps bekreftet ikke betalingen, så nedlastingen er ikke aktivert."
+        ) : (
+          "Vi venter på bekreftelse fra Vipps. Ikke lukk siden."
+        )}
       </p>
 
       {/* Download section */}

@@ -30,7 +30,11 @@ export async function GET(request: NextRequest) {
   }
 
   const result = await confirmProductionVippsPayment(order.payment_id);
-  return NextResponse.json({
-    paymentStatus: result.ok ? "completed" : order.payment_status,
-  });
+  if (result.ok) {
+    return NextResponse.json({ paymentStatus: "completed" });
+  }
+  if (result.reason === "cancelled") {
+    return NextResponse.json({ paymentStatus: "cancelled" });
+  }
+  return NextResponse.json({ paymentStatus: order.payment_status });
 }
