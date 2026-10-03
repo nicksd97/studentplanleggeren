@@ -17,7 +17,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/takk?token=${encodeURIComponent(result.downloadToken)}`);
   }
 
-  if (result.reason === "pending" && result.downloadToken) {
+  if (
+    (result.reason === "pending" || result.reason === "error") &&
+    result.downloadToken
+  ) {
     return NextResponse.redirect(`${origin}/takk?token=${encodeURIComponent(result.downloadToken)}`);
   }
 

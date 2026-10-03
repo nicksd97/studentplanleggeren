@@ -197,6 +197,7 @@ describe("card checkout", () => {
     assert.equal(result.ok, false);
     if (result.ok) throw new Error("expected Stripe start to fail");
     assert.equal(result.status, 503);
+    assert.match(result.error, /ikke aktivert/i);
     assert.equal(harness.emails.length, 0);
     assert.ok(harness.orders.every((order) => order.payment_status !== "completed"));
   });
@@ -221,6 +222,7 @@ describe("card checkout", () => {
     assert.match(source, /Betal med kort/);
     assert.match(source, /handlePayment\("vipps"\)/);
     assert.match(source, /handlePayment\("stripe"\)/);
+    assert.match(source, /Anbefalt/);
     assert.ok(source.indexOf("Betal med Vipps") < source.indexOf("Betal med kort"));
     assert.ok(source.indexOf("#FF5B24") < source.indexOf("Betal med kort"));
     assert.match(source, /isCardCheckoutAllowed/);
@@ -293,8 +295,35 @@ describe("Stripe payment confirmation", () => {
     const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
 
     assert.equal(result.ok, false);
+    assert.notEqual(harness.orders[0].payment_status, "completed");
+    assert.equal(harness.emails.length, 0);
+  });
+
+  it("does not complete a paid Stripe session in the wrong currency", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(
+      stripeSession({
+        status: "complete",
+        payment_status: "paid",
+        amount_total: product.price * 100,
+        currency: "usd",
+      }),
+    );
+
+    const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(result.ok, false);
     assert.equal(harness.orders[0].payment_status, "pending");
     assert.equal(harness.emails.length, 0);
+  });
+
+  it("keeps a paid order on the thank-you page if Stripe status cannot be fetched", async () => {
+    const returnSource = readFileSync(
+      new URL("../app/api/stripe/return/route.ts", import.meta.url),
+      "utf8",
+    );
+    assert.match(returnSource, /reason === "error"/);
+    assert.match(returnSource, /\/takk\?token=/);
   });
 
   it("marks the order paid and sends the download only after Stripe reports paid", async () => {

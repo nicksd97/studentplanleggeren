@@ -178,6 +178,14 @@ function tokenExpiry(now: Date): Date {
   return expiry;
 }
 
+function stripeStartFailureMessage(error: unknown): string {
+  const message = error instanceof Error ? error.message : "";
+  if (/cannot currently make live charges|account is not activated|charges_enabled/i.test(message)) {
+    return "Kortbetaling kan ikke belastes ennå. Stripe-kontoen er ikke aktivert.";
+  }
+  return "Kunne ikke starte kortbetaling";
+}
+
 function paymentDescription(items: CheckoutItem[]): string {
   if (items.length === 1) {
     return items[0].name.slice(0, 100);
@@ -239,8 +247,8 @@ export async function startCheckoutPayment(
         payment_id: session.id,
       });
       return { ok: true, redirectUrl: session.url };
-    } catch {
-      return { ok: false, status: 503, error: "Kunne ikke starte kortbetaling" };
+    } catch (error) {
+      return { ok: false, status: 503, error: stripeStartFailureMessage(error) };
     }
   }
 
@@ -405,7 +413,10 @@ export async function confirmStripePayment(
     };
   }
 
-  if (session.status === "expired") {
+  if (
+    session.status === "expired" ||
+    (session.status === "complete" && session.payment_status !== "paid")
+  ) {
     await deps.orders.markCancelled(order.id);
     return {
       ok: false,
