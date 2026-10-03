@@ -159,3 +159,15 @@ Vipps: pending row + redirect URL, or a 502 that is no longer the insert failure
 Stripe: session start after pending insert, or a Stripe-not-activated message. Failed/cancelled/abandoned paths stay unpaid.
 
 - [x] **Step 4: Commit, push, and update the draft PR. Do not merge.**
+
+---
+
+## Live after merge of PR #6
+
+Merged as `dff328a9cd241e5c2d1e029610a1dd87daa8b370`. Production `dpl_G2f4w7pA4SK9QRK5M76X6QYxMAdU` is READY and aliased to `www.studentplanlegger.no`.
+
+One non-paying production `POST /api/orders` for `daglig-gjennomgang` / 49 kr / vipps returned HTTP 502:
+
+`{"error":"Kunne ikke opprette ordre","code":"ENOTFOUND","details":"TypeError: fetch failed | ... getaddrinfo ENOTFOUND ipofspmzdjshjtcsdzcx.supabase.co (ENOTFOUND)"}`
+
+Nothing was marked paid. The named env is `NEXT_PUBLIC_SUPABASE_URL`. Its host does not resolve. Env values were not changed.
