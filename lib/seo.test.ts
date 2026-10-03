@@ -160,6 +160,26 @@ describe("guide articles", () => {
     }
     assert.ok(getGuide("planlegg-studiedagen"));
     assert.equal(guidePath("planlegg-studiedagen"), "/guider/planlegg-studiedagen");
+    const catalogKeys = new Set(guides.map((guide) => guide.catalogKey));
+    assert.deepEqual([...catalogKeys].sort(), [
+      "daglig",
+      "produktivitet",
+      "sporing",
+      "ukentlig",
+    ]);
+  });
+
+  it("gives each guide a www canonical and matching og:url", () => {
+    for (const guide of guides) {
+      const meta = pageMeta({
+        title: guide.title,
+        description: guide.description,
+        path: guidePath(guide.slug),
+      });
+      const url = `https://www.studentplanlegger.no/guider/${guide.slug}`;
+      assert.equal(meta.alternates.canonical, url);
+      assert.equal(meta.openGraph.url, url);
+    }
   });
 
   it("does not invent prices, reviews, or ratings", () => {

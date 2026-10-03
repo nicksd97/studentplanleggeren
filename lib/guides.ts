@@ -121,7 +121,7 @@ export const guides: Guide[] = [
     catalogKey: "produktivitet",
     productSlug: "pomodoro-planlegger",
     productLead:
-      "Pomodoro Planlegger er et fyllbart ark for å planlegge studieøkter og notere hvordan økten gikk. Den ligger sammen med de andre produktivitetsarkene.",
+      "Pomodoro Planlegger er et fyllbart ark for å planlegge studieøkter og notere produktivitet. Den ligger sammen med de andre produktivitetsarkene.",
     productCta: "Se Pomodoro Planlegger",
     sections: [
       {
@@ -163,7 +163,7 @@ export const guides: Guide[] = [
     catalogKey: "sporing",
     productSlug: "vane-tracker",
     productLead:
-      "Vane Tracker er et månedlig rutenett med plass til egne kategorier, slik at du kan se fremgangen. 30-Dagers Utfordring er et mer avgrenset ark for én vane i en måned.",
+      "Vane Tracker er et månedlig rutenett med plass til egne kategorier, slik at du kan se fremgangen. 30-Dagers Utfordring er et mer avgrenset ark for nye vaner eller mål.",
     productCta: "Se Vane Tracker",
     sections: [
       {
