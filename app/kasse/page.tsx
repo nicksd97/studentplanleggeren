@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useCart } from "@/lib/cart-context";
+import {
+  CARD_CHECKOUT_DISABLED_MESSAGE,
+  isCardCheckoutAllowed,
+} from "@/lib/checkout";
 import { pakker } from "@/lib/products";
 import Button from "@/components/ui/Button";
 
 export default function KassePage() {
-  const { items, totalPrice, removeItem, clearCart } = useCart();
-  const router = useRouter();
+  const { items, totalPrice, removeItem } = useCart();
+  const cardCheckoutAllowed = isCardCheckoutAllowed();
 
   const [form, setForm] = useState({
     fornavn: "",
@@ -45,7 +48,14 @@ export default function KassePage() {
     return errs;
   }
 
-  async function handlePayment(provider: "vipps" | "stripe") {
+  useEffect(() => {
+    const betaling = new URLSearchParams(window.location.search).get("betaling");
+    if (betaling === "avbrutt") {
+      setPaymentError("Betalingen ble avbrutt eller mislyktes. Ingen ordre er fullført.");
+    }
+  }, []);
+
+  async function handlePayment(provider: "vipps") {
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
@@ -74,12 +84,12 @@ export default function KassePage() {
 
       const data = await response.json();
 
-      if (data.success) {
-        clearCart();
-        router.push(`/takk?token=${data.downloadToken}`);
-      } else {
-        setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
+      if (data.redirectUrl) {
+        window.location.assign(data.redirectUrl);
+        return;
       }
+
+      setPaymentError(data.error || "Noe gikk galt. Pr\u00f8v igjen.");
     } catch {
       setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
     } finally {
@@ -301,25 +311,22 @@ export default function KassePage() {
                     )}
                   </button>
                   <button
-                    onClick={() => handlePayment("stripe")}
-                    disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-bold text-white hover:brightness-110 shadow-sm hover:-translate-y-0.5 transition-all cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
+                    type="button"
+                    disabled={!cardCheckoutAllowed || loading}
+                    aria-disabled={!cardCheckoutAllowed}
+                    className="w-full flex items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-bold text-white shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                   >
-                    {loading ? (
-                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                    ) : (
-                      <>
-                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                        </svg>
-                        Betal med kort
-                      </>
-                    )}
+                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                    </svg>
+                    Betal med kort
                   </button>
                 </div>
+                {!cardCheckoutAllowed && (
+                  <p className="text-center text-xs text-brand-medium mb-3">
+                    {CARD_CHECKOUT_DISABLED_MESSAGE}
+                  </p>
+                )}
 
                 {paymentError && (
                   <p className="text-center text-sm text-red-500 mb-3">{paymentError}</p>
