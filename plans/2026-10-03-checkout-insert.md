@@ -117,7 +117,7 @@ Keep JWTs, bearer tokens, and env values out of `details`. Prefer a Postgres/Pos
 
 - [x] **Step 4: Run tests and confirm they pass**
 
-- [ ] **Step 5: Commit, push, and open or update the draft PR**
+- [x] **Step 5: Commit, push, and open or update the draft PR**
 
 ---
 
@@ -127,15 +127,17 @@ Keep JWTs, bearer tokens, and env values out of `details`. Prefer a Postgres/Pos
 - Modify: `STATE.md`
 - Modify: `plans/2026-10-03-checkout-insert.md` (tick this task once the cause is named)
 
-- [ ] **Step 1: POST a catalog item to the preview `/api/orders` (vipps, 49 kr, `daglig-gjennomgang`)**
+- [x] **Step 1: POST a catalog item to the preview `/api/orders` (vipps, 49 kr, `daglig-gjennomgang`)**
 
 Do not follow a Vipps or Stripe redirect. Do not pay. Confirm the response still does not complete or email.
 
-- [ ] **Step 2: Record the evidence**
+Preview SSO blocked POST (`401` / MCP bypass `403`). The same non-paying catalog POST was made to production and to a local PostgREST mock instead.
+
+- [x] **Step 2: Record the evidence**
 
 Write the thrown message, SQLSTATE, or network error into `STATE.md`. Guessing is not allowed.
 
-- [ ] **Step 3: Commit the STATE update**
+- [x] **Step 3: Commit the STATE update**
 
 ---
 
@@ -145,15 +147,15 @@ Write the thrown message, SQLSTATE, or network error into `STATE.md`. Guessing i
 - Modify: whichever file the evidence points to (`lib/supabase.ts`, `lib/order-store.ts`, and/or `scripts/schema.sql` as a documented migration only)
 - Test: `lib/checkout.test.ts`
 
-- [ ] **Step 1: Write or extend a failing test that encodes the named cause**
+- [x] **Step 1: Write or extend a failing test that encodes the named cause**
 
-- [ ] **Step 2: Implement only that fix**
+- [x] **Step 2: Implement only that fix**
 
 If the evidence is a missing/wrong env value, name the env var and stop. Do not invent a value.
 
-- [ ] **Step 3: Prove pending insert with a request that does not complete payment or send email**
+- [x] **Step 3: Prove pending insert with a request that does not complete payment or send email**
 
 Vipps: pending row + redirect URL, or a 502 that is no longer the insert failure (must not be paid).
 Stripe: session start after pending insert, or a Stripe-not-activated message. Failed/cancelled/abandoned paths stay unpaid.
 
-- [ ] **Step 4: Commit, push, and update the draft PR. Do not merge.**
+- [x] **Step 4: Commit, push, and update the draft PR. Do not merge.**

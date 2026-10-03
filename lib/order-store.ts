@@ -32,11 +32,15 @@ function mapOrder(row: OrderRow): OrderRecord {
   };
 }
 
-export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
+type OrderClient = Pick<typeof supabaseAdmin, "from">;
+
+export function createSupabaseOrderStore(
+  client: OrderClient = supabaseAdmin,
+): CheckoutDependencies["orders"] {
   return {
     async insertPending(data) {
       try {
-        const { data: order, error } = await supabaseAdmin
+        const { data: order, error } = await client
           .from("orders")
           .insert({
             email: data.email,
@@ -67,7 +71,7 @@ export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
     },
 
     async findByPaymentId(paymentId) {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await client
         .from("orders")
         .select(
           "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at",
@@ -83,7 +87,7 @@ export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
     },
 
     async completeIfPending(id) {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await client
         .from("orders")
         .update({ payment_status: "completed" })
         .eq("id", id)
@@ -101,7 +105,7 @@ export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
     },
 
     async markCancelled(id) {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await client
         .from("orders")
         .update({ payment_status: "cancelled" })
         .eq("id", id)
