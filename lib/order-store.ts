@@ -48,13 +48,13 @@ export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
           download_token: data.download_token,
           token_expires_at: data.token_expires_at,
         })
-        .select(
-          "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at",
-        )
+        .select()
         .single();
 
       if (error || !order) {
-        throw new Error("Kunne ikke opprette ordre");
+        const failure = new Error("Kunne ikke opprette ordre") as Error & { code?: string };
+        failure.code = error?.code;
+        throw failure;
       }
 
       return mapOrder(order as OrderRow);
