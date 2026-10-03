@@ -1,27 +1,27 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { alleProdukter, categoryGroups, pakker } from "./products.ts";
+import { alleProdukter, categoryGroups, pakker } from "./products";
 import {
   SITE_ORIGIN,
   absoluteUrl,
   indexablePaths,
   pageMeta,
   robotsDisallow,
-} from "./site.ts";
+} from "./site";
 import {
   resolveCatalog,
   catalogTitle,
   catalogDescription,
   catalogHeading,
-} from "./catalog.ts";
+} from "./catalog";
 import {
   faqPageJsonLd,
   organizationJsonLd,
   productOfferJsonLd,
   productListJsonLd,
   websiteJsonLd,
-} from "./json-ld.ts";
-import { faqItems } from "./faq.ts";
+} from "./json-ld";
+import { faqItems } from "./faq";
 
 describe("site URLs", () => {
   it("uses the www host, never the apex", () => {

@@ -22,7 +22,7 @@ export default function Hero() {
             style={{ textShadow: '0 2px 4px rgba(61,50,41,0.08)' }}
           >
             Studentplanlegger
-            <span className="block mt-4 text-lg sm:text-xl lg:text-2xl font-normal text-brand-medium max-w-2xl mx-auto">
+            <span className="block mt-4 font-[family-name:var(--font-body)] text-lg sm:text-xl font-normal text-brand-medium max-w-2xl mx-auto">
               Få orden på studiene.
             </span>
           </h1>

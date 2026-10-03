@@ -1,4 +1,4 @@
-import { categoryGroups } from "./products.ts";
+import { categoryGroups } from "./products";
 
 export interface PageMeta {
   title: string;

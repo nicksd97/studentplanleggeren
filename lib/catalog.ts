@@ -2,7 +2,7 @@ import {
   alleProdukter,
   categoryGroups,
   type Product,
-} from "./products.ts";
+} from "./products";
 
 export type CatalogKey = "alle" | (typeof categoryGroups)[number]["key"];
 

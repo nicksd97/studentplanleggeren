@@ -1,7 +1,7 @@
-import type { Bundle, Product } from "./products.ts";
-import type { Catalog } from "./catalog.ts";
-import { catalogPath } from "./catalog.ts";
-import type { faqItems } from "./faq.ts";
+import type { Bundle, Product } from "./products";
+import type { Catalog } from "./catalog";
+import { catalogPath } from "./catalog";
+import type { faqItems } from "./faq";
 import {
   LEGAL_NAME,
   ORG_NUMBER,
@@ -9,7 +9,7 @@ import {
   SITE_NAME,
   SITE_ORIGIN,
   absoluteUrl,
-} from "./site.ts";
+} from "./site";
 
 type JsonLd = Record<string, unknown>;
 

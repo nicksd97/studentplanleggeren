@@ -90,7 +90,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Price + CTA */}
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-brand-soft/30">
           <span className="font-[family-name:var(--font-display)] text-3xl font-black text-brand-dark">
-            {product.price} kr
+            {`${product.price} kr`}
           </span>
           <Button
             variant="primary"
