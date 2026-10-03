@@ -1,8 +1,14 @@
 import { randomBytes } from "crypto";
-import { confirmVippsPayment, startCheckoutPayment, type CheckoutDependencies } from "./checkout";
+import {
+  confirmStripePayment,
+  confirmVippsPayment,
+  startCheckoutPayment,
+  type CheckoutDependencies,
+} from "./checkout";
 import { sendOrderConfirmation } from "./email";
 import { createSupabaseOrderStore } from "./order-store";
 import { SITE_ORIGIN } from "./site";
+import { createStripeGateway } from "./stripe";
 import { generateDownloadToken } from "./tokens";
 import { createVippsGateway } from "./vipps";
 
@@ -10,6 +16,7 @@ export function createProductionCheckoutDeps(): CheckoutDependencies {
   return {
     orders: createSupabaseOrderStore(),
     vipps: createVippsGateway(),
+    stripe: createStripeGateway(),
     mailer: {
       sendOrderConfirmation,
     },
@@ -41,4 +48,8 @@ export async function startProductionCheckout(
 
 export async function confirmProductionVippsPayment(reference: string) {
   return confirmVippsPayment({ reference }, createProductionCheckoutDeps());
+}
+
+export async function confirmProductionStripePayment(sessionId: string) {
+  return confirmStripePayment({ sessionId }, createProductionCheckoutDeps());
 }

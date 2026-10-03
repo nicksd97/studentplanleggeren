@@ -1,7 +1,7 @@
 import { alleProdukter, pakker } from "./products";
 
 export function isCardCheckoutAllowed(): boolean {
-  return false;
+  return true;
 }
 
 export const CARD_CHECKOUT_DISABLED_MESSAGE =
@@ -22,6 +22,14 @@ export type VippsPayment = {
     cancelledAmount: MoneyAmount;
     refundedAmount: MoneyAmount;
   };
+};
+
+export type StripeCheckoutSession = {
+  id: string;
+  status: string;
+  payment_status: string;
+  amount_total: number | null;
+  currency: string | null;
 };
 
 export type CheckoutItem = {
@@ -62,6 +70,16 @@ export type CheckoutDependencies = {
     getPayment(reference: string): Promise<VippsPayment>;
     capturePayment(reference: string, amountOre: number): Promise<VippsPayment>;
   };
+  stripe: {
+    createCheckoutSession(input: {
+      amountOre: number;
+      email: string;
+      successUrl: string;
+      cancelUrl: string;
+      description: string;
+    }): Promise<{ id: string; url: string }>;
+    getCheckoutSession(sessionId: string): Promise<StripeCheckoutSession>;
+  };
   mailer: {
     sendOrderConfirmation(input: {
       email: string;
@@ -89,7 +107,7 @@ export type StartCheckoutResult =
   | { ok: true; redirectUrl: string }
   | { ok: false; status: number; error: string };
 
-export type ConfirmVippsResult =
+export type ConfirmPaymentResult =
   | { ok: true; downloadToken: string }
   | {
       ok: false;
@@ -98,6 +116,8 @@ export type ConfirmVippsResult =
       reason: "pending" | "cancelled" | "mismatch" | "not_found" | "error";
       downloadToken?: string;
     };
+
+export type ConfirmVippsResult = ConfirmPaymentResult;
 
 const FAILED_VIPPS_STATES = new Set(["ABORTED", "EXPIRED", "TERMINATED"]);
 
@@ -169,11 +189,11 @@ export async function startCheckoutPayment(
   input: StartCheckoutInput,
   deps: CheckoutDependencies,
 ): Promise<StartCheckoutResult> {
-  if (input.paymentProvider !== "vipps") {
+  if (input.paymentProvider !== "vipps" && input.paymentProvider !== "stripe") {
     return {
       ok: false,
       status: 400,
-      error: CARD_CHECKOUT_DISABLED_MESSAGE,
+      error: "Ugyldig betalingsmetode",
     };
   }
 
@@ -188,21 +208,47 @@ export async function startCheckoutPayment(
     return { ok: false, status: 400, error: priced.error };
   }
 
-  const reference = deps.createReference();
   const downloadToken = deps.createDownloadToken();
   const amountOre = priced.amountNok * 100;
-
-  await deps.orders.insertPending({
+  const pendingOrder = {
     email,
     first_name: firstName,
     last_name: input.lastName?.trim() ?? "",
     items: priced.items,
     amount_nok: priced.amountNok,
-    payment_provider: "vipps",
-    payment_id: reference,
-    payment_status: "pending",
+    payment_status: "pending" as const,
     download_token: downloadToken,
     token_expires_at: tokenExpiry(deps.now()).toISOString(),
+  };
+
+  if (input.paymentProvider === "stripe") {
+    try {
+      const session = await deps.stripe.createCheckoutSession({
+        amountOre,
+        email,
+        successUrl: `${input.returnOrigin}/api/stripe/return?session_id={CHECKOUT_SESSION_ID}`,
+        cancelUrl: `${input.returnOrigin}/kasse?betaling=avbrutt`,
+        description: paymentDescription(priced.items),
+      });
+      if (!session.id || !session.url) {
+        return { ok: false, status: 503, error: "Kunne ikke starte kortbetaling" };
+      }
+      await deps.orders.insertPending({
+        ...pendingOrder,
+        payment_provider: "stripe",
+        payment_id: session.id,
+      });
+      return { ok: true, redirectUrl: session.url };
+    } catch {
+      return { ok: false, status: 503, error: "Kunne ikke starte kortbetaling" };
+    }
+  }
+
+  const reference = deps.createReference();
+  await deps.orders.insertPending({
+    ...pendingOrder,
+    payment_provider: "vipps",
+    payment_id: reference,
   });
 
   try {
@@ -302,10 +348,87 @@ export async function confirmVippsPayment(
   return finalizePaidOrder(order, deps);
 }
 
+export async function confirmStripePayment(
+  input: { sessionId: string },
+  deps: CheckoutDependencies,
+): Promise<ConfirmPaymentResult> {
+  const sessionId = input.sessionId?.trim();
+  if (!sessionId) {
+    return {
+      ok: false,
+      status: 400,
+      error: "Mangler betalingsreferanse",
+      reason: "not_found",
+    };
+  }
+
+  const order = await deps.orders.findByPaymentId(sessionId);
+  if (!order) {
+    return { ok: false, status: 404, error: "Ordre ikke funnet", reason: "not_found" };
+  }
+
+  if (order.payment_status === "completed") {
+    return { ok: true, downloadToken: order.download_token };
+  }
+
+  let session: StripeCheckoutSession;
+  try {
+    session = await deps.stripe.getCheckoutSession(sessionId);
+  } catch {
+    return {
+      ok: false,
+      status: 502,
+      error: "Kunne ikke hente betalingsstatus",
+      reason: "error",
+      downloadToken: order.download_token,
+    };
+  }
+
+  const expectedOre = order.amount_nok * 100;
+  const currency = session.currency?.toLowerCase() ?? "";
+  const paidMatchingAmount =
+    session.payment_status === "paid" &&
+    currency === "nok" &&
+    session.amount_total === expectedOre;
+
+  if (paidMatchingAmount) {
+    return finalizePaidOrder(order, deps);
+  }
+
+  if (session.payment_status === "paid") {
+    return {
+      ok: false,
+      status: 409,
+      error: "Beløpet stemmer ikke",
+      reason: "mismatch",
+      downloadToken: order.download_token,
+    };
+  }
+
+  if (session.status === "expired") {
+    await deps.orders.markCancelled(order.id);
+    return {
+      ok: false,
+      status: 409,
+      error: "Betalingen ble avbrutt",
+      reason: "cancelled",
+      downloadToken: order.download_token,
+    };
+  }
+
+  return {
+    ok: false,
+    status: 409,
+    error: "Betalingen er ikke bekreftet ennå",
+    reason: "pending",
+    downloadToken: order.download_token,
+  };
+}
+
 async function finalizePaidOrder(
   order: OrderRecord,
   deps: CheckoutDependencies,
-): Promise<ConfirmVippsResult> {
+): Promise<ConfirmPaymentResult> {
   if (order.payment_status === "completed") {
     return { ok: true, downloadToken: order.download_token };
   }

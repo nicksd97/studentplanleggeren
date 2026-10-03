@@ -70,7 +70,7 @@ function TakkContent() {
           );
         }
       } catch {
-        // Keep showing the pending download state until Vipps confirms.
+        // Keep showing the pending download state until payment confirms.
       }
     };
 
@@ -152,9 +152,9 @@ function TakkContent() {
             <span className="font-medium text-brand-dark">{order.email}</span>
           </>
         ) : isCancelled ? (
-          "Vipps bekreftet ikke betalingen, så nedlastingen er ikke aktivert."
+          "Betalingen ble ikke bekreftet, så nedlastingen er ikke aktivert."
         ) : (
-          "Vi venter på bekreftelse fra Vipps. Ikke lukk siden."
+          "Vi venter på bekreftelse av betalingen. Ikke lukk siden."
         )}
       </p>
 

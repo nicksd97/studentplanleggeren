@@ -42,7 +42,7 @@ export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
           last_name: data.last_name,
           items: data.items,
           amount_nok: data.amount_nok,
-          payment_provider: "vipps",
+          payment_provider: data.payment_provider,
           payment_id: data.payment_id,
           payment_status: "pending",
           download_token: data.download_token,

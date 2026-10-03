@@ -55,7 +55,7 @@ export default function KassePage() {
     }
   }, []);
 
-  async function handlePayment(provider: "vipps") {
+  async function handlePayment(provider: "vipps" | "stripe") {
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
@@ -310,11 +310,13 @@ export default function KassePage() {
                       "Betal med Vipps"
                     )}
                   </button>
+                  <p className="text-center text-xs text-brand-medium">eller</p>
                   <button
                     type="button"
+                    onClick={() => handlePayment("stripe")}
                     disabled={!cardCheckoutAllowed || loading}
                     aria-disabled={!cardCheckoutAllowed}
-                    className="w-full flex items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-bold text-white shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+                    className="w-full flex items-center justify-center gap-2 rounded-full border border-brand-soft bg-white py-3.5 text-sm font-medium text-brand-dark shadow-sm transition-all hover:bg-brand-cream/60 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
