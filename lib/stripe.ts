@@ -38,7 +38,6 @@ export function createStripeGateway(): CheckoutDependencies["stripe"] {
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
         locale: "nb",
-        payment_method_types: ["card"],
         customer_email: input.email,
         success_url: input.successUrl,
         cancel_url: input.cancelUrl,
