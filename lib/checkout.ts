@@ -105,7 +105,7 @@ export type StartCheckoutInput = {
 
 export type StartCheckoutResult =
   | { ok: true; redirectUrl: string }
-  | { ok: false; status: number; error: string };
+  | { ok: false; status: number; error: string; code?: string };
 
 export type ConfirmPaymentResult =
   | { ok: true; downloadToken: string }
@@ -253,11 +253,21 @@ export async function startCheckoutPayment(
   }
 
   const reference = deps.createReference();
-  await deps.orders.insertPending({
-    ...pendingOrder,
-    payment_provider: "vipps",
-    payment_id: reference,
-  });
+  try {
+    await deps.orders.insertPending({
+      ...pendingOrder,
+      payment_provider: "vipps",
+      payment_id: reference,
+    });
+  } catch (error) {
+    const code = error instanceof Error && "code" in error ? String(error.code) : undefined;
+    return {
+      ok: false,
+      status: 502,
+      error: "Kunne ikke opprette ordre",
+      code,
+    };
+  }
 
   try {
     const payment = await deps.vipps.createPayment({

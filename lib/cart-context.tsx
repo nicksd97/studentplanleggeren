@@ -43,7 +43,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     setItems((prev) => {
       if (prev.some((i) => i.id === item.id)) return prev;
       added = true;
-      return [...prev, item];
+      const next = [...prev, item];
+      try {
+        sessionStorage.setItem("cart", JSON.stringify(next));
+      } catch {}
+      return next;
     });
     return added;
   }, []);

@@ -13,7 +13,7 @@ import type {
   StripeCheckoutSession,
   VippsPayment,
 } from "./checkout";
-import { alleProdukter } from "./products";
+import { alleProdukter, completePackageCartItem } from "./products";
 
 const product = alleProdukter[0];
 assert.ok(product);
@@ -384,7 +384,40 @@ describe("Stripe payment confirmation", () => {
   });
 });
 
+describe("header complete package", () => {
+  it("adds the complete package and sends the customer to checkout", () => {
+    const item = completePackageCartItem();
+    assert.equal(item.id, "komplett");
+    assert.equal(item.type, "bundle");
+    assert.equal(item.price, 349);
+    assert.match(item.name, /komplett/i);
+
+    const source = readFileSync(new URL("../components/layout/Header.tsx", import.meta.url), "utf8");
+    assert.match(source, /Kjøp komplett pakke/);
+    assert.match(source, /completePackageCartItem/);
+    assert.match(source, /addItem/);
+    assert.match(source, /\/kasse/);
+    assert.equal(source.includes('href="/#pakker"\n                className="inline-flex'), false);
+  });
+});
+
 describe("Vipps checkout start", () => {
+  it("does not mark the order paid or email when storing the pending order fails", async () => {
+    const harness = memoryDeps();
+    harness.deps.orders.insertPending = async () => {
+      throw new Error("Kunne ikke opprette ordre");
+    };
+
+    const result = await startCheckoutPayment(checkoutInput, harness.deps);
+
+    assert.equal(result.ok, false);
+    if (result.ok) throw new Error("expected Vipps start to fail closed");
+    assert.equal(result.status, 502);
+    assert.match(result.error, /ordre/i);
+    assert.equal(harness.emails.length, 0);
+    assert.ok(harness.orders.every((order) => order.payment_status !== "completed"));
+  });
+
   it("stores the order as pending and does not email a download link", async () => {
     const { deps, orders, emails, createdPayments } = memoryDeps();
     const result = await startCheckoutPayment(checkoutInput, deps);

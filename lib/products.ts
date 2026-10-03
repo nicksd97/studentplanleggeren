@@ -454,3 +454,16 @@ export const pakker: Bundle[] = [
 export function formatPrice(price: number): string {
   return `${price} kr`;
 }
+
+export function completePackageCartItem() {
+  const bundle = pakker.find((entry) => entry.id === "komplett");
+  if (!bundle) {
+    throw new Error("Komplett pakke mangler");
+  }
+  return {
+    id: bundle.id,
+    name: bundle.name,
+    price: bundle.price,
+    type: "bundle" as const,
+  };
+}
