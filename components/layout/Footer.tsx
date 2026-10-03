@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { guidePath, guides } from "@/lib/guides";
 
 export default function Footer() {
   return (
@@ -46,6 +47,23 @@ export default function Footer() {
             </ul>
           </div>
 
+          {/* Guider */}
+          <div>
+            <h4 className="font-medium text-sm mb-4 text-white/80">Guider</h4>
+            <ul className="space-y-2.5">
+              {guides.map((guide) => (
+                <li key={guide.slug}>
+                  <Link
+                    href={guidePath(guide.slug)}
+                    className="text-sm text-brand-soft hover:text-brand-accent transition-colors"
+                  >
+                    {guide.footerLabel}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
           {/* Info */}
           <div>
             <h4 className="font-medium text-sm mb-4 text-white/80">Info</h4>
@@ -65,18 +83,15 @@ export default function Footer() {
                   Vilkår
                 </Link>
               </li>
+              <li>
+                <a
+                  href="mailto:hei@studentplanlegger.no"
+                  className="text-sm text-brand-soft hover:text-brand-accent transition-colors"
+                >
+                  hei@studentplanlegger.no
+                </a>
+              </li>
             </ul>
-          </div>
-
-          {/* Kontakt */}
-          <div>
-            <h4 className="font-medium text-sm mb-4 text-white/80">Kontakt</h4>
-            <a
-              href="mailto:hei@studentplanlegger.no"
-              className="text-sm text-brand-soft hover:text-brand-accent transition-colors"
-            >
-              hei@studentplanlegger.no
-            </a>
           </div>
         </div>
 

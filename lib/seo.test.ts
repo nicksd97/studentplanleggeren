@@ -2,6 +2,15 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import { alleProdukter, categoryGroups, pakker } from "./products";
 import {
+  assertGuideCatalog,
+  getGuide,
+  guidePath,
+  guidePaths,
+  guideProduct,
+  guideProductHref,
+  guides,
+} from "./guides";
+import {
   SITE_ORIGIN,
   absoluteUrl,
   indexablePaths,
@@ -47,6 +56,9 @@ describe("site URLs", () => {
     assert.ok(paths.includes("/produkter?kategori=sporing"));
     assert.ok(paths.includes("/personvern"));
     assert.ok(paths.includes("/vilkar"));
+    for (const path of guidePaths()) {
+      assert.ok(paths.includes(path), `missing guide path ${path}`);
+    }
     assert.ok(!paths.includes("/kasse"));
     assert.ok(!paths.includes("/takk"));
     assert.ok(paths.every((path) => !path.startsWith("/api")));
@@ -114,6 +126,86 @@ describe("product catalog for crawlers", () => {
     }
     for (const description of descriptions) {
       assert.ok(description.length >= 70);
+    }
+  });
+});
+
+describe("guide articles", () => {
+  it("publishes three or four unique indexable guides", () => {
+    assert.ok(guides.length >= 3 && guides.length <= 4);
+    const slugs = guides.map((guide) => guide.slug);
+    const titles = guides.map((guide) => guide.title);
+    const descriptions = guides.map((guide) => guide.description);
+    const headings = guides.map((guide) => guide.heading);
+    assert.equal(new Set(slugs).size, guides.length);
+    assert.equal(new Set(titles).size, guides.length);
+    assert.equal(new Set(descriptions).size, guides.length);
+    assert.equal(new Set(headings).size, guides.length);
+    for (const title of titles) {
+      assert.match(title, /Studentplanlegger/);
+    }
+    for (const description of descriptions) {
+      assert.ok(description.length >= 70);
+    }
+  });
+
+  it("links each guide to a product and category that already exist", () => {
+    for (const guide of guides) {
+      assert.ok(assertGuideCatalog(guide), guide.slug);
+      const product = guideProduct(guide);
+      assert.ok(product);
+      assert.equal(guideProductHref(guide), `/produkter?kategori=${guide.catalogKey}`);
+      assert.ok(guide.productCta.length > 0);
+      assert.ok(guide.productLead.includes(product.name));
+    }
+    assert.ok(getGuide("planlegg-studiedagen"));
+    assert.equal(guidePath("planlegg-studiedagen"), "/guider/planlegg-studiedagen");
+    const catalogKeys = new Set(guides.map((guide) => guide.catalogKey));
+    assert.deepEqual([...catalogKeys].sort(), [
+      "daglig",
+      "produktivitet",
+      "sporing",
+      "ukentlig",
+    ]);
+  });
+
+  it("gives each guide a www canonical and matching og:url", () => {
+    for (const guide of guides) {
+      const meta = pageMeta({
+        title: guide.title,
+        description: guide.description,
+        path: guidePath(guide.slug),
+      });
+      const url = `https://www.studentplanlegger.no/guider/${guide.slug}`;
+      assert.equal(meta.alternates.canonical, url);
+      assert.equal(meta.openGraph.url, url);
+    }
+  });
+
+  it("does not invent prices, reviews, or ratings", () => {
+    const catalogPrices = new Set(
+      [...alleProdukter, ...pakker].flatMap((item) => {
+        const prices = [item.price];
+        if ("originalPrice" in item) prices.push(item.originalPrice);
+        return prices;
+      }),
+    );
+    const copy = guides
+      .flatMap((guide) => [
+        guide.title,
+        guide.description,
+        guide.heading,
+        guide.summary,
+        guide.productLead,
+        guide.productCta,
+        ...guide.sections.flatMap((section) => [section.heading, ...section.paragraphs]),
+      ])
+      .join("\n");
+
+    assert.equal(/anmeldelse|stjerner|rating|anmelder/i.test(copy), false);
+    const mentionedPrices = [...copy.matchAll(/(\d+)\s*kr/gi)].map((match) => Number(match[1]));
+    for (const price of mentionedPrices) {
+      assert.ok(catalogPrices.has(price), `unknown price ${price}`);
     }
   });
 });
