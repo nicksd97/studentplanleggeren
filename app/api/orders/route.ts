@@ -16,13 +16,19 @@ export async function POST(request: NextRequest) {
 
     if (!result.ok) {
       return NextResponse.json(
-        { error: result.error, ...(result.code ? { code: result.code } : {}) },
+        {
+          error: result.error,
+          ...(result.code ? { code: result.code } : {}),
+          ...(result.details ? { details: result.details } : {}),
+        },
         { status: result.status },
       );
     }
 
     return NextResponse.json({ redirectUrl: result.redirectUrl });
-  } catch {
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "unknown";
+    console.error("Order API error:", message);
     return NextResponse.json({ error: "Serverfeil" }, { status: 500 });
   }
 }

@@ -13,6 +13,7 @@ import type {
   StripeCheckoutSession,
   VippsPayment,
 } from "./checkout";
+import { createOrderInsertFailure } from "./order-insert-error";
 import { alleProdukter, completePackageCartItem } from "./products";
 
 const product = alleProdukter[0];
@@ -202,6 +203,30 @@ describe("card checkout", () => {
     assert.ok(harness.orders.every((order) => order.payment_status !== "completed"));
   });
 
+  it("returns 502 ordre error when Stripe session exists but insertPending throws", async () => {
+    const harness = memoryDeps();
+    harness.deps.orders.insertPending = async () => {
+      throw createOrderInsertFailure({
+        code: "",
+        message: "TypeError: fetch failed",
+        details: "Caused by: ConnectTimeoutError",
+      });
+    };
+
+    const result = await startCheckoutPayment(
+      { ...checkoutInput, paymentProvider: "stripe" },
+      harness.deps,
+    );
+
+    assert.equal(result.ok, false);
+    if (result.ok) throw new Error("expected insert to fail");
+    assert.equal(result.status, 502);
+    assert.match(result.error, /ordre/i);
+    assert.match(result.details ?? "", /fetch failed|ConnectTimeoutError/i);
+    assert.equal(harness.emails.length, 0);
+    assert.ok(harness.orders.every((order) => order.payment_status !== "completed"));
+  });
+
   it("rejects unknown payment providers without creating an order", async () => {
     const { deps, orders, emails } = memoryDeps();
     const result = await startCheckoutPayment(
@@ -239,6 +264,7 @@ describe("card checkout", () => {
     assert.equal(source.includes('paymentProvider !== "vipps"'), false);
     assert.equal(source.includes("CARD_CHECKOUT_DISABLED_MESSAGE"), false);
     assert.match(source, /startProductionCheckout/);
+    assert.match(source, /result\.details/);
   });
 
   it("reads the existing Stripe env names and never treats a missing charge as paid", () => {
@@ -405,7 +431,12 @@ describe("Vipps checkout start", () => {
   it("does not mark the order paid or email when storing the pending order fails", async () => {
     const harness = memoryDeps();
     harness.deps.orders.insertPending = async () => {
-      throw new Error("Kunne ikke opprette ordre");
+      throw createOrderInsertFailure({
+        code: "",
+        message: "TypeError: fetch failed",
+        details: "Caused by: Error: getaddrinfo ENOTFOUND example.supabase.co (ENOTFOUND)",
+        hint: "",
+      });
     };
 
     const result = await startCheckoutPayment(checkoutInput, harness.deps);
@@ -414,6 +445,30 @@ describe("Vipps checkout start", () => {
     if (result.ok) throw new Error("expected Vipps start to fail closed");
     assert.equal(result.status, 502);
     assert.match(result.error, /ordre/i);
+    assert.equal(result.code, "ENOTFOUND");
+    assert.match(result.details ?? "", /fetch failed|ENOTFOUND/i);
+    assert.equal(harness.emails.length, 0);
+    assert.ok(harness.orders.every((order) => order.payment_status !== "completed"));
+  });
+
+  it("preserves a PostgREST SQLSTATE from insertPending", async () => {
+    const harness = memoryDeps();
+    harness.deps.orders.insertPending = async () => {
+      throw createOrderInsertFailure({
+        code: "42703",
+        message: "column orders.payment_provider does not exist",
+        details: "",
+        hint: "",
+      });
+    };
+
+    const result = await startCheckoutPayment(checkoutInput, harness.deps);
+
+    assert.equal(result.ok, false);
+    if (result.ok) throw new Error("expected insert to fail");
+    assert.equal(result.status, 502);
+    assert.equal(result.code, "42703");
+    assert.match(result.details ?? "", /payment_provider|42703|does not exist/i);
     assert.equal(harness.emails.length, 0);
     assert.ok(harness.orders.every((order) => order.payment_status !== "completed"));
   });
@@ -600,5 +655,32 @@ describe("Vipps payment confirmation", () => {
     assert.equal(result.ok, false);
     assert.equal(harness.orders[0].payment_status, "pending");
     assert.equal(harness.emails.length, 0);
+  });
+});
+
+describe("createOrderInsertFailure", () => {
+  it("preserves a fetch/network insert failure when PostgREST code is empty", () => {
+    const failure = createOrderInsertFailure({
+      code: "",
+      message: "TypeError: fetch failed",
+      details: "Caused by: Error: getaddrinfo ENOTFOUND example.supabase.co (ENOTFOUND)",
+      hint: "",
+    });
+    assert.equal(failure.message, "Kunne ikke opprette ordre");
+    assert.equal(failure.code, "ENOTFOUND");
+    assert.match(failure.details ?? "", /fetch failed|ENOTFOUND/i);
+  });
+
+  it("does not leak bearer tokens or JWTs in details", () => {
+    const failure = createOrderInsertFailure({
+      code: "",
+      message: "TypeError: fetch failed",
+      details:
+        "Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.aaa.bbb and still fetch failed",
+    });
+    assert.doesNotMatch(failure.details ?? "", /eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9/);
+    assert.doesNotMatch(failure.details ?? "", /Bearer\s+(?!\[redacted\])\S+/);
+    assert.match(failure.details ?? "", /Bearer \[redacted\]/);
+    assert.match(failure.details ?? "", /fetch failed/i);
   });
 });
