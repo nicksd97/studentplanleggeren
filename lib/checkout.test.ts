@@ -2,11 +2,17 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import {
+  confirmStripePayment,
   confirmVippsPayment,
   isCardCheckoutAllowed,
   startCheckoutPayment,
 } from "./checkout";
-import type { CheckoutDependencies, OrderRecord, VippsPayment } from "./checkout";
+import type {
+  CheckoutDependencies,
+  OrderRecord,
+  StripeCheckoutSession,
+  VippsPayment,
+} from "./checkout";
 import { alleProdukter } from "./products";
 
 const product = alleProdukter[0];
@@ -28,11 +34,25 @@ function payment(overrides: Partial<VippsPayment> = {}): VippsPayment {
   };
 }
 
+function stripeSession(overrides: Partial<StripeCheckoutSession> = {}): StripeCheckoutSession {
+  return {
+    id: "cs_test_123",
+    status: "open",
+    payment_status: "unpaid",
+    amount_total: product.price * 100,
+    currency: "nok",
+    ...overrides,
+  };
+}
+
 function memoryDeps(vippsPayment: VippsPayment | null = null) {
   const orders: OrderRecord[] = [];
   let nextPayment: VippsPayment | null = vippsPayment;
+  let nextSession: StripeCheckoutSession | null = null;
   const emails: Array<{ email: string; downloadToken: string }> = [];
   const createdPayments: Array<{ reference: string; amountOre: number }> = [];
+  const createdSessions: Array<{ amountOre: number; email: string; successUrl: string; cancelUrl: string }> =
+    [];
   const captures: Array<{ reference: string; amountOre: number }> = [];
 
   const deps: CheckoutDependencies = {
@@ -83,6 +103,21 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
         return nextPayment;
       },
     },
+    stripe: {
+      async createCheckoutSession(input) {
+        createdSessions.push({
+          amountOre: input.amountOre,
+          email: input.email,
+          successUrl: input.successUrl,
+          cancelUrl: input.cancelUrl,
+        });
+        return { id: "cs_test_123", url: "https://checkout.stripe.com/c/pay/cs_test_123" };
+      },
+      async getCheckoutSession() {
+        if (!nextSession) throw new Error("Stripe session not found");
+        return nextSession;
+      },
+    },
     mailer: {
       async sendOrderConfirmation(input) {
         emails.push({ email: input.email, downloadToken: input.downloadToken });
@@ -98,9 +133,13 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
     orders,
     emails,
     createdPayments,
+    createdSessions,
     captures,
     setPayment(value: VippsPayment | null) {
       nextPayment = value;
+    },
+    setSession(value: StripeCheckoutSession | null) {
+      nextSession = value;
     },
   };
 }
@@ -116,31 +155,232 @@ const checkoutInput = {
 };
 
 describe("card checkout", () => {
-  it("is disabled so the card button cannot complete an unpaid order", () => {
-    assert.equal(isCardCheckoutAllowed(), false);
+  it("is allowed so Betal med kort can start a real Stripe payment", () => {
+    assert.equal(isCardCheckoutAllowed(), true);
   });
 
-  it("does not create a completed order when card checkout is requested", async () => {
-    const { deps, orders, emails } = memoryDeps();
+  it("stores a pending catalog-priced order and does not email a download link", async () => {
+    const { deps, orders, emails, createdSessions } = memoryDeps();
     const result = await startCheckoutPayment(
       { ...checkoutInput, paymentProvider: "stripe" },
       deps,
     );
 
+    assert.equal(result.ok, true);
+    if (!result.ok) throw new Error("expected Stripe checkout to start");
+    assert.equal(result.redirectUrl, "https://checkout.stripe.com/c/pay/cs_test_123");
+    assert.equal("downloadToken" in result, false);
+    assert.equal(orders.length, 1);
+    assert.equal(orders[0].payment_status, "pending");
+    assert.equal(orders[0].payment_provider, "stripe");
+    assert.equal(orders[0].payment_id, "cs_test_123");
+    assert.equal(orders[0].amount_nok, product.price);
+    assert.equal(orders[0].items[0].price, product.price);
+    assert.equal(createdSessions[0].amountOre, product.price * 100);
+    assert.equal(createdSessions[0].email, "ola@example.com");
+    assert.match(createdSessions[0].successUrl, /session_id=\{CHECKOUT_SESSION_ID\}/);
+    assert.match(createdSessions[0].cancelUrl, /kasse\?betaling=avbrutt/);
+    assert.equal(emails.length, 0);
+  });
+
+  it("does not complete or email when Stripe cannot create a checkout session", async () => {
+    const harness = memoryDeps();
+    harness.deps.stripe.createCheckoutSession = async () => {
+      throw new Error("Your account cannot currently make live charges.");
+    };
+
+    const result = await startCheckoutPayment(
+      { ...checkoutInput, paymentProvider: "stripe" },
+      harness.deps,
+    );
+
     assert.equal(result.ok, false);
-    if (result.ok) throw new Error("expected card checkout to fail");
+    if (result.ok) throw new Error("expected Stripe start to fail");
+    assert.equal(result.status, 503);
+    assert.match(result.error, /ikke aktivert/i);
+    assert.equal(harness.emails.length, 0);
+    assert.ok(harness.orders.every((order) => order.payment_status !== "completed"));
+  });
+
+  it("rejects unknown payment providers without creating an order", async () => {
+    const { deps, orders, emails } = memoryDeps();
+    const result = await startCheckoutPayment(
+      { ...checkoutInput, paymentProvider: "free" },
+      deps,
+    );
+
+    assert.equal(result.ok, false);
+    if (result.ok) throw new Error("expected unknown provider to fail");
     assert.equal(result.status, 400);
-    assert.match(result.error, /kort/i);
     assert.equal(orders.length, 0);
     assert.equal(emails.length, 0);
   });
 
-  it("keeps the card button from calling the shared unpaid checkout handler", () => {
+  it("keeps Vipps first and visually primary, with card as a working secondary option", () => {
     const source = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    assert.match(source, /Betal med Vipps/);
     assert.match(source, /Betal med kort/);
-    assert.equal(source.includes('handlePayment("stripe")'), false);
-    assert.equal(source.includes("handlePayment('stripe')"), false);
+    assert.match(source, /handlePayment\("vipps"\)/);
+    assert.match(source, /handlePayment\("stripe"\)/);
+    assert.match(source, /Anbefalt/);
+    assert.ok(source.indexOf("Betal med Vipps") < source.indexOf("Betal med kort"));
+    assert.ok(source.indexOf("#FF5B24") < source.indexOf("Betal med kort"));
     assert.match(source, /isCardCheckoutAllowed/);
+  });
+
+  it("persists the requested payment provider instead of hardcoding Vipps", () => {
+    const source = readFileSync(new URL("../lib/order-store.ts", import.meta.url), "utf8");
+    assert.match(source, /payment_provider:\s*data\.payment_provider/);
+    assert.equal(source.includes('payment_provider: "vipps"'), false);
+  });
+
+  it("lets the orders API start a Stripe checkout instead of rejecting card", () => {
+    const source = readFileSync(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
+    assert.equal(source.includes('paymentProvider !== "vipps"'), false);
+    assert.equal(source.includes("CARD_CHECKOUT_DISABLED_MESSAGE"), false);
+    assert.match(source, /startProductionCheckout/);
+  });
+
+  it("reads the existing Stripe env names and never treats a missing charge as paid", () => {
+    const source = readFileSync(new URL("./stripe.ts", import.meta.url), "utf8");
+    assert.match(source, /process\.env\.STRIPE_SECRET_KEY/);
+    assert.match(source, /process\.env\.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY/);
+    assert.equal(source.includes("payment_status: \"completed\""), false);
+    assert.equal(source.includes("payment_status: 'completed'"), false);
+  });
+});
+
+describe("Stripe payment confirmation", () => {
+  async function pendingStripeOrder(harness = memoryDeps()) {
+    const started = await startCheckoutPayment(
+      { ...checkoutInput, paymentProvider: "stripe" },
+      harness.deps,
+    );
+    assert.equal(started.ok, true);
+    return harness;
+  }
+
+  it("does not mark the order paid before Stripe confirms payment", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(stripeSession({ status: "open", payment_status: "unpaid" }));
+
+    const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(result.ok, false);
+    assert.equal(harness.orders[0].payment_status, "pending");
+    assert.equal(harness.emails.length, 0);
+  });
+
+  it("does not complete or email after an expired or abandoned checkout", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(stripeSession({ status: "expired", payment_status: "unpaid" }));
+
+    const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(result.ok, false);
+    assert.notEqual(harness.orders[0].payment_status, "completed");
+    assert.equal(harness.emails.length, 0);
+  });
+
+  it("does not treat no_payment_required as a successful card charge", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(
+      stripeSession({
+        status: "complete",
+        payment_status: "no_payment_required",
+        amount_total: 0,
+      }),
+    );
+
+    const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(result.ok, false);
+    assert.notEqual(harness.orders[0].payment_status, "completed");
+    assert.equal(harness.emails.length, 0);
+  });
+
+  it("does not complete a paid Stripe session in the wrong currency", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(
+      stripeSession({
+        status: "complete",
+        payment_status: "paid",
+        amount_total: product.price * 100,
+        currency: "usd",
+      }),
+    );
+
+    const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(result.ok, false);
+    assert.equal(harness.orders[0].payment_status, "pending");
+    assert.equal(harness.emails.length, 0);
+  });
+
+  it("keeps a paid order on the thank-you page if Stripe status cannot be fetched", async () => {
+    const returnSource = readFileSync(
+      new URL("../app/api/stripe/return/route.ts", import.meta.url),
+      "utf8",
+    );
+    assert.match(returnSource, /reason === "error"/);
+    assert.match(returnSource, /\/takk\?token=/);
+  });
+
+  it("marks the order paid and sends the download only after Stripe reports paid", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(
+      stripeSession({
+        status: "complete",
+        payment_status: "paid",
+        amount_total: product.price * 100,
+        currency: "nok",
+      }),
+    );
+
+    const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(result.ok, true);
+    if (!result.ok) throw new Error("expected Stripe confirmation to succeed");
+    assert.equal(result.downloadToken, "download-token-test");
+    assert.equal(harness.orders[0].payment_status, "completed");
+    assert.equal(harness.emails.length, 1);
+    assert.equal(harness.emails[0].downloadToken, "download-token-test");
+  });
+
+  it("does not send a second download email if Stripe confirmation runs twice", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(
+      stripeSession({
+        status: "complete",
+        payment_status: "paid",
+        amount_total: product.price * 100,
+        currency: "nok",
+      }),
+    );
+
+    await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+    const second = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(second.ok, true);
+    assert.equal(harness.emails.length, 1);
+  });
+
+  it("does not complete when the Stripe amount does not match the order", async () => {
+    const harness = await pendingStripeOrder();
+    harness.setSession(
+      stripeSession({
+        status: "complete",
+        payment_status: "paid",
+        amount_total: 100,
+        currency: "nok",
+      }),
+    );
+
+    const result = await confirmStripePayment({ sessionId: "cs_test_123" }, harness.deps);
+
+    assert.equal(result.ok, false);
+    assert.equal(harness.orders[0].payment_status, "pending");
+    assert.equal(harness.emails.length, 0);
   });
 });
 

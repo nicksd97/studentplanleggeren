@@ -22,8 +22,9 @@ export default function KassePage() {
     epostBekreft: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [loading, setLoading] = useState(false);
+  const [loadingProvider, setLoadingProvider] = useState<"vipps" | "stripe" | null>(null);
   const [paymentError, setPaymentError] = useState("");
+  const loading = loadingProvider !== null;
 
   const bundleItems = items.filter((i) => i.type === "bundle");
   const totalSavings = bundleItems.reduce((sum, item) => {
@@ -55,12 +56,12 @@ export default function KassePage() {
     }
   }, []);
 
-  async function handlePayment(provider: "vipps") {
+  async function handlePayment(provider: "vipps" | "stripe") {
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
-    setLoading(true);
+    setLoadingProvider(provider);
     setPaymentError("");
 
     try {
@@ -93,7 +94,7 @@ export default function KassePage() {
     } catch {
       setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
     } finally {
-      setLoading(false);
+      setLoadingProvider(null);
     }
   }
 
@@ -301,25 +302,41 @@ export default function KassePage() {
                     className="w-full flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold text-white transition-all hover:brightness-110 shadow-sm hover:-translate-y-0.5 cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
                     style={{ backgroundColor: "#FF5B24" }}
                   >
-                    {loading ? (
+                    {loadingProvider === "vipps" ? (
                       <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                       </svg>
                     ) : (
-                      "Betal med Vipps"
+                      <>
+                        Betal med Vipps
+                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+                          Anbefalt
+                        </span>
+                      </>
                     )}
                   </button>
+                  <p className="text-center text-xs text-brand-medium">eller</p>
                   <button
                     type="button"
+                    onClick={() => handlePayment("stripe")}
                     disabled={!cardCheckoutAllowed || loading}
                     aria-disabled={!cardCheckoutAllowed}
-                    className="w-full flex items-center justify-center gap-2 rounded-full bg-brand-dark py-3.5 text-sm font-bold text-white shadow-sm transition-all disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+                    className="w-full flex items-center justify-center gap-2 rounded-full border border-brand-soft bg-white py-3.5 text-sm font-medium text-brand-dark shadow-sm transition-all hover:bg-brand-cream/60 cursor-pointer disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                   >
-                    <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                    </svg>
-                    Betal med kort
+                    {loadingProvider === "stripe" ? (
+                      <svg className="animate-spin h-5 w-5" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                      </svg>
+                    ) : (
+                      <>
+                        <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                        </svg>
+                        Betal med kort
+                      </>
+                    )}
                   </button>
                 </div>
                 {!cardCheckoutAllowed && (

@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { confirmProductionVippsPayment } from "@/lib/checkout-server";
+import {
+  confirmProductionStripePayment,
+  confirmProductionVippsPayment,
+} from "@/lib/checkout-server";
 import { supabaseAdmin } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -13,7 +16,7 @@ export async function GET(request: NextRequest) {
 
   const { data: order, error } = await supabaseAdmin
     .from("orders")
-    .select("payment_id, payment_status")
+    .select("payment_id, payment_status, payment_provider")
     .eq("download_token", token)
     .maybeSingle();
 
@@ -29,7 +32,10 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ paymentStatus: order.payment_status });
   }
 
-  const result = await confirmProductionVippsPayment(order.payment_id);
+  const result =
+    order.payment_provider === "stripe"
+      ? await confirmProductionStripePayment(order.payment_id)
+      : await confirmProductionVippsPayment(order.payment_id);
   if (result.ok) {
     return NextResponse.json({ paymentStatus: "completed" });
   }
