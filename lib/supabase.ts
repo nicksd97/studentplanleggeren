@@ -11,6 +11,15 @@ function requireEnv(name: string): string {
   return value;
 }
 
+export function isLoopbackSupabaseHost(url: string): boolean {
+  try {
+    const host = new URL(url).hostname.toLowerCase();
+    return host === "localhost" || host === "127.0.0.1" || host === "::1" || host === "0.0.0.0";
+  } catch {
+    return false;
+  }
+}
+
 function getSupabase(): SupabaseClient {
   if (!browserClient) {
     browserClient = createClient(
@@ -23,10 +32,21 @@ function getSupabase(): SupabaseClient {
 
 function getSupabaseAdmin(): SupabaseClient {
   if (!adminClient) {
-    adminClient = createClient(
-      requireEnv('NEXT_PUBLIC_SUPABASE_URL'),
-      requireEnv('SUPABASE_SERVICE_ROLE_KEY'),
-    );
+    const url = requireEnv('NEXT_PUBLIC_SUPABASE_URL');
+    if (isLoopbackSupabaseHost(url)) {
+      throw Object.assign(new Error('TypeError: fetch failed'), {
+        code: 'ECONNREFUSED',
+        details:
+          'Caused by: Error: connect ECONNREFUSED loopback (ECONNREFUSED). NEXT_PUBLIC_SUPABASE_URL is a loopback host.',
+      });
+    }
+    adminClient = createClient(url, requireEnv('SUPABASE_SERVICE_ROLE_KEY'), {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+    });
   }
   return adminClient;
 }

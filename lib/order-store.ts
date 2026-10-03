@@ -1,5 +1,6 @@
-import { supabaseAdmin } from "./supabase";
 import type { CheckoutDependencies, CheckoutItem, OrderRecord } from "./checkout";
+import { createOrderInsertFailure } from "./order-insert-error";
+import { supabaseAdmin } from "./supabase";
 
 type OrderRow = {
   id: string;
@@ -31,37 +32,46 @@ function mapOrder(row: OrderRow): OrderRecord {
   };
 }
 
-export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
+type OrderClient = Pick<typeof supabaseAdmin, "from">;
+
+export function createSupabaseOrderStore(
+  client: OrderClient = supabaseAdmin,
+): CheckoutDependencies["orders"] {
   return {
     async insertPending(data) {
-      const { data: order, error } = await supabaseAdmin
-        .from("orders")
-        .insert({
-          email: data.email,
-          first_name: data.first_name,
-          last_name: data.last_name,
-          items: data.items,
-          amount_nok: data.amount_nok,
-          payment_provider: data.payment_provider,
-          payment_id: data.payment_id,
-          payment_status: "pending",
-          download_token: data.download_token,
-          token_expires_at: data.token_expires_at,
-        })
-        .select()
-        .single();
+      try {
+        const { data: order, error } = await client
+          .from("orders")
+          .insert({
+            email: data.email,
+            first_name: data.first_name,
+            last_name: data.last_name,
+            items: data.items,
+            amount_nok: data.amount_nok,
+            payment_provider: data.payment_provider,
+            payment_id: data.payment_id,
+            payment_status: "pending",
+            download_token: data.download_token,
+            token_expires_at: data.token_expires_at,
+          })
+          .select()
+          .single();
 
-      if (error || !order) {
-        const failure = new Error("Kunne ikke opprette ordre") as Error & { code?: string };
-        failure.code = error?.code;
-        throw failure;
+        if (error || !order) {
+          throw createOrderInsertFailure(error ?? new Error("empty insert result"));
+        }
+
+        return mapOrder(order as OrderRow);
+      } catch (error) {
+        if (error instanceof Error && error.message === "Kunne ikke opprette ordre") {
+          throw error;
+        }
+        throw createOrderInsertFailure(error);
       }
-
-      return mapOrder(order as OrderRow);
     },
 
     async findByPaymentId(paymentId) {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await client
         .from("orders")
         .select(
           "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at",
@@ -77,7 +87,7 @@ export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
     },
 
     async completeIfPending(id) {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await client
         .from("orders")
         .update({ payment_status: "completed" })
         .eq("id", id)
@@ -95,7 +105,7 @@ export function createSupabaseOrderStore(): CheckoutDependencies["orders"] {
     },
 
     async markCancelled(id) {
-      const { data, error } = await supabaseAdmin
+      const { data, error } = await client
         .from("orders")
         .update({ payment_status: "cancelled" })
         .eq("id", id)

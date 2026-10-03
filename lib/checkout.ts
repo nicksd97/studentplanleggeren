@@ -1,3 +1,4 @@
+import { insertFailureResult } from "./order-insert-error";
 import { alleProdukter, pakker } from "./products";
 
 export function isCardCheckoutAllowed(): boolean {
@@ -105,7 +106,7 @@ export type StartCheckoutInput = {
 
 export type StartCheckoutResult =
   | { ok: true; redirectUrl: string }
-  | { ok: false; status: number; error: string; code?: string };
+  | { ok: false; status: number; error: string; code?: string; details?: string };
 
 export type ConfirmPaymentResult =
   | { ok: true; downloadToken: string }
@@ -230,8 +231,9 @@ export async function startCheckoutPayment(
   };
 
   if (input.paymentProvider === "stripe") {
+    let session: { id: string; url: string };
     try {
-      const session = await deps.stripe.createCheckoutSession({
+      session = await deps.stripe.createCheckoutSession({
         amountOre,
         email,
         successUrl: `${input.returnOrigin}/api/stripe/return?session_id={CHECKOUT_SESSION_ID}`,
@@ -241,15 +243,25 @@ export async function startCheckoutPayment(
       if (!session.id || !session.url) {
         return { ok: false, status: 503, error: "Kunne ikke starte kortbetaling" };
       }
+    } catch (error) {
+      return { ok: false, status: 503, error: stripeStartFailureMessage(error) };
+    }
+
+    try {
       await deps.orders.insertPending({
         ...pendingOrder,
         payment_provider: "stripe",
         payment_id: session.id,
       });
-      return { ok: true, redirectUrl: session.url };
     } catch (error) {
-      return { ok: false, status: 503, error: stripeStartFailureMessage(error) };
+      return {
+        ok: false,
+        status: 502,
+        error: "Kunne ikke opprette ordre",
+        ...insertFailureResult(error),
+      };
     }
+    return { ok: true, redirectUrl: session.url };
   }
 
   const reference = deps.createReference();
@@ -260,12 +272,11 @@ export async function startCheckoutPayment(
       payment_id: reference,
     });
   } catch (error) {
-    const code = error instanceof Error && "code" in error ? String(error.code) : undefined;
     return {
       ok: false,
       status: 502,
       error: "Kunne ikke opprette ordre",
-      code,
+      ...insertFailureResult(error),
     };
   }
 
