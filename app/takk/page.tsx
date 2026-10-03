@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
+import { useCart } from "@/lib/cart-context";
 import { getFilesForItems } from "@/lib/product-files";
 
 interface OrderData {
@@ -21,14 +22,13 @@ interface OrderData {
 function TakkContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
+  const { clearCart } = useCart();
   const [order, setOrder] = useState<OrderData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(() => Boolean(token));
+  const [error, setError] = useState(() => !token);
 
   useEffect(() => {
     if (!token) {
-      setLoading(false);
-      setError(true);
       return;
     }
 
@@ -44,6 +44,41 @@ function TakkContent() {
       .catch(() => setError(true))
       .finally(() => setLoading(false));
   }, [token]);
+
+  useEffect(() => {
+    if (order?.paymentStatus === "completed") {
+      clearCart();
+    }
+  }, [order, clearCart]);
+
+  useEffect(() => {
+    if (!token || !order || order.paymentStatus === "completed") {
+      return;
+    }
+
+    let cancelled = false;
+    const poll = async () => {
+      try {
+        const response = await fetch(`/api/vipps/status?token=${encodeURIComponent(token)}`);
+        const data = await response.json();
+        if (!cancelled && data.paymentStatus === "completed") {
+          setOrder((current) =>
+            current ? { ...current, paymentStatus: "completed" } : current,
+          );
+        }
+      } catch {
+        // Keep showing the pending download state until Vipps confirms.
+      }
+    };
+
+    const interval = window.setInterval(poll, 2000);
+    const timeout = window.setTimeout(() => window.clearInterval(interval), 30000);
+    return () => {
+      cancelled = true;
+      window.clearInterval(interval);
+      window.clearTimeout(timeout);
+    };
+  }, [token, order]);
 
   if (loading) {
     return (

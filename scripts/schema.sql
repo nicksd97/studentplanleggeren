@@ -24,6 +24,9 @@ CREATE INDEX IF NOT EXISTS idx_orders_download_token ON orders(download_token);
 -- Index for email lookups
 CREATE INDEX IF NOT EXISTS idx_orders_email ON orders(email);
 
+-- Index for Vipps payment lookups
+CREATE INDEX IF NOT EXISTS idx_orders_payment_id ON orders(payment_id);
+
 -- Enable Row Level Security
 ALTER TABLE orders ENABLE ROW LEVEL SECURITY;
 

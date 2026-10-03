@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { SITE_ORIGIN } from './site';
 
 function getResendClient() {
   const apiKey = process.env.RESEND_API_KEY;
@@ -25,7 +26,7 @@ export async function sendOrderConfirmation({
   items: OrderItem[];
   downloadToken: string;
 }) {
-  const downloadUrl = `https://studentplanlegger.no/takk?token=${downloadToken}`;
+  const downloadUrl = `${SITE_ORIGIN}/takk?token=${downloadToken}`;
 
   const itemListHtml = items
     .map((item) => `<li style="padding:4px 0">${item.name} — ${item.price} kr</li>`)
