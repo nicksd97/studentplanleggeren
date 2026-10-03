@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { CARD_CHECKOUT_DISABLED_MESSAGE } from "@/lib/checkout";
+import { checkoutOrigin, startProductionCheckout } from "@/lib/checkout-server";
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,7 +9,6 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: CARD_CHECKOUT_DISABLED_MESSAGE }, { status: 400 });
     }
 
-    const { checkoutOrigin, startProductionCheckout } = await import("@/lib/checkout-server");
     const result = await startProductionCheckout({
       email: body.email,
       firstName: body.firstName,
