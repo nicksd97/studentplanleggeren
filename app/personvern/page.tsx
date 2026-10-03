@@ -1,10 +1,13 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { pageMeta } from "@/lib/site";
 
-export const metadata = {
+export const metadata = pageMeta({
   title: "Personvernerklæring — Studentplanlegger",
-  description: "Personvernerklæring for Studentplanlegger.no",
-};
+  description:
+    "Slik behandler Studentplanlegger personopplysninger ved kjøp av fyllbare PDF-planleggere. Kontakt hei@studentplanlegger.no.",
+  path: "/personvern",
+});
 
 export default function PersonvernPage() {
   return (

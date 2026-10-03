@@ -83,10 +83,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={100}>
           <div className="flex justify-center items-center py-12 max-w-2xl mx-auto group">
             {[
-              { src: "daglig-planlegger.jpg", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
-              { src: "ukentlig-plan.jpg", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
-              { src: "pomodoro-planlegger.jpg", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
-              { src: "vane-tracker.jpg", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
+              { src: "daglig-planlegger.jpg", alt: "Daglig Planlegger", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
+              { src: "ukentlig-plan.jpg", alt: "Ukentlig Plan", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
+              { src: "pomodoro-planlegger.jpg", alt: "Pomodoro Planlegger", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
+              { src: "vane-tracker.jpg", alt: "Vane Tracker", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
             ].map((item, i) => (
               <div
                 key={item.src}
@@ -94,7 +94,7 @@ export default function BundleShowcase() {
               >
                 <img
                   src={`/images/products/${item.src}`}
-                  alt=""
+                  alt={item.alt}
                   className="w-full h-full object-cover object-top"
                 />
               </div>

@@ -27,7 +27,10 @@ export default function ProductCard({ product }: { product: Product }) {
   }
 
   return (
-    <div className="group bg-white rounded-2xl border border-brand-soft overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in flex flex-col h-full">
+    <div
+      id={product.slug}
+      className="group bg-white rounded-2xl border border-brand-soft overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in flex flex-col h-full"
+    >
       {/* Preview area — real product image */}
       <div className="relative aspect-[3/4] bg-brand-pale overflow-hidden shrink-0">
         <img
