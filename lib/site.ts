@@ -1,3 +1,4 @@
+import { guidePaths } from "./guides";
 import { categoryGroups } from "./products";
 
 export interface PageMeta {
@@ -39,6 +40,7 @@ export function indexablePaths(): string[] {
     "/",
     "/produkter",
     ...categoryGroups.map((group) => `/produkter?kategori=${group.key}`),
+    ...guidePaths(),
     "/personvern",
     "/vilkar",
   ];

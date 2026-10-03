@@ -9,6 +9,7 @@ import HowItWorks from "@/components/sections/HowItWorks";
 import Testimonials from "@/components/sections/Testimonials";
 import FAQ from "@/components/sections/FAQ";
 import NewsletterSignup from "@/components/sections/NewsletterSignup";
+import GuideList from "@/components/sections/GuideList";
 import JsonLd from "@/components/seo/JsonLd";
 import { faqItems } from "@/lib/faq";
 import {
@@ -60,6 +61,7 @@ export default function Home() {
         <HowItWorks />
         <Testimonials />
         <FAQ />
+        <GuideList />
         <NewsletterSignup />
       </main>
       <Footer />
