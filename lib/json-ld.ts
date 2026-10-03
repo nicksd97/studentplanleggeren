@@ -4,6 +4,7 @@ import { catalogPath } from "./catalog";
 import type { faqItems } from "./faq";
 import {
   LEGAL_NAME,
+  OG_IMAGE_PATH,
   ORG_NUMBER,
   SITE_EMAIL,
   SITE_NAME,
@@ -48,23 +49,32 @@ export function websiteJsonLd(): JsonLd {
 export function productOfferJsonLd(
   item: Bundle | Product,
   path = "/#pakker",
+  options: { includeContext?: boolean } = {},
 ): JsonLd {
+  const includeContext = options.includeContext ?? true;
+  const image =
+    "image" in item && typeof item.image === "string"
+      ? absoluteUrl(`/images/products/${item.image}`)
+      : absoluteUrl(OG_IMAGE_PATH);
+
   return {
-    "@context": "https://schema.org",
+    ...(includeContext ? { "@context": "https://schema.org" } : {}),
     "@type": "Product",
     name: item.name,
     description: item.description,
+    image,
     offers: {
       "@type": "Offer",
       price: item.price,
       priceCurrency: "NOK",
       availability: "https://schema.org/InStock",
-      url: absoluteUrl(path),
+      url: absoluteUrl(`${path}#${item.slug}`),
     },
   };
 }
 
 export function productListJsonLd(catalog: Catalog): JsonLd {
+  const path = catalogPath(catalog.key);
   return {
     "@context": "https://schema.org",
     "@type": "ItemList",
@@ -72,7 +82,7 @@ export function productListJsonLd(catalog: Catalog): JsonLd {
     itemListElement: catalog.products.map((product, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      item: productOfferJsonLd(product, catalogPath(catalog.key)),
+      item: productOfferJsonLd(product, path, { includeContext: false }),
     })),
   };
 }

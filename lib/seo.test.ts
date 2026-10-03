@@ -31,7 +31,7 @@ describe("site URLs", () => {
       absoluteUrl("/produkter?kategori=daglig"),
       "https://www.studentplanlegger.no/produkter?kategori=daglig",
     );
-    assert.ok(!absoluteUrl("/").includes("https://studentplanlegger.no/"));
+    assert.equal(new URL(absoluteUrl("/")).hostname, "www.studentplanlegger.no");
   });
 
   it("lists public indexable paths and omits checkout, thanks, and API", () => {
@@ -146,6 +146,7 @@ describe("structured data", () => {
     assert.equal(product.offers["@type"], "Offer");
     assert.equal(product.offers.price, komplett.price);
     assert.equal(product.offers.priceCurrency, "NOK");
+    assert.ok(typeof product.image === "string" && product.image.startsWith(SITE_ORIGIN));
     assert.equal("aggregateRating" in product, false);
     assert.equal("review" in product, false);
   });
@@ -157,6 +158,12 @@ describe("structured data", () => {
     assert.equal(list.numberOfItems, daglig.products.length);
     assert.equal(list.itemListElement.length, daglig.products.length);
     assert.equal(list.itemListElement[0].item.offers.price, daglig.products[0].price);
+    assert.ok(
+      String(list.itemListElement[0].item.image).endsWith(
+        `/images/products/${daglig.products[0].image}`,
+      ),
+    );
+    assert.equal("@context" in list.itemListElement[0].item, false);
   });
 
   it("builds FAQPage JSON-LD from the homepage questions", () => {

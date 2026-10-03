@@ -29,12 +29,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/produkter?kategori=daglig" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Daglig Pakke
                 </Link>
               </li>
               <li>
-                <Link href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                <Link href="/produkter?kategori=ukentlig" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Ukentlig Pakke
                 </Link>
               </li>

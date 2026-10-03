@@ -24,16 +24,6 @@ export const metadata: Metadata = {
     icon: "/favicon.png",
     apple: "/favicon.png",
   },
-  keywords: [
-    "studentplanlegger",
-    "planlegger student",
-    "ukentlig plan",
-    "daglig planlegger",
-    "vane tracker",
-    "pomodoro planlegger",
-    "fyllbar pdf",
-    "studieplanlegger",
-  ],
   openGraph: {
     siteName: SITE_NAME,
     locale: "nb_NO",

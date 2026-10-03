@@ -1,15 +1,12 @@
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { pageMeta } from "@/lib/site";
-
-export const metadata = pageMeta({
+export const metadata = {
   title: "Siden finnes ikke — Studentplanlegger",
   description:
     "Denne siden finnes ikke. Gå til Studentplanlegger for å se de fyllbare PDF-planleggerne.",
-  path: "/404",
-  index: false,
-});
+  robots: { index: false, follow: true },
+};
 
 export default function NotFound() {
   return (

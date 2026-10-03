@@ -20,12 +20,24 @@ import {
 import { pakker } from "@/lib/products";
 import { pageMeta } from "@/lib/site";
 
-export const metadata = pageMeta({
-  title: "Studentplanlegger — Få orden på studiene",
-  description:
-    "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
-  path: "/",
-});
+export const metadata = {
+  ...pageMeta({
+    title: "Studentplanlegger — Få orden på studiene",
+    description:
+      "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
+    path: "/",
+  }),
+  keywords: [
+    "studentplanlegger",
+    "planlegger student",
+    "ukentlig plan",
+    "daglig planlegger",
+    "vane tracker",
+    "pomodoro planlegger",
+    "fyllbar pdf",
+    "studieplanlegger",
+  ],
+};
 
 export default function Home() {
   const structuredData = [
