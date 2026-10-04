@@ -164,6 +164,6 @@ Vipps one-press with Instagram tags stores them on the pending `komplett` order.
 ### Task 5: Verify, commit, and open the PR
 
 - [x] **Step 1: Run the full test script and a production build**
-- [ ] **Step 2: Browser-check a tagged landing → Vipps POST and an untagged `/kasse` card POST. Do not charge.**
+- [x] **Step 2: Browser-check a tagged landing → Vipps POST and an untagged `/kasse` card POST. Do not charge.**
 - [x] **Step 3: Update STATE.md and tick this plan**
-- [ ] **Step 4: Commit, push, and open a draft PR. Do not merge.**
+- [x] **Step 4: Commit, push, and open a draft PR. Do not merge.**

@@ -91,7 +91,8 @@ export function rememberCampaignTags(tags: CampaignTags): void {
   } catch {
     // Private mode can block storage; the cookie is enough for this visit.
   }
-  document.cookie = `${CAMPAIGN_COOKIE}=${encodeURIComponent(value)}; Path=/; Max-Age=2592000; SameSite=Lax`;
+  const secure = window.location.protocol === "https:" ? "; Secure" : "";
+  document.cookie = `${CAMPAIGN_COOKIE}=${encodeURIComponent(value)}; Path=/; Max-Age=2592000; SameSite=Lax${secure}`;
 }
 
 export function readStoredCampaignTags(): CampaignTags | null {
@@ -101,13 +102,25 @@ export function readStoredCampaignTags(): CampaignTags | null {
   } catch {
     // Fall through to the cookie.
   }
-  const cookie = document.cookie
-    .split("; ")
-    .find((part) => part.startsWith(`${CAMPAIGN_COOKIE}=`));
-  if (!cookie) return null;
-  return parseCampaignCookie(decodeURIComponent(cookie.slice(CAMPAIGN_COOKIE.length + 1)));
+  try {
+    const cookie = document.cookie
+      .split("; ")
+      .find((part) => part.startsWith(`${CAMPAIGN_COOKIE}=`));
+    if (!cookie) return null;
+    return parseCampaignCookie(cookie.slice(CAMPAIGN_COOKIE.length + 1));
+  } catch {
+    return null;
+  }
 }
 
 export function currentCampaignTags(): CampaignTags | null {
-  return mergeCampaignTags(parseCampaignTags(window.location.search), readStoredCampaignTags());
+  try {
+    return mergeCampaignTags(parseCampaignTags(window.location.search), readStoredCampaignTags());
+  } catch {
+    try {
+      return parseCampaignTags(window.location.search);
+    } catch {
+      return null;
+    }
+  }
 }

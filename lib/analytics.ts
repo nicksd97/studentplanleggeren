@@ -27,29 +27,27 @@ export async function recordPaidPurchase(order: OrderRecord): Promise<void> {
     utm_content: order.utm_content,
   };
 
-  try {
-    await fetch(
-      `https://www.google-analytics.com/mp/collect?measurement_id=${encodeURIComponent(measurementId)}&api_secret=${encodeURIComponent(apiSecret)}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          client_id: order.id,
-          events: [
-            {
-              name: "purchase",
-              params: {
-                transaction_id: order.id,
-                value: order.amount_nok,
-                currency: "NOK",
-                ...tags,
-              },
+  void fetch(
+    `https://www.google-analytics.com/mp/collect?measurement_id=${encodeURIComponent(measurementId)}&api_secret=${encodeURIComponent(apiSecret)}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: order.id,
+        events: [
+          {
+            name: "purchase",
+            params: {
+              transaction_id: order.id,
+              value: order.amount_nok,
+              currency: "NOK",
+              ...tags,
             },
-          ],
-        }),
-      },
-    );
-  } catch {
+          },
+        ],
+      }),
+    },
+  ).catch(() => {
     // Never block fulfillment because analytics is unavailable.
-  }
+  });
 }

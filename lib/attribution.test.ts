@@ -90,4 +90,11 @@ describe("campaign cookie", () => {
     assert.equal(parseCampaignCookie(""), null);
     assert.equal(parseCampaignCookie("not-json"), null);
   });
+
+  it("does not throw when a stored tag contains a percent sign", () => {
+    const tags = { utm_source: "instagram", utm_content: "50%" };
+    const encoded = encodeURIComponent(campaignCookieValue(tags));
+    assert.deepEqual(parseCampaignCookie(encoded), tags);
+    assert.deepEqual(parseCampaignCookie(campaignCookieValue(tags)), tags);
+  });
 });

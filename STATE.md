@@ -30,6 +30,13 @@ GROUP BY 1;
 - Vipps `userDetails` fill does not wipe tags.
 - If `NEXT_PUBLIC_GA_MEASUREMENT_ID` is later set, a purchase is recorded when the order is actually paid. Missing id does not block checkout.
 
+## Verified on this branch
+
+- `npm test`: 74/74 pass. `next build` succeeds.
+- Headless Chrome against local `next dev`, no charge: Instagram landing `?utm_source=instagram&utm_medium=social&utm_campaign=komplett&utm_content=bio` → one-press Vipps POST includes those four tags. TikTok landing then `/produkter` → Vipps POST still has `utm_source=tiktok`. Fresh untagged `/kasse` card POST sends `campaign: null` and `paymentProvider: stripe`. Local insert returns the usual unpaid error because Supabase is unset.
+- A stored tag containing `%` no longer throws in `decodeURIComponent`.
+- No Google Analytics measurement id is configured, so checkout does not depend on one. If `NEXT_PUBLIC_GA_MEASUREMENT_ID` is added later, `/takk` can record a paid purchase. A server Measurement Protocol ping also needs `GA_API_SECRET`; that secret is not present and is not invented.
+
 ## Not done
 
 Do not complete a live paid checkout on production. Do not merge.
