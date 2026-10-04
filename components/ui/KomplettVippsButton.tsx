@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { currentCampaignTags } from "@/lib/attribution";
 import { completePackageCartItem } from "@/lib/products";
 
 type KomplettVippsButtonProps = {
@@ -31,6 +32,7 @@ export default function KomplettVippsButton({
         body: JSON.stringify({
           items: [completePackageCartItem()],
           paymentProvider: "vipps",
+          campaign: currentCampaignTags(),
         }),
       });
       const data = (await response.json()) as { redirectUrl?: string; error?: string };

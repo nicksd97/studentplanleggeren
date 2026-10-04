@@ -83,6 +83,59 @@ describe("createSupabaseOrderStore insertPending", () => {
     assert.equal(order.items[0].id, "daglig-gjennomgang");
   });
 
+  it("stores campaign tags on items and does not send unknown utm columns", async () => {
+    const received: Array<{ body: Record<string, unknown> }> = [];
+    const server = http.createServer((request, response) => {
+      const chunks: Buffer[] = [];
+      request.on("data", (chunk) => chunks.push(chunk as Buffer));
+      request.on("end", () => {
+        if (request.method === "POST" && request.url?.startsWith("/rest/v1/orders")) {
+          const body = JSON.parse(Buffer.concat(chunks).toString() || "{}");
+          received.push({ body });
+          response.writeHead(201, { "content-type": "application/json" });
+          response.end(JSON.stringify({ id: "order-attr", ...body }));
+          return;
+        }
+        response.writeHead(404);
+        response.end();
+      });
+    });
+
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    assert.ok(address && typeof address === "object");
+    const store = createSupabaseOrderStore(
+      createClient(`http://127.0.0.1:${address.port}`, "test-anon-key", {
+        auth: { persistSession: false, autoRefreshToken: false },
+      }),
+    );
+
+    try {
+      const order = await store.insertPending({
+        ...pending,
+        items: [
+          {
+            ...pending.items[0],
+            utm_source: "instagram",
+            utm_medium: "social",
+            utm_campaign: "komplett",
+          },
+        ],
+        utm_source: "instagram",
+        utm_medium: "social",
+        utm_campaign: "komplett",
+      });
+      assert.equal(order.utm_source, "instagram");
+      assert.equal(order.items[0].utm_source, "instagram");
+      assert.equal("utm_source" in received[0].body, false);
+      assert.equal((received[0].body.items as Array<{ utm_source?: string }>)[0].utm_source, "instagram");
+    } finally {
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve())),
+      );
+    }
+  });
+
   it("inserts a pending row when PostgREST is reachable", async () => {
     const received: Array<{ method?: string; url?: string; body: typeof pending }> = [];
     const server = http.createServer((request, response) => {

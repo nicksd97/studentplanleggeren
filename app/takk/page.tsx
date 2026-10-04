@@ -5,6 +5,7 @@ import { Suspense, useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
+import { campaignTagsFromItems } from "@/lib/attribution";
 import { useCart } from "@/lib/cart-context";
 import { getFilesForItems } from "@/lib/product-files";
 
@@ -50,6 +51,35 @@ function TakkContent() {
       clearCart();
     }
   }, [order, clearCart]);
+
+  useEffect(() => {
+    if (!order || order.paymentStatus !== "completed") {
+      return;
+    }
+    const measurementId = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim();
+    if (!measurementId) {
+      return;
+    }
+    const gtag = (window as Window & { gtag?: (...args: unknown[]) => void }).gtag;
+    if (typeof gtag !== "function") {
+      return;
+    }
+    const purchaseKey = `sp_purchase_${order.id}`;
+    try {
+      if (sessionStorage.getItem(purchaseKey)) {
+        return;
+      }
+      sessionStorage.setItem(purchaseKey, "1");
+    } catch {
+      // Still record once in this page lifetime.
+    }
+    gtag("event", "purchase", {
+      transaction_id: order.id,
+      value: order.items.reduce((sum, item) => sum + item.price, 0),
+      currency: "NOK",
+      ...campaignTagsFromItems(order.items),
+    });
+  }, [order]);
 
   useEffect(() => {
     if (!token || !order || order.paymentStatus === "completed") {

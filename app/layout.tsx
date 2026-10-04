@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Playfair_Display, DM_Sans } from "next/font/google";
+import CampaignCapture from "@/components/analytics/CampaignCapture";
+import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import { CartProvider } from "@/lib/cart-context";
 import { OG_IMAGE_ALT, OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
@@ -43,7 +45,11 @@ export default function RootLayout({
       className={`${playfair.variable} ${dmSans.variable} antialiased`}
     >
       <body className="min-h-screen">
-        <CartProvider>{children}</CartProvider>
+        <GoogleAnalytics />
+        <CartProvider>
+          <CampaignCapture />
+          {children}
+        </CartProvider>
       </body>
     </html>
   );
