@@ -26,6 +26,13 @@ The live `orders` table has `email`, `first_name`, `last_name` as `NOT NULL` tex
 - After authorize, `userDetails` is copied onto the pending order. Missing fields stay empty. Download email is sent only when Vipps (or the `/kasse` form) supplied a real email.
 - Stripe on `/kasse` still requires the form and remains the secondary card option.
 
+## Verified on this branch
+
+- `npm test`: 59/59 pass. `next build` succeeds.
+- Local `POST /api/orders` with `{ items: [{ id: "komplett" }], paymentProvider: "vipps" }` is no longer `400 Mangler påkrevde felt`. It reaches pending insert (`502` locally because Supabase is unset). The same body with Stripe still returns `400 Mangler påkrevde felt`.
+- Headless Chrome: header button is `Kjøp komplett pakke med Vipps` at `rgb(255, 91, 36)`. One click stays on `/` and shows `Kunne ikke opprette ordre` (local insert). Featured CTA is `Kjøp komplett pakke med Vipps — 349 kr` in the same orange.
+- After adding `Daglig Pakke` to the cart, `/kasse` still has Fornavn/E-post, orange `Betal med Vipps` first, and `Betal med kort` second. Card without the form stays on `/kasse` with `Fornavn er påkrevd` and `E-post er påkrevd`.
+
 ## Not done
 
 Do not complete a live paid checkout on production. Do not merge.
