@@ -2,23 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCart } from "@/lib/cart-context";
-import { completePackageCartItem } from "@/lib/products";
 import CartPanel from "@/components/ui/CartPanel";
+import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
-  const { itemCount, addItem } = useCart();
-  const router = useRouter();
-
-  function buyCompletePackage() {
-    addItem(completePackageCartItem());
-    setMobileOpen(false);
-    router.push("/kasse");
-  }
+  const { itemCount } = useCart();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -63,13 +55,10 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <button
-                type="button"
-                onClick={buyCompletePackage}
-                className="inline-flex items-center rounded-full bg-brand-accent px-5 py-2 text-sm font-medium text-brand-dark hover:bg-brand-accent/90 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md cursor-pointer"
-              >
-                Kjøp komplett pakke
-              </button>
+              <KomplettVippsButton
+                label="Kjøp komplett pakke med Vipps"
+                className="px-5 py-2"
+              />
 
               {/* Cart button */}
               <button
@@ -140,13 +129,11 @@ export default function Header() {
                 </Link>
               ))}
               <div className="px-4 pt-2">
-                <button
-                  type="button"
-                  onClick={buyCompletePackage}
-                  className="block w-full text-center rounded-full bg-brand-accent px-5 py-2.5 text-sm font-medium text-brand-dark cursor-pointer"
-                >
-                  Kjøp komplett pakke
-                </button>
+                <KomplettVippsButton
+                  fullWidth
+                  label="Kjøp komplett pakke med Vipps"
+                  className="px-5 py-2.5"
+                />
               </div>
             </div>
           )}

@@ -5,6 +5,7 @@ import type { Bundle } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import Badge from "./Badge";
 import Button from "./Button";
+import KomplettVippsButton from "./KomplettVippsButton";
 
 function useBundleCart(bundle: Bundle) {
   const { addItem, isInCart } = useCart();
@@ -29,11 +30,8 @@ function useBundleCart(bundle: Bundle) {
   return { handleAdd, feedback };
 }
 
-export default function BundleCard({ bundle }: { bundle: Bundle }) {
-  const { handleAdd, feedback } = useBundleCart(bundle);
-
-  if (bundle.featured) {
-    return (
+function FeaturedKomplettCard({ bundle }: { bundle: Bundle }) {
+  return (
       <div className="relative max-w-[560px] mx-auto bg-brand-dark rounded-2xl border-2 border-brand-accent shadow-2xl overflow-hidden">
         {/* Ribbon */}
         <div className="bg-brand-accent text-brand-dark text-center py-2 text-sm font-medium">
@@ -91,20 +89,24 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
             ))}
           </div>
 
-          <Button
-            variant="primary"
+          <KomplettVippsButton
             fullWidth
             className="text-base py-4"
-            onClick={handleAdd}
-          >
-            {feedback ?? `Kjøp komplett pakke — ${bundle.price} kr`}
-          </Button>
+            label={`Kjøp komplett pakke med Vipps — ${bundle.price} kr`}
+          />
           <p className="text-center text-white/30 text-xs mt-3">
             Umiddelbar nedlasting · Ingen abonnement
           </p>
         </div>
       </div>
     );
+}
+
+export default function BundleCard({ bundle }: { bundle: Bundle }) {
+  const { handleAdd, feedback } = useBundleCart(bundle);
+
+  if (bundle.featured) {
+    return <FeaturedKomplettCard bundle={bundle} />;
   }
 
   return (

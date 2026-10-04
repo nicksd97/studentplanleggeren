@@ -13,6 +13,13 @@ export type MoneyAmount = {
   value: number;
 };
 
+export type VippsUserDetails = {
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  mobileNumber?: string;
+};
+
 export type VippsPayment = {
   reference: string;
   state: string;
@@ -23,6 +30,13 @@ export type VippsPayment = {
     cancelledAmount: MoneyAmount;
     refundedAmount: MoneyAmount;
   };
+  userDetails?: VippsUserDetails;
+};
+
+export type VippsBuyerFields = {
+  email?: string;
+  first_name?: string;
+  last_name?: string;
 };
 
 export type StripeCheckoutSession = {
@@ -60,6 +74,7 @@ export type CheckoutDependencies = {
     findByPaymentId(paymentId: string): Promise<OrderRecord | null>;
     completeIfPending(id: string): Promise<OrderRecord | null>;
     markCancelled(id: string): Promise<OrderRecord | null>;
+    updateBuyerDetails(id: string, details: VippsBuyerFields): Promise<OrderRecord | null>;
   };
   vipps: {
     createPayment(input: {
@@ -67,6 +82,7 @@ export type CheckoutDependencies = {
       amountOre: number;
       returnUrl: string;
       description: string;
+      profileScope?: string;
     }): Promise<{ redirectUrl: string }>;
     getPayment(reference: string): Promise<VippsPayment>;
     capturePayment(reference: string, amountOre: number): Promise<VippsPayment>;
@@ -164,6 +180,30 @@ export function priceCheckoutItems(
   return { items, amountNok };
 }
 
+function nonEmptyBuyerField(value: unknown): string | undefined {
+  if (typeof value !== "string") return undefined;
+  const trimmed = value.trim();
+  return trimmed || undefined;
+}
+
+export function buyerDetailsFromVipps(payment: VippsPayment): VippsBuyerFields {
+  const details = payment.userDetails;
+  if (!details) return {};
+
+  const buyer: VippsBuyerFields = {};
+  const email = nonEmptyBuyerField(details.email);
+  const firstName = nonEmptyBuyerField(details.firstName);
+  const lastName = nonEmptyBuyerField(details.lastName);
+  if (email) buyer.email = email;
+  if (firstName) buyer.first_name = firstName;
+  if (lastName) buyer.last_name = lastName;
+  return buyer;
+}
+
+function hasValidEmail(email: string): boolean {
+  return Boolean(email) && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
 export function isReservedOrCaptured(payment: VippsPayment, expectedOre: number): boolean {
   if (payment.amount?.currency !== "NOK" || payment.amount.value !== expectedOre) {
     return false;
@@ -208,7 +248,11 @@ export async function startCheckoutPayment(
 
   const email = input.email?.trim() ?? "";
   const firstName = input.firstName?.trim() ?? "";
-  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !firstName) {
+  if (input.paymentProvider === "stripe") {
+    if (!hasValidEmail(email) || !firstName) {
+      return { ok: false, status: 400, error: "Mangler påkrevde felt" };
+    }
+  } else if (email && !hasValidEmail(email)) {
     return { ok: false, status: 400, error: "Mangler påkrevde felt" };
   }
 
@@ -286,6 +330,7 @@ export async function startCheckoutPayment(
       amountOre,
       returnUrl: `${input.returnOrigin}/api/vipps/return?reference=${encodeURIComponent(reference)}`,
       description: paymentDescription(priced.items),
+      profileScope: "name email phoneNumber",
     });
     return { ok: true, redirectUrl: payment.redirectUrl };
   } catch {
@@ -313,6 +358,25 @@ export async function confirmVippsPayment(
   }
 
   if (order.payment_status === "completed") {
+    try {
+      const hadEmail = hasValidEmail(order.email);
+      const payment = await deps.vipps.getPayment(reference);
+      const updated = await applyVippsBuyerDetails(order, payment, deps);
+      if (!hadEmail && hasValidEmail(updated.email)) {
+        try {
+          await deps.mailer.sendOrderConfirmation({
+            email: updated.email,
+            firstName: updated.first_name,
+            items: updated.items,
+            downloadToken: updated.download_token,
+          });
+        } catch {
+          // Payment is already captured/reserved; do not roll back fulfillment.
+        }
+      }
+    } catch {
+      return { ok: true, downloadToken: order.download_token };
+    }
     return { ok: true, downloadToken: order.download_token };
   }
 
@@ -332,7 +396,7 @@ export async function confirmVippsPayment(
   const expectedOre = order.amount_nok * 100;
   const captured = payment.aggregate?.capturedAmount?.value ?? 0;
   if (payment.amount?.currency === "NOK" && captured >= expectedOre && payment.amount.value === expectedOre) {
-    return finalizePaidOrder(order, deps);
+    return finalizePaidOrder(await applyVippsBuyerDetails(order, payment, deps), deps);
   }
 
   if (payment.amount?.currency !== "NOK" || payment.amount.value !== expectedOre) {
@@ -374,7 +438,7 @@ export async function confirmVippsPayment(
     }
   }
 
-  return finalizePaidOrder(order, deps);
+  return finalizePaidOrder(await applyVippsBuyerDetails(order, payment, deps), deps);
 }
 
 export async function confirmStripePayment(
@@ -480,16 +544,32 @@ async function finalizePaidOrder(
     };
   }
 
-  try {
-    await deps.mailer.sendOrderConfirmation({
-      email: completed.email,
-      firstName: completed.first_name,
-      items: completed.items,
-      downloadToken: completed.download_token,
-    });
-  } catch {
-    // Payment is already captured/reserved; do not roll back fulfillment.
+  if (hasValidEmail(completed.email)) {
+    try {
+      await deps.mailer.sendOrderConfirmation({
+        email: completed.email,
+        firstName: completed.first_name,
+        items: completed.items,
+        downloadToken: completed.download_token,
+      });
+    } catch {
+      // Payment is already captured/reserved; do not roll back fulfillment.
+    }
   }
 
   return { ok: true, downloadToken: completed.download_token };
+}
+
+async function applyVippsBuyerDetails(
+  order: OrderRecord,
+  payment: VippsPayment,
+  deps: CheckoutDependencies,
+): Promise<OrderRecord> {
+  const buyer = buyerDetailsFromVipps(payment);
+  if (!buyer.email && !buyer.first_name && !buyer.last_name) {
+    return order;
+  }
+
+  const updated = await deps.orders.updateBuyerDetails(order.id, buyer);
+  return updated ?? order;
 }

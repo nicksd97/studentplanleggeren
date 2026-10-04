@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { pakker } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
-import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
 
 const includes = [
   "5 daglige planleggere",
@@ -149,10 +149,8 @@ export default function BundleShowcase() {
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <BundleButton
-                bundleId="komplett"
-                label={`Kjøp komplett pakke — ${featured.price} kr`}
-                variant="primary"
+              <KomplettVippsButton
+                label={`Kjøp komplett pakke med Vipps — ${featured.price} kr`}
                 className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
               />
               <Button

@@ -147,10 +147,14 @@ function TakkContent() {
       </h1>
       <p className="text-brand-medium mb-10">
         {isPaid ? (
-          <>
-            En bekreftelse er sendt til{" "}
-            <span className="font-medium text-brand-dark">{order.email}</span>
-          </>
+          order.email.includes("@") ? (
+            <>
+              En bekreftelse er sendt til{" "}
+              <span className="font-medium text-brand-dark">{order.email}</span>
+            </>
+          ) : (
+            "Nedlastingen er klar. Ta vare på denne siden hvis du ikke har fått e-post."
+          )
         ) : isCancelled ? (
           "Betalingen ble ikke bekreftet, så nedlastingen er ikke aktivert."
         ) : (

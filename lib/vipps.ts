@@ -101,6 +101,9 @@ export function createVippsGateway(): CheckoutDependencies["vipps"] {
           userFlow: "WEB_REDIRECT",
           returnUrl: input.returnUrl,
           paymentDescription: input.description,
+          ...(input.profileScope
+            ? { profile: { scope: input.profileScope } }
+            : {}),
         }),
       });
 
