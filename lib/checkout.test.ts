@@ -51,7 +51,11 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
   let nextPayment: VippsPayment | null = vippsPayment;
   let nextSession: StripeCheckoutSession | null = null;
   const emails: Array<{ email: string; downloadToken: string }> = [];
-  const createdPayments: Array<{ reference: string; amountOre: number }> = [];
+  const createdPayments: Array<{
+    reference: string;
+    amountOre: number;
+    profileScope?: string;
+  }> = [];
   const createdSessions: Array<{ amountOre: number; email: string; successUrl: string; cancelUrl: string }> =
     [];
   const captures: Array<{ reference: string; amountOre: number }> = [];
@@ -78,12 +82,21 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
         order.payment_status = "cancelled";
         return { ...order };
       },
+      async updateBuyerDetails(id, details) {
+        const order = orders.find((row) => row.id === id);
+        if (!order) return null;
+        if (details.email !== undefined) order.email = details.email;
+        if (details.first_name !== undefined) order.first_name = details.first_name;
+        if (details.last_name !== undefined) order.last_name = details.last_name;
+        return { ...order };
+      },
     },
     vipps: {
       async createPayment(input) {
         createdPayments.push({
           reference: input.reference,
           amountOre: input.amountOre,
+          profileScope: input.profileScope,
         });
         return { redirectUrl: `https://landing.vipps.no/pay/${input.reference}` };
       },
@@ -253,6 +266,14 @@ describe("card checkout", () => {
     assert.match(source, /isCardCheckoutAllowed/);
   });
 
+  it("keeps the checkout form for card, not for the homepage complett Vipps button", () => {
+    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    assert.match(kasse, /Fornavn/);
+    assert.match(kasse, /E-post/);
+    assert.match(kasse, /Betal med kort/);
+    assert.match(kasse, /handlePayment\("stripe"\)/);
+  });
+
   it("persists the requested payment provider instead of hardcoding Vipps", () => {
     const source = readFileSync(new URL("../lib/order-store.ts", import.meta.url), "utf8");
     assert.match(source, /payment_provider:\s*data\.payment_provider/);
@@ -411,19 +432,46 @@ describe("Stripe payment confirmation", () => {
 });
 
 describe("header complete package", () => {
-  it("adds the complete package and sends the customer to checkout", () => {
+  it("starts Vipps for the complete package without routing through /kasse", () => {
     const item = completePackageCartItem();
     assert.equal(item.id, "komplett");
     assert.equal(item.type, "bundle");
     assert.equal(item.price, 349);
     assert.match(item.name, /komplett/i);
 
-    const source = readFileSync(new URL("../components/layout/Header.tsx", import.meta.url), "utf8");
-    assert.match(source, /Kjøp komplett pakke/);
-    assert.match(source, /completePackageCartItem/);
-    assert.match(source, /addItem/);
-    assert.match(source, /\/kasse/);
-    assert.equal(source.includes('href="/#pakker"\n                className="inline-flex'), false);
+    const header = readFileSync(new URL("../components/layout/Header.tsx", import.meta.url), "utf8");
+    assert.match(header, /KomplettVippsButton/);
+    assert.match(header, /Kjøp komplett pakke med Vipps/);
+    assert.equal(header.includes("router.push(\"/kasse\")"), false);
+    assert.equal(header.includes("buyCompletePackage"), false);
+  });
+
+  it("makes the featured complett CTAs a Vipps-orange one-press buy", () => {
+    const button = readFileSync(
+      new URL("../components/ui/KomplettVippsButton.tsx", import.meta.url),
+      "utf8",
+    );
+    assert.match(button, /#FF5B24/);
+    assert.match(button, /Kjøp komplett pakke med Vipps/);
+    assert.match(button, /paymentProvider: "vipps"/);
+    assert.match(button, /completePackageCartItem/);
+    assert.equal(button.includes("firstName"), false);
+    assert.equal(button.includes("fornavn"), false);
+    assert.equal(button.includes("/kasse"), false);
+
+    const showcase = readFileSync(
+      new URL("../components/sections/BundleShowcase.tsx", import.meta.url),
+      "utf8",
+    );
+    assert.match(showcase, /KomplettVippsButton/);
+    assert.match(showcase, /Kjøp komplett pakke med Vipps/);
+
+    const card = readFileSync(new URL("../components/ui/BundleCard.tsx", import.meta.url), "utf8");
+    assert.match(card, /KomplettVippsButton/);
+    assert.match(card, /Kjøp komplett pakke med Vipps/);
+
+    const vipps = readFileSync(new URL("./vipps.ts", import.meta.url), "utf8");
+    assert.match(vipps, /profile:\s*\{\s*scope:\s*input\.profileScope/);
   });
 });
 
@@ -488,6 +536,51 @@ describe("Vipps checkout start", () => {
     assert.equal(orders[0].amount_nok, product.price);
     assert.equal(orders[0].items[0].price, product.price);
     assert.equal(createdPayments[0].amountOre, product.price * 100);
+    assert.equal(createdPayments[0].profileScope, "name email phoneNumber");
+    assert.equal(emails.length, 0);
+  });
+
+  it("starts Vipps for komplett without email or name", async () => {
+    const { deps, orders, emails, createdPayments } = memoryDeps();
+    const result = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      deps,
+    );
+
+    assert.equal(result.ok, true);
+    if (!result.ok) throw new Error("expected Vipps checkout to start");
+    assert.equal(orders.length, 1);
+    assert.equal(orders[0].email, "");
+    assert.equal(orders[0].first_name, "");
+    assert.equal(orders[0].last_name, "");
+    assert.equal(orders[0].payment_status, "pending");
+    assert.equal(orders[0].amount_nok, 349);
+    assert.equal(orders[0].items[0].id, "komplett");
+    assert.equal(createdPayments[0].amountOre, 34900);
+    assert.equal(createdPayments[0].profileScope, "name email phoneNumber");
+    assert.equal(emails.length, 0);
+  });
+
+  it("still requires email and name before Stripe starts", async () => {
+    const { deps, orders, emails } = memoryDeps();
+    const result = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "stripe",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      deps,
+    );
+
+    assert.equal(result.ok, false);
+    if (result.ok) throw new Error("expected Stripe to require buyer fields");
+    assert.equal(result.status, 400);
+    assert.match(result.error, /påkrevde felt/i);
+    assert.equal(orders.length, 0);
     assert.equal(emails.length, 0);
   });
 });
@@ -633,6 +726,83 @@ describe("Vipps payment confirmation", () => {
     assert.equal(result.ok, true);
     assert.equal(harness.orders[0].payment_status, "completed");
     assert.equal(harness.emails.length, 1);
+  });
+
+  it("fills the pending order from Vipps userDetails after authorize", async () => {
+    const harness = memoryDeps();
+    const started = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    assert.equal(started.ok, true);
+    harness.setPayment(
+      payment({
+        amount: { currency: "NOK", value: 34900 },
+        state: "AUTHORIZED",
+        userDetails: {
+          email: "kari@example.com",
+          firstName: "Kari",
+          lastName: "Hansen",
+          mobileNumber: "4712345678",
+        },
+        aggregate: {
+          authorizedAmount: { currency: "NOK", value: 34900 },
+          capturedAmount: { currency: "NOK", value: 0 },
+          cancelledAmount: { currency: "NOK", value: 0 },
+          refundedAmount: { currency: "NOK", value: 0 },
+        },
+      }),
+    );
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+
+    assert.equal(result.ok, true);
+    assert.equal(harness.orders[0].email, "kari@example.com");
+    assert.equal(harness.orders[0].first_name, "Kari");
+    assert.equal(harness.orders[0].last_name, "Hansen");
+    assert.equal(harness.emails.length, 1);
+    assert.equal(harness.emails[0].email, "kari@example.com");
+    assert.equal("phone" in harness.orders[0], false);
+  });
+
+  it("does not invent buyer fields Vipps omitted", async () => {
+    const harness = memoryDeps();
+    const started = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    assert.equal(started.ok, true);
+    harness.setPayment(
+      payment({
+        amount: { currency: "NOK", value: 34900 },
+        state: "AUTHORIZED",
+        userDetails: {
+          firstName: "Kari",
+        },
+        aggregate: {
+          authorizedAmount: { currency: "NOK", value: 34900 },
+          capturedAmount: { currency: "NOK", value: 0 },
+          cancelledAmount: { currency: "NOK", value: 0 },
+          refundedAmount: { currency: "NOK", value: 0 },
+        },
+      }),
+    );
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+
+    assert.equal(result.ok, true);
+    assert.equal(harness.orders[0].first_name, "Kari");
+    assert.equal(harness.orders[0].email, "");
+    assert.equal(harness.orders[0].last_name, "");
+    assert.equal(harness.emails.length, 0);
   });
 
   it("does not complete when the Vipps amount does not match the order", async () => {
