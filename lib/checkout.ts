@@ -1,3 +1,9 @@
+import {
+  attachCampaignTags,
+  campaignTagsFromItems,
+  parseCampaignTags,
+  type CampaignTags,
+} from "./attribution";
 import { insertFailureResult } from "./order-insert-error";
 import { alleProdukter, pakker } from "./products";
 
@@ -52,7 +58,7 @@ export type CheckoutItem = {
   name: string;
   price: number;
   type: "product" | "bundle";
-};
+} & CampaignTags;
 
 export type OrderRecord = {
   id: string;
@@ -66,7 +72,7 @@ export type OrderRecord = {
   payment_status: string;
   download_token: string;
   token_expires_at: string;
-};
+} & CampaignTags;
 
 export type CheckoutDependencies = {
   orders: {
@@ -105,6 +111,9 @@ export type CheckoutDependencies = {
       downloadToken: string;
     }): Promise<void>;
   };
+  analytics?: {
+    recordPurchase(order: OrderRecord): Promise<void>;
+  };
   now: () => Date;
   createReference: () => string;
   createDownloadToken: () => string;
@@ -117,6 +126,7 @@ export type StartCheckoutInput = {
   items?: Array<{ id?: string; name?: string; price?: number; type?: string }>;
   amountNok?: number;
   paymentProvider?: string;
+  campaign?: CampaignTags | Record<string, unknown> | string | null;
   returnOrigin: string;
 };
 
@@ -263,15 +273,17 @@ export async function startCheckoutPayment(
 
   const downloadToken = deps.createDownloadToken();
   const amountOre = priced.amountNok * 100;
+  const campaign = parseCampaignTags(input.campaign);
   const pendingOrder = {
     email,
     first_name: firstName,
     last_name: input.lastName?.trim() ?? "",
-    items: priced.items,
+    items: attachCampaignTags(priced.items, campaign),
     amount_nok: priced.amountNok,
     payment_status: "pending" as const,
     download_token: downloadToken,
     token_expires_at: tokenExpiry(deps.now()).toISOString(),
+    ...campaign,
   };
 
   if (input.paymentProvider === "stripe") {
@@ -554,6 +566,17 @@ async function finalizePaidOrder(
       });
     } catch {
       // Payment is already captured/reserved; do not roll back fulfillment.
+    }
+  }
+
+  if (deps.analytics) {
+    try {
+      await deps.analytics.recordPurchase({
+        ...completed,
+        ...(campaignTagsFromItems(completed.items) ?? {}),
+      });
+    } catch {
+      // Analytics must never block a paid download.
     }
   }
 

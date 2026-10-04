@@ -1,4 +1,5 @@
 import { randomBytes } from "crypto";
+import { recordPaidPurchase } from "./analytics";
 import {
   confirmStripePayment,
   confirmVippsPayment,
@@ -19,6 +20,9 @@ export function createProductionCheckoutDeps(): CheckoutDependencies {
     stripe: createStripeGateway(),
     mailer: {
       sendOrderConfirmation,
+    },
+    analytics: {
+      recordPurchase: recordPaidPurchase,
     },
     now: () => new Date(),
     createReference: () => `ord${randomBytes(16).toString("hex")}`,

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useCart } from "@/lib/cart-context";
+import { currentCampaignTags } from "@/lib/attribution";
 import {
   CARD_CHECKOUT_DISABLED_MESSAGE,
   isCardCheckoutAllowed,
@@ -80,6 +81,7 @@ export default function KassePage() {
           })),
           amountNok: totalPrice,
           paymentProvider: provider,
+          campaign: currentCampaignTags(),
         }),
       });
 

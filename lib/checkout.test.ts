@@ -59,6 +59,7 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
   const createdSessions: Array<{ amountOre: number; email: string; successUrl: string; cancelUrl: string }> =
     [];
   const captures: Array<{ reference: string; amountOre: number }> = [];
+  const purchases: OrderRecord[] = [];
 
   const deps: CheckoutDependencies = {
     orders: {
@@ -137,6 +138,11 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
         emails.push({ email: input.email, downloadToken: input.downloadToken });
       },
     },
+    analytics: {
+      async recordPurchase(order) {
+        purchases.push({ ...order });
+      },
+    },
     now: () => new Date("2026-10-03T12:00:00.000Z"),
     createReference: () => "ord-testref01",
     createDownloadToken: () => "download-token-test",
@@ -146,6 +152,7 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
     deps,
     orders,
     emails,
+    purchases,
     createdPayments,
     createdSessions,
     captures,
@@ -899,5 +906,157 @@ describe("createOrderInsertFailure", () => {
     assert.doesNotMatch(failure.details ?? "", /Bearer\s+(?!\[redacted\])\S+/);
     assert.match(failure.details ?? "", /Bearer \[redacted\]/);
     assert.match(failure.details ?? "", /fetch failed/i);
+  });
+});
+
+const instagramCampaign = {
+  utm_source: "instagram",
+  utm_medium: "social",
+  utm_campaign: "komplett",
+};
+
+describe("marketing attribution", () => {
+  it("stores campaign tags on a pending one-press Vipps komplett order", async () => {
+    const { deps, orders, emails } = memoryDeps();
+    const result = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        campaign: instagramCampaign,
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      deps,
+    );
+
+    assert.equal(result.ok, true);
+    assert.equal(orders[0].items[0].id, "komplett");
+    assert.equal(orders[0].amount_nok, 349);
+    assert.equal(orders[0].payment_status, "pending");
+    assert.equal(orders[0].utm_source, "instagram");
+    assert.equal(orders[0].utm_medium, "social");
+    assert.equal(orders[0].utm_campaign, "komplett");
+    assert.equal(orders[0].items[0].utm_source, "instagram");
+    assert.equal(emails.length, 0);
+  });
+
+  it("keeps campaign tags after Vipps fills the buyer profile", async () => {
+    const harness = memoryDeps();
+    const started = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        campaign: instagramCampaign,
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    assert.equal(started.ok, true);
+    harness.setPayment(
+      payment({
+        amount: { currency: "NOK", value: 34900 },
+        state: "AUTHORIZED",
+        userDetails: {
+          email: "kari@example.com",
+          firstName: "Kari",
+          lastName: "Hansen",
+        },
+        aggregate: {
+          authorizedAmount: { currency: "NOK", value: 34900 },
+          capturedAmount: { currency: "NOK", value: 0 },
+          cancelledAmount: { currency: "NOK", value: 0 },
+          refundedAmount: { currency: "NOK", value: 0 },
+        },
+      }),
+    );
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+
+    assert.equal(result.ok, true);
+    assert.equal(harness.orders[0].email, "kari@example.com");
+    assert.equal(harness.orders[0].utm_source, "instagram");
+    assert.equal(harness.orders[0].items[0].utm_source, "instagram");
+    assert.equal(harness.orders[0].payment_status, "completed");
+    assert.equal(harness.purchases.length, 1);
+    assert.equal(harness.purchases[0].utm_source, "instagram");
+    assert.equal(harness.purchases[0].amount_nok, 349);
+  });
+
+  it("stores the same tags on a /kasse Stripe start", async () => {
+    const { deps, orders, emails } = memoryDeps();
+    const result = await startCheckoutPayment(
+      {
+        ...checkoutInput,
+        paymentProvider: "stripe",
+        campaign: instagramCampaign,
+      },
+      deps,
+    );
+
+    assert.equal(result.ok, true);
+    assert.equal(orders[0].payment_provider, "stripe");
+    assert.equal(orders[0].utm_source, "instagram");
+    assert.equal(orders[0].items[0].utm_source, "instagram");
+    assert.equal(emails.length, 0);
+  });
+
+  it("leaves untagged checkouts valid without inventing a source", async () => {
+    const { deps, orders, purchases } = memoryDeps();
+    const result = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      deps,
+    );
+
+    assert.equal(result.ok, true);
+    assert.equal(orders[0].utm_source, undefined);
+    assert.equal("utm_source" in orders[0].items[0], false);
+    assert.equal(purchases.length, 0);
+  });
+
+  it("does not record a purchase before the order is paid", async () => {
+    const harness = memoryDeps();
+    await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        campaign: instagramCampaign,
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    harness.setPayment(payment({
+      amount: { currency: "NOK", value: 34900 },
+      state: "CREATED",
+    }));
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+
+    assert.equal(result.ok, false);
+    assert.equal(harness.orders[0].payment_status, "pending");
+    assert.equal(harness.purchases.length, 0);
+    assert.equal(harness.orders[0].utm_source, "instagram");
+  });
+
+  it("sends stored campaign tags from the Vipps button and /kasse without changing the Vipps-first flow", () => {
+    const button = readFileSync(
+      new URL("../components/ui/KomplettVippsButton.tsx", import.meta.url),
+      "utf8",
+    );
+    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+    const ordersApi = readFileSync(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
+
+    assert.match(button, /currentCampaignTags/);
+    assert.match(button, /campaign:/);
+    assert.equal(button.includes("firstName"), false);
+    assert.match(kasse, /currentCampaignTags/);
+    assert.match(kasse, /handlePayment\("stripe"\)/);
+    assert.ok(kasse.indexOf("Betal med Vipps") < kasse.indexOf("Betal med kort"));
+    assert.match(layout, /CampaignCapture/);
+    assert.match(ordersApi, /campaign/);
+    assert.match(ordersApi, /CAMPAIGN_COOKIE/);
   });
 });

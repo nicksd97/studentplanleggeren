@@ -1,9 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import {
+  CAMPAIGN_COOKIE,
+  mergeCampaignTags,
+  parseCampaignCookie,
+  parseCampaignTags,
+} from "@/lib/attribution";
 import { checkoutOrigin, startProductionCheckout } from "@/lib/checkout-server";
 
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
+    const campaign = mergeCampaignTags(
+      parseCampaignTags(body.campaign ?? body),
+      parseCampaignCookie(request.cookies.get(CAMPAIGN_COOKIE)?.value),
+    );
     const result = await startProductionCheckout({
       email: body.email,
       firstName: body.firstName,
@@ -11,6 +21,7 @@ export async function POST(request: NextRequest) {
       items: body.items,
       amountNok: body.amountNok,
       paymentProvider: body.paymentProvider,
+      campaign,
       returnOrigin: checkoutOrigin(request.headers),
     });
 

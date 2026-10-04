@@ -1,3 +1,4 @@
+import { attachCampaignTags, campaignTagsFromItems, parseCampaignTags } from "./attribution";
 import type { CheckoutDependencies, CheckoutItem, OrderRecord } from "./checkout";
 import { createOrderInsertFailure } from "./order-insert-error";
 import { supabaseAdmin } from "./supabase";
@@ -17,6 +18,7 @@ type OrderRow = {
 };
 
 function mapOrder(row: OrderRow): OrderRecord {
+  const tags = campaignTagsFromItems(row.items) ?? {};
   return {
     id: row.id,
     email: row.email,
@@ -29,6 +31,7 @@ function mapOrder(row: OrderRow): OrderRecord {
     payment_status: row.payment_status,
     download_token: row.download_token,
     token_expires_at: row.token_expires_at,
+    ...tags,
   };
 }
 
@@ -40,13 +43,14 @@ export function createSupabaseOrderStore(
   return {
     async insertPending(data) {
       try {
+        const tags = campaignTagsFromItems(data.items) ?? parseCampaignTags(data);
         const { data: order, error } = await client
           .from("orders")
           .insert({
             email: data.email,
             first_name: data.first_name,
             last_name: data.last_name,
-            items: data.items,
+            items: attachCampaignTags(data.items, tags),
             amount_nok: data.amount_nok,
             payment_provider: data.payment_provider,
             payment_id: data.payment_id,
