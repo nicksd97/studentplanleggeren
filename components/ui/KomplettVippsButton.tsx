@@ -1,28 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { completePackageCartItem } from "@/lib/products";
 
 type KomplettVippsButtonProps = {
   label?: string;
   className?: string;
   fullWidth?: boolean;
-  onStarted?: () => void;
 };
 
 export default function KomplettVippsButton({
   label = "Kjøp komplett pakke med Vipps",
   className = "",
   fullWidth = false,
-  onStarted,
 }: KomplettVippsButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const inFlight = useRef(false);
 
   async function startVipps() {
+    if (inFlight.current) return;
+    inFlight.current = true;
     setLoading(true);
     setError("");
-    onStarted?.();
 
     try {
       const response = await fetch("/api/orders", {
@@ -39,8 +39,10 @@ export default function KomplettVippsButton({
         return;
       }
       setError(data.error || "Kunne ikke starte Vipps-betaling");
+      inFlight.current = false;
     } catch {
       setError("Kunne ikke starte Vipps-betaling");
+      inFlight.current = false;
     } finally {
       setLoading(false);
     }

@@ -272,6 +272,10 @@ describe("card checkout", () => {
     assert.match(kasse, /E-post/);
     assert.match(kasse, /Betal med kort/);
     assert.match(kasse, /handlePayment\("stripe"\)/);
+
+    const takk = readFileSync(new URL("../app/takk/page.tsx", import.meta.url), "utf8");
+    assert.match(takk, /Nedlastingen er klar/);
+    assert.match(takk, /order\.email\.includes\("@"\)/);
   });
 
   it("persists the requested payment provider instead of hardcoding Vipps", () => {
@@ -444,6 +448,7 @@ describe("header complete package", () => {
     assert.match(header, /Kjøp komplett pakke med Vipps/);
     assert.equal(header.includes("router.push(\"/kasse\")"), false);
     assert.equal(header.includes("buyCompletePackage"), false);
+    assert.equal(header.includes("onStarted"), false);
   });
 
   it("makes the featured complett CTAs a Vipps-orange one-press buy", () => {
@@ -458,6 +463,8 @@ describe("header complete package", () => {
     assert.equal(button.includes("firstName"), false);
     assert.equal(button.includes("fornavn"), false);
     assert.equal(button.includes("/kasse"), false);
+    assert.match(button, /inFlight/);
+    assert.equal(button.includes("onStarted"), false);
 
     const showcase = readFileSync(
       new URL("../components/sections/BundleShowcase.tsx", import.meta.url),
@@ -767,6 +774,46 @@ describe("Vipps payment confirmation", () => {
     assert.equal(harness.emails.length, 1);
     assert.equal(harness.emails[0].email, "kari@example.com");
     assert.equal("phone" in harness.orders[0], false);
+  });
+
+  it("fills a completed pending-profile order when Vipps userDetails arrives later", async () => {
+    const harness = memoryDeps();
+    const started = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    assert.equal(started.ok, true);
+    harness.orders[0].payment_status = "completed";
+    harness.setPayment(
+      payment({
+        amount: { currency: "NOK", value: 34900 },
+        state: "AUTHORIZED",
+        userDetails: {
+          email: "kari@example.com",
+          firstName: "Kari",
+          lastName: "Hansen",
+        },
+        aggregate: {
+          authorizedAmount: { currency: "NOK", value: 34900 },
+          capturedAmount: { currency: "NOK", value: 34900 },
+          cancelledAmount: { currency: "NOK", value: 0 },
+          refundedAmount: { currency: "NOK", value: 0 },
+        },
+      }),
+    );
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+
+    assert.equal(result.ok, true);
+    assert.equal(harness.orders[0].email, "kari@example.com");
+    assert.equal(harness.orders[0].first_name, "Kari");
+    assert.equal(harness.orders[0].last_name, "Hansen");
+    assert.equal(harness.emails.length, 1);
+    assert.equal(harness.emails[0].email, "kari@example.com");
   });
 
   it("does not invent buyer fields Vipps omitted", async () => {

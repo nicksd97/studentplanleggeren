@@ -358,6 +358,25 @@ export async function confirmVippsPayment(
   }
 
   if (order.payment_status === "completed") {
+    try {
+      const hadEmail = hasValidEmail(order.email);
+      const payment = await deps.vipps.getPayment(reference);
+      const updated = await applyVippsBuyerDetails(order, payment, deps);
+      if (!hadEmail && hasValidEmail(updated.email)) {
+        try {
+          await deps.mailer.sendOrderConfirmation({
+            email: updated.email,
+            firstName: updated.first_name,
+            items: updated.items,
+            downloadToken: updated.download_token,
+          });
+        } catch {
+          // Payment is already captured/reserved; do not roll back fulfillment.
+        }
+      }
+    } catch {
+      return { ok: true, downloadToken: order.download_token };
+    }
     return { ok: true, downloadToken: order.download_token };
   }
 

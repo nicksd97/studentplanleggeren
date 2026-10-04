@@ -133,7 +133,6 @@ export default function Header() {
                   fullWidth
                   label="Kjøp komplett pakke med Vipps"
                   className="px-5 py-2.5"
-                  onStarted={() => setMobileOpen(false)}
                 />
               </div>
             </div>
