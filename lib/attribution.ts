@@ -52,11 +52,11 @@ export function attachCampaignTags<T extends object>(
   return items.map((item, index) => (index === 0 ? { ...item, ...tags } : item));
 }
 
-export function campaignTagsFromItems(
-  items: Array<CampaignTags> | null | undefined,
-): CampaignTags | null {
-  if (!items?.length) return null;
-  return parseCampaignTags(items[0]);
+export function campaignTagsFromItems(items: unknown): CampaignTags | null {
+  if (!Array.isArray(items) || items.length === 0) return null;
+  const first = items[0];
+  if (!first || typeof first !== "object") return null;
+  return parseCampaignTags(first as Record<string, unknown>);
 }
 
 export function campaignCookieValue(tags: CampaignTags): string {

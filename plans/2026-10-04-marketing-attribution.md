@@ -59,7 +59,7 @@
 **Interfaces:**
 - Produces: `CampaignTags`, `parseCampaignTags(input)`, `mergeCampaignTags(incoming, stored)`, `attachCampaignTags(items, tags)`, `campaignTagsFromItems(items)`, `campaignCookieValue(tags)`, `parseCampaignCookie(value)`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 ```ts
 it("keeps only present utm fields and does not invent a source", () => {
