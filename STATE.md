@@ -1,52 +1,28 @@
-# Gratis lead magnet — implemented, awaiting ops
+# Linjeforening rabattkoder — plan only
 
 Date: 2026-10-05
-Production HEAD at branch start: `2131435`
-Branch: `cursor/gratis-lead-magnet-plan-e27b`
+Production HEAD: `9ed55b4` (`/gratis` squash-merged)
+Branch: `cursor/linjeforening-rabattkoder-plan-e27b`
 
 ## Status
 
-Feature implemented on this branch. **Do not merge** until Nick sets Vercel/Supabase ops below. Live signup cannot deliver the PDF until the smakebit is in Storage and `RESEND_LEAD_SEGMENT_ID` is set.
+Plan written. **No feature code.** Awaits Nick’s go before building checkout codes.
 
-Plan: `plans/2026-10-05-gratis-lead-magnet.md`
+Plan file: `plans/2026-10-05-linjeforening-rabattkoder.md`
 
-## What shipped
+`/gratis` is live on master. Paid PDFs are in `products/planners/<slug>.pdf`.
 
-- `/gratis` landing page (Bokmål), Header/Footer links, homepage band posts to the same API
-- `POST /api/newsletter`: validate, honeypot, 5/hour rate limit, Resend Contact + segment, lead mail with signed URL
-- From-address `Studentplanlegger <hei@studentplanlegger.no>` for order mail and lead mail
-- `/personvern` newsletter/lead purpose
-- `/gratis` in `indexablePaths` / sitemap (priority 0.7)
-- Beehiiv TODO removed
-- Prices / Vipps / Stripe / `productFileMap` unchanged
+## Locked recommendations in the plan
 
-## New Vercel env (no secret values)
+- 20 % off the **server** cart after 5-pack math. `amount_nok` stays integer (`Math.round`). Komplett 249 → 199.
+- Codes in Supabase `discount_codes` so Nick can add `ABAKUS20` without a deploy.
+- `?kode=` cookie so one-press Vipps can discount. Invalid code rejects payment.
+- UTM tags stay on `items`; new order columns `discount_code`, `list_amount_nok`, `discount_nok`.
 
-Already present: `RESEND_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+## Papirmaler (not in this build)
 
-| Name | Required | What Nick puts there |
-|---|---|---|
-| `RESEND_LEAD_SEGMENT_ID` | Yes for go-live | UUID of Resend segment named `lead-gratis-ukeplan` (Production + Preview) |
-| `LEAD_MAGNET_STORAGE_PATH` | No | Default in code: `leads/gratis-ukentlig-plan-smakebit.pdf` |
-
-`RESEND_API_KEY` must be **full-access** (Contacts + Emails), not sending-only.
-
-## PDF upload (Nick)
-
-This agent has no Supabase credentials, so the file was not uploaded.
-
-1. File: `gratis-ukentlig-plan-smakebit.pdf` (1 page, GRATIS SMAKEBIT). Agent copy: `/home/ubuntu/.cursor/projects/workspace/uploads/gratis-ukentlig-plan-smakebit_3dd0.pdf`.
-2. Supabase Storage → bucket **`products`** (keep private).
-3. Object path: **`leads/gratis-ukentlig-plan-smakebit.pdf`**.
-4. Do **not** upload or link `24. Ukentlig Plan.pdf` / `planners/ukentlig-plan.pdf`.
-
-## Local verification
-
-- `npm test`: 93/93
-- `next build`: `/gratis` static
-- Invalid email → 400; honeypot → 200; 6th signup/hour → 429
-- Valid signup locally → 500 `Kunne ikke lage nedlastingslenke` until Storage + Resend env exist
+Komplett delivers 25 planner PDFs only. Copy still promises “12 papirmaler” in `lib/products.ts`, `lib/faq.ts`, `BundleShowcase`, `BundleCard`, `ProdukterStickyBar`. Recommend a later copy-only PR unless Nick has the files.
 
 ## Not done
 
-Do not merge. Do not complete a live paid checkout. Live mail/PDF check waits on the env/upload above.
+Do not implement codes until Nick says go. Do not merge this plan as if it were the feature.
