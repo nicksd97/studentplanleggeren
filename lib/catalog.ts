@@ -18,7 +18,7 @@ const categoryCopy: Record<
   alle: {
     title: "Alle planleggere — Studentplanlegger",
     description:
-      "25 fyllbare PDF-planleggere for norske studenter. Velg enkeltvis eller spar med en pakke — daglig, ukentlig, månedlig og mer.",
+      "25 fyllbare PDF-planleggere for norske studenter. 39 kr per stykk, fem valgfrie for 99 kr, eller pakker fra 149 kr.",
     heading: "Alle planleggere",
   },
   daglig: {

@@ -11,13 +11,13 @@ export default function Bundles() {
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
           <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-            ✦ Spar med pakkene ✦
+            ✦ Velg en pakke ✦
           </p>
           <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark mb-4">
             Mer verdi, én pris
           </h2>
           <p className="text-brand-medium max-w-2xl mx-auto">
-            Kombiner verktøyene og spar opptil 71%. Umiddelbar nedlasting i alle formater.
+            Temapakker 149 kr, komplett pakke 249 kr. Fem valgfrie enkeltplanleggere koster 99 kr. Umiddelbar nedlasting.
           </p>
         </div>
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useCallback, useEffect, type ReactNode } from "react";
+import { cartPricingSummary } from "./checkout";
 
 export interface CartItem {
   id: string;
@@ -63,7 +64,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     [items],
   );
 
-  const totalPrice = items.reduce((sum, i) => sum + i.price, 0);
+  const totalPrice = cartPricingSummary(items)?.amountNok ?? 0;
 
   return (
     <CartContext value={{

@@ -14,6 +14,7 @@ interface OrderData {
   email: string;
   firstName: string;
   items: { id: string; name: string; price: number; type: string }[];
+  amountNok?: number;
   paymentStatus: string;
   downloadCount: number;
   maxDownloads: number;
@@ -75,7 +76,7 @@ function TakkContent() {
     }
     gtag("event", "purchase", {
       transaction_id: order.id,
-      value: order.items.reduce((sum, item) => sum + item.price, 0),
+      value: order.amountNok ?? order.items.reduce((sum, item) => sum + item.price, 0),
       currency: "NOK",
       ...campaignTagsFromItems(order.items),
     });

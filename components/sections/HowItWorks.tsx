@@ -6,7 +6,7 @@ export default function HowItWorks() {
       number: "01",
       title: "Velg",
       description:
-        "Velg verktøyet eller pakken som passer ditt behov. Enkeltprodukter fra 79 kr, komplette pakker fra 249 kr.",
+        "Velg verktøyet eller pakken som passer ditt behov. Enkeltprodukter fra 39 kr, 5-pakke 99 kr, pakker fra 149 kr.",
       icon: (
         <svg className="h-6 w-6 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M15.042 21.672L13.684 16.6m0 0l-2.51 2.225.569-9.47 5.227 7.917-3.286-.672zm-7.518-.267A8.25 8.25 0 1120.25 10.5M8.288 14.212A5.25 5.25 0 1117.25 10.5" />

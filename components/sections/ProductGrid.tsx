@@ -14,7 +14,7 @@ export default function ProductGrid() {
             Verktøyene som gir deg kontroll
           </h2>
           <p className="text-brand-medium max-w-2xl mx-auto">
-            Alle planleggere er fyllbare PDF-er — fyll inn digitalt eller skriv ut. 49 kr per stykk.
+            Alle planleggere er fyllbare PDF-er — fyll inn digitalt eller skriv ut. 39 kr per stykk, eller 5 valgfrie for 99 kr.
           </p>
         </div>
 
@@ -38,10 +38,10 @@ export default function ProductGrid() {
         {/* Funnel CTA */}
         <div className="text-center">
           <p className="text-brand-medium mb-4">
-            Vil du ha alle 25? Spar 71% med komplett pakke.
+            Vil du ha alle 25? Se Studentplanlegger Komplett.
           </p>
           <Button href="#komplett" variant="primary" className="text-base px-8 py-3.5">
-            Se Studentplanlegger Komplett — 349 kr
+            Se Studentplanlegger Komplett — 249 kr
           </Button>
         </div>
       </div>

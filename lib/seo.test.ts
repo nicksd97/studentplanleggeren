@@ -1,6 +1,14 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
-import { alleProdukter, categoryGroups, pakker } from "./products";
+import {
+  alleProdukter,
+  categoryGroups,
+  FIVE_PACK_PRICE,
+  KOMPLETT_PRICE,
+  pakker,
+  SINGLE_PRICE,
+  THEME_PACK_PRICE,
+} from "./products";
 import {
   assertGuideCatalog,
   getGuide,
@@ -25,11 +33,13 @@ import {
 } from "./catalog";
 import {
   faqPageJsonLd,
+  fivePackOfferJsonLd,
   organizationJsonLd,
   productOfferJsonLd,
   productListJsonLd,
   websiteJsonLd,
 } from "./json-ld";
+import { readFileSync } from "node:fs";
 import { faqItems } from "./faq";
 
 describe("site URLs", () => {
@@ -183,13 +193,11 @@ describe("guide articles", () => {
   });
 
   it("does not invent prices, reviews, or ratings", () => {
-    const catalogPrices = new Set(
-      [...alleProdukter, ...pakker].flatMap((item) => {
-        const prices = [item.price];
-        if ("originalPrice" in item) prices.push(item.originalPrice);
-        return prices;
-      }),
-    );
+    const catalogPrices = new Set([
+      ...alleProdukter.map((item) => item.price),
+      ...pakker.map((item) => item.price),
+      FIVE_PACK_PRICE,
+    ]);
     const copy = guides
       .flatMap((guide) => [
         guide.title,
@@ -229,6 +237,41 @@ describe("structured data", () => {
     assert.equal(site.inLanguage, "nb-NO");
   });
 
+  it("uses the new list prices without fake comparison prices", () => {
+    assert.ok(alleProdukter.every((item) => item.price === SINGLE_PRICE));
+    assert.equal(pakker.find((bundle) => bundle.featured)?.price, KOMPLETT_PRICE);
+    assert.ok(
+      pakker.filter((bundle) => !bundle.featured).every((bundle) => bundle.price === THEME_PACK_PRICE),
+    );
+    for (const bundle of pakker) {
+      assert.equal("originalPrice" in bundle, false);
+      assert.equal("savingsPercent" in bundle, false);
+    }
+  });
+
+  it("does not show a strikethrough anchor or stale price copy", () => {
+    const files = [
+      "components/ui/BundleCard.tsx",
+      "components/sections/BundleShowcase.tsx",
+      "components/sections/ProdukterStickyBar.tsx",
+      "components/sections/Hero.tsx",
+      "components/sections/HowItWorks.tsx",
+      "components/sections/ProductGrid.tsx",
+      "components/sections/Bundles.tsx",
+      "app/kasse/page.tsx",
+    ];
+    const joined = files
+      .map((file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8"))
+      .join("\n");
+    assert.equal(joined.includes("line-through"), false);
+    assert.equal(joined.includes("originalPrice"), false);
+    assert.doesNotMatch(joined, /Spar\s*71\s*%/);
+    assert.doesNotMatch(joined, /1225/);
+    assert.doesNotMatch(joined, /fra 79/);
+    assert.doesNotMatch(joined, /(?<![0-9])49\s*kr/);
+    assert.doesNotMatch(joined, /(?<![0-9])349\s*kr/);
+  });
+
   it("emits Product/Offer JSON-LD from catalog prices only", () => {
     const komplett = pakker.find((bundle) => bundle.featured);
     assert.ok(komplett);
@@ -236,11 +279,19 @@ describe("structured data", () => {
     assert.equal(product["@type"], "Product");
     assert.equal(product.name, komplett.name);
     assert.equal(product.offers["@type"], "Offer");
-    assert.equal(product.offers.price, komplett.price);
+    assert.equal(product.offers.price, KOMPLETT_PRICE);
     assert.equal(product.offers.priceCurrency, "NOK");
     assert.ok(typeof product.image === "string" && product.image.startsWith(SITE_ORIGIN));
     assert.equal("aggregateRating" in product, false);
     assert.equal("review" in product, false);
+  });
+
+  it("publishes a 5-pack Offer at 99 kr without a purchasable fem-pakke SKU", () => {
+    const offer = fivePackOfferJsonLd();
+    assert.equal(offer["@type"], "Product");
+    assert.equal(offer.offers.price, FIVE_PACK_PRICE);
+    assert.equal(offer.offers.priceCurrency, "NOK");
+    assert.equal(pakker.some((bundle) => bundle.id === "fem-pakke"), false);
   });
 
   it("lists visible catalog products with their real prices", () => {

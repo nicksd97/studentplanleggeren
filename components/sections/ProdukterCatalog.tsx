@@ -31,6 +31,9 @@ export default function ProdukterCatalog({
               {heading}
             </h1>
             <p className="text-brand-medium max-w-xl mx-auto">{intro}</p>
+            <p className="text-sm text-brand-dark mt-4">
+              39 kr per planlegger. Legg fem valgfrie i handlekurven og betal 99 kr.
+            </p>
           </div>
 
           <nav

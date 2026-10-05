@@ -2,6 +2,8 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import { cartPricingSummary } from "@/lib/checkout";
+import { FIVE_PACK_PRICE, FIVE_PACK_SIZE } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import Button from "./Button";
 
@@ -13,6 +15,7 @@ export default function CartPanel({
   onClose: () => void;
 }) {
   const { items, removeItem, clearCart, totalPrice } = useCart();
+  const pricing = cartPricingSummary(items);
 
   // Lock body scroll when open
   useEffect(() => {
@@ -97,7 +100,9 @@ export default function CartPanel({
                     <p className="text-sm font-medium text-brand-dark truncate">
                       {item.name}
                     </p>
-                    <p className="text-sm text-brand-medium">{item.price} kr</p>
+                    {(item.type === "bundle" || !pricing?.fivePacks) && (
+                      <p className="text-sm text-brand-medium">{item.price} kr</p>
+                    )}
                   </div>
                   <button
                     onClick={() => removeItem(item.id)}
@@ -117,6 +122,20 @@ export default function CartPanel({
         {/* Footer */}
         {items.length > 0 && (
           <div className="border-t border-brand-soft px-6 py-5 space-y-4">
+            {pricing && pricing.fivePacks > 0 ? (
+              <p className="text-sm text-brand-medium">
+                {pricing.fivePacks === 1
+                  ? `5-pakke: fem planleggere for ${FIVE_PACK_PRICE} kr`
+                  : `${pricing.fivePacks} × 5-pakke for ${pricing.fivePacks * FIVE_PACK_PRICE} kr`}
+                {pricing.singleCount % FIVE_PACK_SIZE > 0
+                  ? ` + ${pricing.singleCount % FIVE_PACK_SIZE} enkelt`
+                  : ""}
+              </p>
+            ) : pricing && pricing.singleCount > 0 && pricing.singleCount < FIVE_PACK_SIZE ? (
+              <p className="text-sm text-brand-medium">
+                Legg til {FIVE_PACK_SIZE - pricing.singleCount} til og få 5-pakke for {FIVE_PACK_PRICE} kr.
+              </p>
+            ) : null}
             <div className="flex items-center justify-between">
               <span className="text-sm text-brand-medium">Totalt</span>
               <span className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark">

@@ -5,6 +5,7 @@ import {
   confirmStripePayment,
   confirmVippsPayment,
   isCardCheckoutAllowed,
+  priceCheckoutItems,
   startCheckoutPayment,
 } from "./checkout";
 import type {
@@ -14,10 +15,19 @@ import type {
   VippsPayment,
 } from "./checkout";
 import { createOrderInsertFailure } from "./order-insert-error";
-import { alleProdukter, completePackageCartItem } from "./products";
+import {
+  alleProdukter,
+  completePackageCartItem,
+  FIVE_PACK_PRICE,
+  KOMPLETT_PRICE,
+  SINGLE_PRICE,
+  THEME_PACK_PRICE,
+} from "./products";
 
 const product = alleProdukter[0];
 assert.ok(product);
+const komplettOre = KOMPLETT_PRICE * 100;
+const fiveSingles = alleProdukter.slice(0, 5).map((entry) => ({ id: entry.id, price: 1 }));
 
 function payment(overrides: Partial<VippsPayment> = {}): VippsPayment {
   const amount = overrides.amount ?? { currency: "NOK", value: product.price * 100 };
@@ -50,7 +60,7 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
   const orders: OrderRecord[] = [];
   let nextPayment: VippsPayment | null = vippsPayment;
   let nextSession: StripeCheckoutSession | null = null;
-  const emails: Array<{ email: string; downloadToken: string }> = [];
+  const emails: Array<{ email: string; downloadToken: string; amountNok?: number }> = [];
   const createdPayments: Array<{
     reference: string;
     amountOre: number;
@@ -135,7 +145,11 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
     },
     mailer: {
       async sendOrderConfirmation(input) {
-        emails.push({ email: input.email, downloadToken: input.downloadToken });
+        emails.push({
+          email: input.email,
+          downloadToken: input.downloadToken,
+          amountNok: input.amountNok,
+        });
       },
     },
     analytics: {
@@ -174,6 +188,92 @@ const checkoutInput = {
   paymentProvider: "vipps" as const,
   returnOrigin: "https://www.studentplanlegger.no",
 };
+
+describe("catalog prices and 5-pack", () => {
+  it("prices every single at 39 kr and theme packs at 149 kr", () => {
+    assert.equal(SINGLE_PRICE, 39);
+    assert.equal(THEME_PACK_PRICE, 149);
+    assert.equal(FIVE_PACK_PRICE, 99);
+    assert.equal(KOMPLETT_PRICE, 249);
+    assert.ok(alleProdukter.every((entry) => entry.price === SINGLE_PRICE));
+    const daglig = priceCheckoutItems([{ id: "daglig-pakke", price: 1 }]);
+    assert.equal("error" in daglig, false);
+    if ("error" in daglig) throw new Error(daglig.error);
+    assert.equal(daglig.amountNok, THEME_PACK_PRICE);
+  });
+
+  it("charges 99 kr for any 5 singles even if the client forges unit prices", () => {
+    const priced = priceCheckoutItems(fiveSingles);
+    assert.equal("error" in priced, false);
+    if ("error" in priced) throw new Error(priced.error);
+    assert.equal(priced.amountNok, FIVE_PACK_PRICE);
+    assert.equal(priced.items.length, 5);
+    assert.ok(priced.items.every((item) => item.price === SINGLE_PRICE));
+  });
+
+  it("keeps leftover singles at 39 kr after each complete 5-pack", () => {
+    const six = alleProdukter.slice(0, 6).map((entry) => ({ id: entry.id }));
+    const ten = alleProdukter.slice(0, 10).map((entry) => ({ id: entry.id }));
+    const four = alleProdukter.slice(0, 4).map((entry) => ({ id: entry.id }));
+    const sixPriced = priceCheckoutItems(six);
+    const tenPriced = priceCheckoutItems(ten);
+    const fourPriced = priceCheckoutItems(four);
+    assert.equal("error" in sixPriced, false);
+    assert.equal("error" in tenPriced, false);
+    assert.equal("error" in fourPriced, false);
+    if ("error" in sixPriced || "error" in tenPriced || "error" in fourPriced) {
+      throw new Error("expected singles to price");
+    }
+    assert.equal(sixPriced.amountNok, FIVE_PACK_PRICE + SINGLE_PRICE);
+    assert.equal(tenPriced.amountNok, FIVE_PACK_PRICE * 2);
+    assert.equal(fourPriced.amountNok, SINGLE_PRICE * 4);
+  });
+
+  it("does not fold theme packs into the 5-pack count", () => {
+    const mixed = priceCheckoutItems([
+      { id: "daglig-pakke" },
+      ...alleProdukter.slice(5, 9).map((entry) => ({ id: entry.id })),
+    ]);
+    assert.equal("error" in mixed, false);
+    if ("error" in mixed) throw new Error(mixed.error);
+    assert.equal(mixed.amountNok, THEME_PACK_PRICE + SINGLE_PRICE * 4);
+  });
+
+  it("rejects a fake 5-pack bundle id so checkout still needs the five product ids", () => {
+    const fake = priceCheckoutItems([{ id: "fem-pakke" }]);
+    assert.deepEqual(fake, { error: "Ukjent produkt" });
+  });
+
+  it("starts Vipps and Stripe at the 5-pack amount, not the forged client total", async () => {
+    const { deps, orders, createdPayments } = memoryDeps();
+    const vipps = await startCheckoutPayment(
+      {
+        items: fiveSingles,
+        amountNok: 1,
+        paymentProvider: "vipps",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      deps,
+    );
+    assert.equal(vipps.ok, true);
+    assert.equal(orders[0].amount_nok, FIVE_PACK_PRICE);
+    assert.equal(createdPayments[0].amountOre, FIVE_PACK_PRICE * 100);
+
+    const stripeHarness = memoryDeps();
+    const stripe = await startCheckoutPayment(
+      {
+        ...checkoutInput,
+        items: fiveSingles,
+        amountNok: 1,
+        paymentProvider: "stripe",
+      },
+      stripeHarness.deps,
+    );
+    assert.equal(stripe.ok, true);
+    assert.equal(stripeHarness.orders[0].amount_nok, FIVE_PACK_PRICE);
+    assert.equal(stripeHarness.createdSessions[0].amountOre, FIVE_PACK_PRICE * 100);
+  });
+});
 
 describe("card checkout", () => {
   it("is allowed so Betal med kort can start a real Stripe payment", () => {
@@ -447,7 +547,7 @@ describe("header complete package", () => {
     const item = completePackageCartItem();
     assert.equal(item.id, "komplett");
     assert.equal(item.type, "bundle");
-    assert.equal(item.price, 349);
+    assert.equal(item.price, KOMPLETT_PRICE);
     assert.match(item.name, /komplett/i);
 
     const header = readFileSync(new URL("../components/layout/Header.tsx", import.meta.url), "utf8");
@@ -572,9 +672,9 @@ describe("Vipps checkout start", () => {
     assert.equal(orders[0].first_name, "");
     assert.equal(orders[0].last_name, "");
     assert.equal(orders[0].payment_status, "pending");
-    assert.equal(orders[0].amount_nok, 349);
+    assert.equal(orders[0].amount_nok, KOMPLETT_PRICE);
     assert.equal(orders[0].items[0].id, "komplett");
-    assert.equal(createdPayments[0].amountOre, 34900);
+    assert.equal(createdPayments[0].amountOre, komplettOre);
     assert.equal(createdPayments[0].profileScope, "name email phoneNumber");
     assert.equal(emails.length, 0);
   });
@@ -755,7 +855,7 @@ describe("Vipps payment confirmation", () => {
     assert.equal(started.ok, true);
     harness.setPayment(
       payment({
-        amount: { currency: "NOK", value: 34900 },
+        amount: { currency: "NOK", value: komplettOre },
         state: "AUTHORIZED",
         userDetails: {
           email: "kari@example.com",
@@ -764,7 +864,7 @@ describe("Vipps payment confirmation", () => {
           mobileNumber: "4712345678",
         },
         aggregate: {
-          authorizedAmount: { currency: "NOK", value: 34900 },
+          authorizedAmount: { currency: "NOK", value: komplettOre },
           capturedAmount: { currency: "NOK", value: 0 },
           cancelledAmount: { currency: "NOK", value: 0 },
           refundedAmount: { currency: "NOK", value: 0 },
@@ -797,7 +897,7 @@ describe("Vipps payment confirmation", () => {
     harness.orders[0].payment_status = "completed";
     harness.setPayment(
       payment({
-        amount: { currency: "NOK", value: 34900 },
+        amount: { currency: "NOK", value: komplettOre },
         state: "AUTHORIZED",
         userDetails: {
           email: "kari@example.com",
@@ -805,8 +905,8 @@ describe("Vipps payment confirmation", () => {
           lastName: "Hansen",
         },
         aggregate: {
-          authorizedAmount: { currency: "NOK", value: 34900 },
-          capturedAmount: { currency: "NOK", value: 34900 },
+          authorizedAmount: { currency: "NOK", value: komplettOre },
+          capturedAmount: { currency: "NOK", value: komplettOre },
           cancelledAmount: { currency: "NOK", value: 0 },
           refundedAmount: { currency: "NOK", value: 0 },
         },
@@ -836,13 +936,13 @@ describe("Vipps payment confirmation", () => {
     assert.equal(started.ok, true);
     harness.setPayment(
       payment({
-        amount: { currency: "NOK", value: 34900 },
+        amount: { currency: "NOK", value: komplettOre },
         state: "AUTHORIZED",
         userDetails: {
           firstName: "Kari",
         },
         aggregate: {
-          authorizedAmount: { currency: "NOK", value: 34900 },
+          authorizedAmount: { currency: "NOK", value: komplettOre },
           capturedAmount: { currency: "NOK", value: 0 },
           cancelledAmount: { currency: "NOK", value: 0 },
           refundedAmount: { currency: "NOK", value: 0 },
@@ -930,7 +1030,7 @@ describe("marketing attribution", () => {
 
     assert.equal(result.ok, true);
     assert.equal(orders[0].items[0].id, "komplett");
-    assert.equal(orders[0].amount_nok, 349);
+    assert.equal(orders[0].amount_nok, KOMPLETT_PRICE);
     assert.equal(orders[0].payment_status, "pending");
     assert.equal(orders[0].utm_source, "instagram");
     assert.equal(orders[0].utm_medium, "social");
@@ -953,7 +1053,7 @@ describe("marketing attribution", () => {
     assert.equal(started.ok, true);
     harness.setPayment(
       payment({
-        amount: { currency: "NOK", value: 34900 },
+        amount: { currency: "NOK", value: komplettOre },
         state: "AUTHORIZED",
         userDetails: {
           email: "kari@example.com",
@@ -961,7 +1061,7 @@ describe("marketing attribution", () => {
           lastName: "Hansen",
         },
         aggregate: {
-          authorizedAmount: { currency: "NOK", value: 34900 },
+          authorizedAmount: { currency: "NOK", value: komplettOre },
           capturedAmount: { currency: "NOK", value: 0 },
           cancelledAmount: { currency: "NOK", value: 0 },
           refundedAmount: { currency: "NOK", value: 0 },
@@ -978,7 +1078,7 @@ describe("marketing attribution", () => {
     assert.equal(harness.orders[0].payment_status, "completed");
     assert.equal(harness.purchases.length, 1);
     assert.equal(harness.purchases[0].utm_source, "instagram");
-    assert.equal(harness.purchases[0].amount_nok, 349);
+    assert.equal(harness.purchases[0].amount_nok, KOMPLETT_PRICE);
   });
 
   it("stores the same tags on a /kasse Stripe start", async () => {
@@ -1028,7 +1128,7 @@ describe("marketing attribution", () => {
       harness.deps,
     );
     harness.setPayment(payment({
-      amount: { currency: "NOK", value: 34900 },
+      amount: { currency: "NOK", value: komplettOre },
       state: "CREATED",
     }));
 
