@@ -5,7 +5,15 @@ import {
   type CampaignTags,
 } from "./attribution";
 import { insertFailureResult } from "./order-insert-error";
-import { alleProdukter, pakker } from "./products";
+import {
+  alleProdukter,
+  FIVE_PACK_PRICE,
+  FIVE_PACK_SIZE,
+  fivePackCount,
+  pakker,
+  SINGLE_PRICE,
+  singlesAmountNok,
+} from "./products";
 
 export function isCardCheckoutAllowed(): boolean {
   return true;
@@ -109,6 +117,7 @@ export type CheckoutDependencies = {
       firstName: string;
       items: CheckoutItem[];
       downloadToken: string;
+      amountNok: number;
     }): Promise<void>;
   };
   analytics?: {
@@ -156,7 +165,8 @@ export function priceCheckoutItems(
   }
 
   const items: CheckoutItem[] = [];
-  let amountNok = 0;
+  let singleCount = 0;
+  let bundleAmountNok = 0;
 
   for (const raw of rawItems) {
     if (!raw?.id) {
@@ -170,7 +180,7 @@ export function priceCheckoutItems(
         price: product.price,
         type: "product",
       });
-      amountNok += product.price;
+      singleCount += 1;
       continue;
     }
     const bundle = pakker.find((entry) => entry.id === raw.id);
@@ -181,13 +191,28 @@ export function priceCheckoutItems(
         price: bundle.price,
         type: "bundle",
       });
-      amountNok += bundle.price;
+      bundleAmountNok += bundle.price;
       continue;
     }
     return { error: "Ukjent produkt" };
   }
 
-  return { items, amountNok };
+  return { items, amountNok: singlesAmountNok(singleCount) + bundleAmountNok };
+}
+
+export function cartPricingSummary(rawItems: StartCheckoutInput["items"]) {
+  const priced = priceCheckoutItems(rawItems);
+  if ("error" in priced) {
+    return null;
+  }
+  const singleCount = priced.items.filter((item) => item.type === "product").length;
+  const packs = fivePackCount(singleCount);
+  return {
+    ...priced,
+    singleCount,
+    fivePacks: packs,
+    fivePackDiscount: packs * (SINGLE_PRICE * FIVE_PACK_SIZE - FIVE_PACK_PRICE),
+  };
 }
 
 function nonEmptyBuyerField(value: unknown): string | undefined {
@@ -381,6 +406,7 @@ export async function confirmVippsPayment(
             firstName: updated.first_name,
             items: updated.items,
             downloadToken: updated.download_token,
+            amountNok: updated.amount_nok,
           });
         } catch {
           // Payment is already captured/reserved; do not roll back fulfillment.
@@ -563,6 +589,7 @@ async function finalizePaidOrder(
         firstName: completed.first_name,
         items: completed.items,
         downloadToken: completed.download_token,
+        amountNok: completed.amount_nok,
       });
     } catch {
       // Payment is already captured/reserved; do not roll back fulfillment.

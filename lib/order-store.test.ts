@@ -10,8 +10,8 @@ const pending = {
   email: "probe-checkout-insert@example.com",
   first_name: "Probe",
   last_name: "Test",
-  items: [{ id: "daglig-gjennomgang", name: "Daglig Gjennomgang", price: 49, type: "product" as const }],
-  amount_nok: 49,
+  items: [{ id: "daglig-gjennomgang", name: "Daglig Gjennomgang", price: 39, type: "product" as const }],
+  amount_nok: 39,
   payment_provider: "vipps",
   payment_id: "ord-probe-pending",
   payment_status: "pending",
@@ -79,7 +79,7 @@ describe("createSupabaseOrderStore insertPending", () => {
     const order = await store.insertPending(pending);
     assert.equal(order.payment_status, "pending");
     assert.equal(order.payment_provider, "vipps");
-    assert.equal(order.amount_nok, 49);
+    assert.equal(order.amount_nok, 39);
     assert.equal(order.items[0].id, "daglig-gjennomgang");
   });
 

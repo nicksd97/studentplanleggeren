@@ -14,6 +14,7 @@ import JsonLd from "@/components/seo/JsonLd";
 import { faqItems } from "@/lib/faq";
 import {
   faqPageJsonLd,
+  fivePackOfferJsonLd,
   organizationJsonLd,
   productOfferJsonLd,
   websiteJsonLd,
@@ -25,7 +26,7 @@ export const metadata = {
   ...pageMeta({
     title: "Studentplanlegger — Få orden på studiene",
     description:
-      "25 fyllbare PDF-planleggere for norske studenter. Daglig, ukentlig, månedlig og mer — skriv ut eller fyll inn digitalt.",
+      "25 fyllbare PDF-planleggere for norske studenter. 39 kr per stykk, 5-pakke 99 kr, temapakker 149 kr og komplett pakke 249 kr.",
     path: "/",
   }),
   keywords: [
@@ -46,6 +47,7 @@ export default function Home() {
     websiteJsonLd(),
     faqPageJsonLd(faqItems),
     ...pakker.map((bundle) => productOfferJsonLd(bundle, "/#pakker")),
+    fivePackOfferJsonLd(),
   ];
 
   return (

@@ -20,16 +20,19 @@ export async function sendOrderConfirmation({
   firstName,
   items,
   downloadToken,
+  amountNok,
 }: {
   email: string;
   firstName: string;
   items: OrderItem[];
   downloadToken: string;
+  amountNok?: number;
 }) {
   const downloadUrl = `${SITE_ORIGIN}/takk?token=${downloadToken}`;
+  const total = amountNok ?? items.reduce((sum, item) => sum + item.price, 0);
 
   const itemListHtml = items
-    .map((item) => `<li style="padding:4px 0">${item.name} — ${item.price} kr</li>`)
+    .map((item) => `<li style="padding:4px 0">${item.name}</li>`)
     .join('');
 
   const html = `
@@ -40,6 +43,7 @@ export async function sendOrderConfirmation({
       </p>
       <ul style="list-style:none;padding:0;margin:16px 0;background:#f9f9fb;border-radius:8px;padding:16px">
         ${itemListHtml}
+        <li style="padding:12px 0 0;margin-top:8px;border-top:1px solid #eee;font-weight:600">Totalt — ${total} kr</li>
       </ul>
       <p style="color:#555;font-size:16px;line-height:1.6">
         Last ned produktene dine via lenken under:

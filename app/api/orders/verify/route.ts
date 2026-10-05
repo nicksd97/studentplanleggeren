@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
 
   const { data: order, error } = await supabaseAdmin
     .from('orders')
-    .select('id, email, first_name, items, payment_status, download_count, max_downloads, token_expires_at, created_at')
+    .select('id, email, first_name, items, amount_nok, payment_status, download_count, max_downloads, token_expires_at, created_at')
     .eq('download_token', token)
     .single();
 
@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
     email: order.email,
     firstName: order.first_name,
     items: order.items,
+    amountNok: order.amount_nok,
     paymentStatus: order.payment_status,
     downloadCount: order.download_count,
     maxDownloads: order.max_downloads,

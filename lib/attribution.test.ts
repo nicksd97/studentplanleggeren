@@ -59,7 +59,7 @@ describe("mergeCampaignTags", () => {
 
 describe("attachCampaignTags", () => {
   const items = [
-    { id: "komplett", name: "Studentplanlegger Komplett", price: 349, type: "bundle" as const },
+    { id: "komplett", name: "Studentplanlegger Komplett", price: 249, type: "bundle" as const },
   ];
 
   it("writes tags onto the first catalog item and can read them back", () => {
@@ -69,7 +69,7 @@ describe("attachCampaignTags", () => {
       utm_campaign: "komplett",
     });
     assert.equal(tagged[0].id, "komplett");
-    assert.equal(tagged[0].price, 349);
+    assert.equal(tagged[0].price, 249);
     assert.deepEqual(campaignTagsFromItems(tagged), {
       utm_source: "instagram",
       utm_medium: "social",

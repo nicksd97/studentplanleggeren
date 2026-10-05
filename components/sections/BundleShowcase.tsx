@@ -134,17 +134,11 @@ export default function BundleShowcase() {
         {/* Price block */}
         <FadeInOnScroll delay={300}>
           <div className="text-center mb-16">
-            <div className="flex items-baseline justify-center gap-3 mb-3">
+            <div className="flex items-baseline justify-center gap-3 mb-8">
               <span className="font-[family-name:var(--font-display)] text-6xl md:text-7xl font-bold text-brand-dark text-shadow-sm">
                 {featured.price}
               </span>
               <span className="text-brand-dark/70 text-2xl font-bold">kr</span>
-              <span className="text-brand-medium/60 line-through text-xl">
-                {featured.originalPrice} kr
-              </span>
-            </div>
-            <div className="mb-8">
-              <span className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-brand-accent text-brand-dark font-bold shadow-sm">Spar {featured.savingsPercent}%</span>
             </div>
 
             {/* CTAs */}
@@ -169,6 +163,9 @@ export default function BundleShowcase() {
           <div className="border-t border-brand-soft/60 pt-10">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium text-center mb-6">
               ✦ Eller velg en pakke ✦
+            </p>
+            <p className="text-sm text-brand-medium text-center mb-6">
+              Temapakker 149 kr. Velg fem enkeltplanleggere i handlekurven for 99 kr.
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               {categoryBundles.map((bundle) => (

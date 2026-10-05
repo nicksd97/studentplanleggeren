@@ -3,7 +3,6 @@
 import { useState } from "react";
 import type { Bundle } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
-import Badge from "./Badge";
 import Button from "./Button";
 import KomplettVippsButton from "./KomplettVippsButton";
 
@@ -45,17 +44,11 @@ function FeaturedKomplettCard({ bundle }: { bundle: Bundle }) {
           <p className="text-brand-soft text-sm mb-6">{bundle.description}</p>
 
           {/* Price */}
-          <div className="flex items-baseline gap-3 mb-2">
+          <div className="flex items-baseline gap-3 mb-8">
             <span className="font-[family-name:var(--font-display)] text-5xl md:text-6xl font-bold text-white">
               {bundle.price}
             </span>
             <span className="text-white/70 text-xl">kr</span>
-            <span className="text-white/40 line-through text-lg">
-              {bundle.originalPrice} kr
-            </span>
-          </div>
-          <div className="mb-8">
-            <Badge variant="accent">Spar {bundle.savingsPercent}%</Badge>
           </div>
 
           {/* Includes */}
@@ -121,12 +114,6 @@ export default function BundleCard({ bundle }: { bundle: Bundle }) {
         <span className="font-[family-name:var(--font-display)] text-3xl font-bold text-brand-dark">
           {bundle.price} kr
         </span>
-        <span className="text-brand-medium/60 line-through text-sm">
-          {bundle.originalPrice} kr
-        </span>
-        <Badge variant="accent" className="ml-1">
-          Spar {bundle.savingsPercent}%
-        </Badge>
       </div>
       <Button variant="secondary" fullWidth onClick={handleAdd}>
         {feedback ?? "Kjøp pakke"}

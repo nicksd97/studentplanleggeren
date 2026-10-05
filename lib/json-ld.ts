@@ -1,4 +1,4 @@
-import type { Bundle, Product } from "./products";
+import { FIVE_PACK_PRICE, type Bundle, type Product } from "./products";
 import type { Catalog } from "./catalog";
 import { catalogPath } from "./catalog";
 import type { faqItems } from "./faq";
@@ -69,6 +69,23 @@ export function productOfferJsonLd(
       priceCurrency: "NOK",
       availability: "https://schema.org/InStock",
       url: absoluteUrl(`${path}#${item.slug}`),
+    },
+  };
+}
+
+export function fivePackOfferJsonLd(): JsonLd {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    name: "5-pakke",
+    description: "Velg fem enkeltplanleggere og betal 99 kr.",
+    image: absoluteUrl(OG_IMAGE_PATH),
+    offers: {
+      "@type": "Offer",
+      price: FIVE_PACK_PRICE,
+      priceCurrency: "NOK",
+      availability: "https://schema.org/InStock",
+      url: absoluteUrl("/produkter"),
     },
   };
 }

@@ -18,12 +18,25 @@ export interface Bundle {
   name: string;
   description: string;
   price: number;
-  originalPrice: number;
-  savings: number;
-  savingsPercent: number;
   productIds: string[];
   badge?: string;
   featured?: boolean;
+}
+
+export const SINGLE_PRICE = 39;
+export const FIVE_PACK_SIZE = 5;
+export const FIVE_PACK_PRICE = 99;
+export const THEME_PACK_PRICE = 149;
+export const KOMPLETT_PRICE = 249;
+
+export function singlesAmountNok(count: number): number {
+  const packs = Math.floor(count / FIVE_PACK_SIZE);
+  const remainder = count % FIVE_PACK_SIZE;
+  return packs * FIVE_PACK_PRICE + remainder * SINGLE_PRICE;
+}
+
+export function fivePackCount(singleCount: number): number {
+  return Math.floor(singleCount / FIVE_PACK_SIZE);
 }
 
 // ── Daglig (Daily) ──────────────────────────────────────────────
@@ -33,7 +46,7 @@ export const dagligProdukter: Product[] = [
     slug: "daglig-gjennomgang",
     name: "Daglig Gjennomgang",
     description: "Daglig gjennomgang og refleksjonsark — oppsummer dagen, noter hva som gikk bra og hva du vil forbedre.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "daglig",
     categoryLabel: "Daglig",
     fileName: "2. Dagelig Gjennomgang.pdf",
@@ -46,7 +59,7 @@ export const dagligProdukter: Product[] = [
     slug: "daglig-helseplan",
     name: "Daglig Helseplan",
     description: "Daglig helseplanlegger — spor trening, måltider, vanninntak og søvn.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "daglig",
     categoryLabel: "Daglig",
     fileName: "3. Dagelig Helseplan.pdf",
@@ -59,7 +72,7 @@ export const dagligProdukter: Product[] = [
     slug: "daglig-planlegger",
     name: "Daglig Planlegger",
     description: "Daglig planlegger med agenda, fokusområder og gjøremål.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "daglig",
     categoryLabel: "Daglig",
     fileName: "4. Dagelig Planlegger.pdf",
@@ -72,7 +85,7 @@ export const dagligProdukter: Product[] = [
     slug: "daglig-produktivitetsplan",
     name: "Daglig Produktivitetsplan",
     description: "Daglig produktivitetsplan med tidsblokker og prioriteringer.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "daglig",
     categoryLabel: "Daglig",
     fileName: "5. Dagelig Productivitests Plan.pdf",
@@ -85,7 +98,7 @@ export const dagligProdukter: Product[] = [
     slug: "daglig-timeplan",
     name: "Daglig Timeplan",
     description: "Timebasert dagsplan fra morgen til kveld.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "daglig",
     categoryLabel: "Daglig",
     fileName: "6. Dagelig timeplan.pdf",
@@ -102,7 +115,7 @@ export const ukentligProdukter: Product[] = [
     slug: "ukentlig-gjennomgang",
     name: "Ukentlig Gjennomgang",
     description: "Ukentlig oppsummering — reflekter over uken og sett mål for neste.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "ukentlig",
     categoryLabel: "Ukentlig",
     fileName: "21. Ukentlig Gjennomgang.pdf",
@@ -115,7 +128,7 @@ export const ukentligProdukter: Product[] = [
     slug: "ukentlig-gjoremaal",
     name: "Ukentlig Gjøremål",
     description: "Ukentlig gjøremålsliste med plass til oppgaver for hver dag.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "ukentlig",
     categoryLabel: "Ukentlig",
     fileName: "22. Ukentlig Gjøremål.pdf",
@@ -128,7 +141,7 @@ export const ukentligProdukter: Product[] = [
     slug: "ukentlig-matplan",
     name: "Ukentlig Matplan",
     description: "Ukentlig måltidsplanlegger med handleliste.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "ukentlig",
     categoryLabel: "Ukentlig",
     fileName: "23. Ukentlig Mat Plan.pdf",
@@ -141,7 +154,7 @@ export const ukentligProdukter: Product[] = [
     slug: "ukentlig-plan",
     name: "Ukentlig Plan",
     description: "Komplett ukentlig plan med fokusområder og daglige blokker.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "ukentlig",
     categoryLabel: "Ukentlig",
     fileName: "24. Ukentlig Plan.pdf",
@@ -154,7 +167,7 @@ export const ukentligProdukter: Product[] = [
     slug: "ukentlig-planlegger",
     name: "Ukentlig Planlegger",
     description: "Enkel ukentlig planlegger for studier og hverdag.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "ukentlig",
     categoryLabel: "Ukentlig",
     fileName: "25. Ukentlig Planlegger.pdf",
@@ -171,7 +184,7 @@ export const maanedligProdukter: Product[] = [
     slug: "maanedlig-budsjett",
     name: "Månedlig Budsjett",
     description: "Månedlig budsjettplanlegger — spor inntekter og utgifter.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "maanedlig",
     categoryLabel: "Månedlig",
     fileName: "7. Månedlig Budsjett.pdf",
@@ -184,7 +197,7 @@ export const maanedligProdukter: Product[] = [
     slug: "maanedlig-gjennomgang",
     name: "Månedlig Gjennomgang",
     description: "Månedlig gjennomgang og refleksjon.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "maanedlig",
     categoryLabel: "Månedlig",
     fileName: "8. Månedlig gjennomgang.pdf",
@@ -197,7 +210,7 @@ export const maanedligProdukter: Product[] = [
     slug: "maanedlig-planlegger",
     name: "Månedlig Planlegger",
     description: "Månedlig planlegger med oversikt over mål og gjøremål.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "maanedlig",
     categoryLabel: "Månedlig",
     fileName: "9. Månedlig planlegger.pdf",
@@ -214,7 +227,7 @@ export const aarligProdukter: Product[] = [
     slug: "aarlig-planlegger",
     name: "Årlig Planlegger",
     description: "Årsplanlegger med månedsoversikt og årlige mål.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "aarlig",
     categoryLabel: "Årlig",
     fileName: "26. Årlig Planlegger.pdf",
@@ -231,7 +244,7 @@ export const produktivitetProdukter: Product[] = [
     slug: "pomodoro-planlegger",
     name: "Pomodoro Planlegger",
     description: "Pomodoro studieøkt-planlegger med produktivitetsscoring.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "produktivitet",
     categoryLabel: "Produktivitet",
     fileName: "17. POMODORO Planlegger.pdf",
@@ -244,7 +257,7 @@ export const produktivitetProdukter: Product[] = [
     slug: "prosjekt-planlegger",
     name: "Prosjekt Planlegger",
     description: "Prosjektplanlegging med tidslinje og milepæler.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "produktivitet",
     categoryLabel: "Produktivitet",
     fileName: "18. Prosjekt Planlegger.pdf",
@@ -257,7 +270,7 @@ export const produktivitetProdukter: Product[] = [
     slug: "gjoremaal-liste",
     name: "Gjøremål Liste",
     description: "Enkel gjøremålsliste med prioriteringsfelt.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "produktivitet",
     categoryLabel: "Produktivitet",
     fileName: "13. Gjøremål Liste.pdf",
@@ -270,7 +283,7 @@ export const produktivitetProdukter: Product[] = [
     slug: "handlingsplan",
     name: "Handlingsplan",
     description: "Handlingsplan for å bryte ned mål til konkrete steg.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "produktivitet",
     categoryLabel: "Produktivitet",
     fileName: "14. Handlingsplan.pdf",
@@ -283,7 +296,7 @@ export const produktivitetProdukter: Product[] = [
     slug: "maal-planlegger",
     name: "Mål Planlegger",
     description: "Målsettingsark med tiltak og tidsfrister.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "produktivitet",
     categoryLabel: "Produktivitet",
     fileName: "16. Mål Planlegger.pdf",
@@ -300,7 +313,7 @@ export const helseProdukter: Product[] = [
     slug: "helse-planlegger",
     name: "Helse Planlegger",
     description: "Helse- og treningsplanlegger med kostmål.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "helse",
     categoryLabel: "Helse og livsstil",
     fileName: "20. Helse Planlegger.pdf",
@@ -313,7 +326,7 @@ export const helseProdukter: Product[] = [
     slug: "hjemmeplanlegger",
     name: "Hjemmeplanlegger",
     description: "Planlegg måltider, husarbeid og handleliste for hjemmet.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "helse",
     categoryLabel: "Helse og livsstil",
     fileName: "15. Hjemmeplanlegger.pdf",
@@ -326,7 +339,7 @@ export const helseProdukter: Product[] = [
     slug: "reise-planlegger",
     name: "Reise Planlegger",
     description: "Planlegg reiser med budsjett, pakkeliste og dagsprogram.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "helse",
     categoryLabel: "Helse og livsstil",
     fileName: "19. Reise Planlegger.pdf",
@@ -343,7 +356,7 @@ export const sporingProdukter: Product[] = [
     slug: "personlig-finans-tracker",
     name: "Personlig Finans Tracker",
     description: "Personlig finansoversikt med inntekter, utgifter og sparing.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "sporing",
     categoryLabel: "Sporing",
     fileName: "10. Personlig Finans Tracker.pdf",
@@ -356,7 +369,7 @@ export const sporingProdukter: Product[] = [
     slug: "vane-tracker",
     name: "Vane Tracker",
     description: "Månedlig vanesporing i rutenett — bygg gode vaner.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "sporing",
     categoryLabel: "Sporing",
     fileName: "11. Vane Tracker.pdf",
@@ -369,7 +382,7 @@ export const sporingProdukter: Product[] = [
     slug: "30-dagers-utfordring",
     name: "30-Dagers Utfordring",
     description: "30-dagers utfordringstracker for nye vaner eller mål.",
-    price: 49,
+    price: SINGLE_PRICE,
     category: "sporing",
     categoryLabel: "Sporing",
     fileName: "12. 30-Dagers Utfordring.pdf",
@@ -408,10 +421,7 @@ export const pakker: Bundle[] = [
     slug: "komplett",
     name: "Studentplanlegger Komplett",
     description: "Alle 25 planleggere + 12 papirmaler. Alt du trenger for å ha full kontroll på studiene.",
-    price: 349,
-    originalPrice: 1225,
-    savings: 876,
-    savingsPercent: 71,
+    price: KOMPLETT_PRICE,
     productIds: alleProdukter.map((p) => p.id),
     badge: "Best verdi",
     featured: true,
@@ -421,10 +431,7 @@ export const pakker: Bundle[] = [
     slug: "daglig-pakke",
     name: "Daglig Pakke",
     description: "Alle 5 daglige planleggere i én pakke.",
-    price: 149,
-    originalPrice: 245,
-    savings: 96,
-    savingsPercent: 39,
+    price: THEME_PACK_PRICE,
     productIds: dagligProdukter.map((p) => p.id),
   },
   {
@@ -432,10 +439,7 @@ export const pakker: Bundle[] = [
     slug: "ukentlig-pakke",
     name: "Ukentlig Pakke",
     description: "Alle 5 ukentlige planleggere i én pakke.",
-    price: 149,
-    originalPrice: 245,
-    savings: 96,
-    savingsPercent: 39,
+    price: THEME_PACK_PRICE,
     productIds: ukentligProdukter.map((p) => p.id),
   },
   {
@@ -443,10 +447,7 @@ export const pakker: Bundle[] = [
     slug: "produktivitetspakken",
     name: "Produktivitetspakken",
     description: "Alle 5 produktivitetsverktøy i én pakke.",
-    price: 149,
-    originalPrice: 245,
-    savings: 96,
-    savingsPercent: 39,
+    price: THEME_PACK_PRICE,
     productIds: produktivitetProdukter.map((p) => p.id),
   },
 ];

@@ -35,7 +35,7 @@ export const guides: Guide[] = [
     catalogKey: "daglig",
     productSlug: "daglig-planlegger",
     productLead:
-      "Daglig Planlegger er et fyllbart PDF-ark med agenda, fokusområder og gjøremål. I samme kategori finnes også Daglig Timeplan og Daglig Gjennomgang.",
+      "Daglig Planlegger er et fyllbart PDF-ark med agenda, fokusområder og gjøremål for 39 kr. I samme kategori finnes også Daglig Timeplan og Daglig Gjennomgang.",
     productCta: "Se de daglige planleggerne",
     sections: [
       {
@@ -79,7 +79,7 @@ export const guides: Guide[] = [
     catalogKey: "ukentlig",
     productSlug: "ukentlig-planlegger",
     productLead:
-      "Ukentlig Planlegger er en enkel fyllbar ukeplan for studier og hverdag. Ukentlig Plan har fokusområder og daglige blokker, og Ukentlig Gjøremål gir plass til oppgaver per dag.",
+      "Ukentlig Planlegger er en enkel fyllbar ukeplan for studier og hverdag, 39 kr. Ukentlig Plan har fokusområder og daglige blokker, og Ukentlig Gjøremål gir plass til oppgaver per dag.",
     productCta: "Se de ukentlige planleggerne",
     sections: [
       {
@@ -121,7 +121,7 @@ export const guides: Guide[] = [
     catalogKey: "produktivitet",
     productSlug: "pomodoro-planlegger",
     productLead:
-      "Pomodoro Planlegger er et fyllbart ark for å planlegge studieøkter og notere produktivitet. Den ligger sammen med de andre produktivitetsarkene.",
+      "Pomodoro Planlegger er et fyllbart ark for å planlegge studieøkter og notere produktivitet, 39 kr. Den ligger sammen med de andre produktivitetsarkene.",
     productCta: "Se Pomodoro Planlegger",
     sections: [
       {
@@ -163,7 +163,7 @@ export const guides: Guide[] = [
     catalogKey: "sporing",
     productSlug: "vane-tracker",
     productLead:
-      "Vane Tracker er et månedlig rutenett med plass til egne kategorier, slik at du kan se fremgangen. 30-Dagers Utfordring er et mer avgrenset ark for nye vaner eller mål.",
+      "Vane Tracker er et månedlig rutenett med plass til egne kategorier, slik at du kan se fremgangen, 39 kr. 30-Dagers Utfordring er et mer avgrenset ark for nye vaner eller mål.",
     productCta: "Se Vane Tracker",
     sections: [
       {

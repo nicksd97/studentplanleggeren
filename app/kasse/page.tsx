@@ -9,7 +9,8 @@ import {
   CARD_CHECKOUT_DISABLED_MESSAGE,
   isCardCheckoutAllowed,
 } from "@/lib/checkout";
-import { pakker } from "@/lib/products";
+import { cartPricingSummary } from "@/lib/checkout";
+import { FIVE_PACK_PRICE } from "@/lib/products";
 import Button from "@/components/ui/Button";
 
 export default function KassePage() {
@@ -27,11 +28,7 @@ export default function KassePage() {
   const [paymentError, setPaymentError] = useState("");
   const loading = loadingProvider !== null;
 
-  const bundleItems = items.filter((i) => i.type === "bundle");
-  const totalSavings = bundleItems.reduce((sum, item) => {
-    const bundle = pakker.find((p) => p.id === item.id);
-    return sum + (bundle ? bundle.originalPrice - bundle.price : 0);
-  }, 0);
+  const pricing = cartPricingSummary(items);
 
   function validate() {
     const errs: Record<string, string> = {};
@@ -276,15 +273,15 @@ export default function KassePage() {
                 </ul>
 
                 <div className="border-t border-brand-soft pt-4 space-y-2 mb-6">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-brand-medium">Delsum</span>
-                    <span className="text-brand-dark">{totalPrice} kr</span>
-                  </div>
-                  {totalSavings > 0 && (
+                  {pricing && pricing.fivePacks > 0 && (
                     <div className="flex justify-between text-sm">
-                      <span className="text-green-600">Du sparer</span>
-                      <span className="text-green-600 font-medium">
-                        {totalSavings} kr
+                      <span className="text-brand-medium">
+                        {pricing.fivePacks === 1
+                          ? "5-pakke"
+                          : `${pricing.fivePacks} × 5-pakke`}
+                      </span>
+                      <span className="text-brand-dark">
+                        {pricing.fivePacks * FIVE_PACK_PRICE} kr
                       </span>
                     </div>
                   )}
