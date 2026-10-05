@@ -41,6 +41,7 @@ export function indexablePaths(): string[] {
     "/produkter",
     ...categoryGroups.map((group) => `/produkter?kategori=${group.key}`),
     ...guidePaths(),
+    "/gratis",
     "/personvern",
     "/vilkar",
   ];

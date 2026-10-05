@@ -74,6 +74,11 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/gratis" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  Gratis smakebit
+                </Link>
+              </li>
+              <li>
                 <Link href="/personvern" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
                   Personvern
                 </Link>

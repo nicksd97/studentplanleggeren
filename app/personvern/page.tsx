@@ -1,11 +1,12 @@
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { pageMeta } from "@/lib/site";
+import Link from "next/link";
 
 export const metadata = pageMeta({
   title: "Personvernerklæring — Studentplanlegger",
   description:
-    "Slik behandler Studentplanlegger personopplysninger ved kjøp av fyllbare PDF-planleggere. Kontakt hei@studentplanlegger.no.",
+    "Slik behandler Studentplanlegger personopplysninger ved kjøp og ved utsending av gratis smakebit og nyhetsbrev. Kontakt hei@studentplanlegger.no.",
   path: "/personvern",
 });
 
@@ -21,7 +22,7 @@ export default function PersonvernPage() {
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-dark mb-8">
             Personvernerklæring
           </h1>
-          <p className="text-brand-muted mb-8">Sist oppdatert: 12. april 2026</p>
+          <p className="text-brand-muted mb-8">Sist oppdatert: 5. oktober 2026</p>
 
           <div className="prose prose-brand max-w-none space-y-8 text-brand-dark/80">
             <section>
@@ -52,6 +53,54 @@ export default function PersonvernPage() {
                 Disse opplysningene er nødvendige for å behandle bestillingen din og sende deg
                 nedlastingslenke for produktene du har kjøpt.
               </p>
+              <p>
+                Når du sender inn skjemaet på{" "}
+                <Link href="/gratis" className="text-brand-accent hover:underline">
+                  /gratis
+                </Link>{" "}
+                eller forsiden, samler vi inn e-postadressen din for nyhetsbrev og den gratis
+                ukeplan-smakebiten.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold text-brand-dark mb-3">Nyhetsbrev og gratis smakebit</h2>
+              <p>
+                Vi samler <strong>e-postadresse</strong> når du sender inn skjemaet på /gratis
+                eller forsiden.
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li>
+                  <strong>Formål:</strong> sende den gratis ukeplan-smakebiten og jevnlige e-poster
+                  med studietips og produktinfo.
+                </li>
+                <li>
+                  <strong>Rettslig grunnlag:</strong> samtykke (skjemainnsending). Du kan trekke
+                  samtykket når som helst.
+                </li>
+                <li>
+                  <strong>Behandlingsansvarlig:</strong> Studentplanlegger Davidson, org.nr 937416156.
+                </li>
+                <li>
+                  <strong>Databehandler:</strong> Resend (e-postutsending og kontaktliste). Ordre
+                  fortsetter hos Supabase.
+                </li>
+                <li>
+                  <strong>Lagring:</strong> i Resend Contacts, segment lead-gratis-ukeplan, til du
+                  ber om sletting eller avmelding, eller opplysningene ikke lenger er relevante.
+                </li>
+                <li>
+                  <strong>Avmelding:</strong> svar til{" "}
+                  <a href="mailto:hei@studentplanlegger.no" className="text-brand-accent hover:underline">
+                    hei@studentplanlegger.no
+                  </a>{" "}
+                  med ønske om avmelding, eller bruk lenken i e-posten når den finnes.
+                </li>
+              </ul>
+              <p>
+                Rettighetene under (innsyn, retting, sletting og klage til Datatilsynet) gjelder
+                også for nyhetsbrevdata.
+              </p>
             </section>
 
             <section>
@@ -79,6 +128,7 @@ export default function PersonvernPage() {
                 <li>Behandle og levere bestillingen din</li>
                 <li>Sende bekreftelse og nedlastingslenke på e-post</li>
                 <li>Kontakte deg ved eventuelle problemer med bestillingen</li>
+                <li>Sende den gratis smakebiten og nyhetsbrev du har samtykket til</li>
               </ul>
               <p>
                 Vi selger eller deler aldri dine personopplysninger med tredjeparter
