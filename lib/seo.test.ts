@@ -64,6 +64,7 @@ describe("site URLs", () => {
     assert.ok(paths.includes("/produkter?kategori=produktivitet"));
     assert.ok(paths.includes("/produkter?kategori=helse"));
     assert.ok(paths.includes("/produkter?kategori=sporing"));
+    assert.ok(paths.includes("/gratis"));
     assert.ok(paths.includes("/personvern"));
     assert.ok(paths.includes("/vilkar"));
     for (const path of guidePaths()) {

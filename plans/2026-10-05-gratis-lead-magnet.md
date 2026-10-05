@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 >
-> **Do not start this plan until Nick says go.** This file is the spec. DNS is already done. Sample PDF is not yet in Supabase.
+> Nick said go 2026-10-05. Feature code is on this branch. Sample PDF is still not in Supabase until Nick uploads it.
 
 **Goal:** Add an indexable Bokmål landing page at `/gratis` that collects an email, upserts a Resend Contact into segment `lead-gratis-ukeplan`, and sends a lead mail from `Studentplanlegger <hei@studentplanlegger.no>` with a download link to the 1-page GRATIS smakebit PDF — never the commercial `24. Ukentlig Plan.pdf`.
 
@@ -125,10 +125,10 @@ Treat “already exists” as success and still send the PDF (the user wants the
 
 Not code. Block production signup until these are done. Local tests can mock Resend + Storage.
 
-- [ ] **Step 1: Confirm Resend domain** `studentplanlegger.no` is Verified. From-address `hei@studentplanlegger.no` is allowed.
+- [x] **Step 1: Confirm Resend domain** `studentplanlegger.no` is Verified. From-address `hei@studentplanlegger.no` is allowed.
 - [ ] **Step 2: Confirm `RESEND_API_KEY` on Vercel is full-access** (Contacts + Emails). If it is sending-only, create a new full-access key and replace the env value. Do not commit the key.
 - [ ] **Step 3: Create Resend segment** named exactly `lead-gratis-ukeplan`. Put its UUID in Vercel env `RESEND_LEAD_SEGMENT_ID` (Production + Preview).
-- [ ] **Step 4: Upload the smakebit** to Supabase Storage bucket `products`, path `leads/gratis-ukentlig-plan-smakebit.pdf`. Confirm the object is not `planners/ukentlig-plan.pdf`.
+- [ ] **Step 4: Upload the smakebit** to Supabase Storage bucket `products`, path `leads/gratis-ukentlig-plan-smakebit.pdf`. Source on this agent: `/home/ubuntu/.cursor/projects/workspace/uploads/gratis-ukentlig-plan-smakebit_3dd0.pdf` (57 KB, GRATIS SMAKEBIT). Confirm the object is not `planners/ukentlig-plan.pdf`.
 - [ ] **Step 5: Optional env** `LEAD_MAGNET_STORAGE_PATH=leads/gratis-ukentlig-plan-smakebit.pdf` if you do not want to rely on the code default.
 
 ---
@@ -146,7 +146,7 @@ Not code. Block production signup until these are done. Local tests can mock Res
 - Consumes: `SITE_NAME`, `SITE_EMAIL`, `SITE_ORIGIN` from `lib/site.ts`
 - `sendOrderConfirmation` must use the same `EMAIL_FROM` (sandbox `onboarding@resend.dev` cannot reach real buyers now that the domain is verified)
 
-- [ ] **Step 1: Write failing tests** in `lib/email.test.ts`
+- [x] **Step 1: Write failing tests** in `lib/email.test.ts`
 
 ```ts
 import assert from "node:assert/strict";
@@ -163,7 +163,7 @@ describe("email from-address", () => {
 
 Also add a source-scan (same style as `lib/seo.test.ts`) that `lib/email.ts` contains `sendLeadMagnetEmail`, subject `Gratis ukentlig plan-smakebit`, the phrases `GRATIS SMAKEBIT` and `ikke hele produktet`, a `/produkter` shop CTA, `hei@studentplanlegger.no` avmelding, and `/personvern`, and that it does **not** contain `onboarding@resend.dev` or `Beehiiv`.
 
-- [ ] **Step 2: Run the new tests and confirm they fail**
+- [x] **Step 2: Run the new tests and confirm they fail**
 
 ```bash
 node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test lib/email.test.ts
@@ -171,7 +171,7 @@ node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test 
 
 Expected: FAIL (`EMAIL_FROM` not exported / sandbox from still present).
 
-- [ ] **Step 3: Implement `lib/email.ts`**
+- [x] **Step 3: Implement `lib/email.ts`**
 
 Keep the existing HTML layout (sans-serif, max-width 560px, `#6c5ce7` button). Shared helpers:
 
@@ -217,7 +217,7 @@ async function sendHtmlEmail({
 - Body (Bokmål): thank them; this is a **GRATIS SMAKEBIT** / **ikke hele produktet**; button `Last ned smakebiten` → `downloadUrl`; explain fillable PDF, Adobe Reader recommended; shop CTA link to `${SITE_ORIGIN}/produkter` mentioning live prices 39 kr / 5-pakke 99 kr / temapakke 149 kr / Komplett 249 kr; avmelding via `${SITE_EMAIL}`; personvern link `${SITE_ORIGIN}/personvern`; footer `Studentplanlegger.no · NSD Drift`
 - Do not attach files. Do not mention Beehiiv.
 
-- [ ] **Step 4: Run tests and confirm they pass**
+- [x] **Step 4: Run tests and confirm they pass**
 
 ```bash
 npm test
@@ -225,7 +225,7 @@ npm test
 
 Expected: existing suite still green, plus `lib/email.test.ts`.
 
-- [ ] **Step 5: Commit** `feat: shared Resend from-address and lead-magnet mail`
+- [x] **Step 5: Commit** `feat: shared Resend from-address and lead-magnet mail`
 
 ---
 
@@ -246,7 +246,7 @@ Expected: existing suite still green, plus `lib/email.test.ts`.
 - Produces: `assertSafeLeadMagnetPath(path: string): void` — throw if path includes `ukentlig-plan.pdf` without `smakebit`, or equals any `productFileMap` value, or starts with `planners/`
 - Consumes later: Resend + `supabaseAdmin` from the route (keep I/O in the route or in functions that accept clients so tests stay mocks)
 
-- [ ] **Step 1: Write failing tests** covering:
+- [x] **Step 1: Write failing tests** covering:
 
   - valid `Name@Gmail.com` → `name@gmail.com`
   - missing / no `@` / no dot-TLD → `null`
@@ -256,8 +256,8 @@ Expected: existing suite still green, plus `lib/email.test.ts`.
   - `assertSafeLeadMagnetPath("planners/ukentlig-plan.pdf")` throws
   - `assertSafeLeadMagnetPath("leads/gratis-ukentlig-plan-smakebit.pdf")` does not throw
 
-- [ ] **Step 2: Run them and confirm they fail**
-- [ ] **Step 3: Implement `lib/newsletter.ts`**
+- [x] **Step 2: Run them and confirm they fail**
+- [x] **Step 3: Implement `lib/newsletter.ts`**
 
 Rate limit is process-local on purpose (light). Fluid Compute may reuse the instance; it is not a global firewall. Honeypot is the main bot filter.
 
@@ -280,8 +280,8 @@ export function allowNewsletterRequest(key: string, now = Date.now()): boolean {
 
 Do not log the raw email address.
 
-- [ ] **Step 4: Run `lib/newsletter.test.ts` and `npm test`**
-- [ ] **Step 5: Commit** `feat: newsletter validation, honeypot, and rate limit`
+- [x] **Step 4: Run `lib/newsletter.test.ts` and `npm test`**
+- [x] **Step 5: Commit** `feat: newsletter validation, honeypot, and rate limit`
 
 ---
 
@@ -308,9 +308,9 @@ Use `NextRequest` so headers are available. Do not change other `/api/*` routes.
 
 Check Resend `{ error }` on contact calls. Do not wrap SDK errors as success.
 
-- [ ] **Step 1: Implement the route** as a thin orchestrator (logic already tested in `lib/newsletter.ts`)
-- [ ] **Step 2: Confirm there is no `Beehiiv` string in `app/` or `lib/`**
-- [ ] **Step 3: Commit** `feat: store newsletter leads in Resend and send smakebit link`
+- [x] **Step 1: Implement the route** as a thin orchestrator (logic already tested in `lib/newsletter.ts`)
+- [x] **Step 2: Confirm there is no `Beehiiv` string in `app/` or `lib/`**
+- [x] **Step 3: Commit** `feat: store newsletter leads in Resend and send smakebit link`
 
 ---
 
@@ -345,9 +345,9 @@ Read `node_modules/next/dist/docs/` for App Router `page.tsx` / `metadata` befor
 
 Homepage `NewsletterSignup` (dark band): keep it posting to the same API so both surfaces share the list. Update copy so it does not promise “tips” without the PDF: heading `Gratis ukentlig plan-smakebit`, button `Send meg smakebiten`, microcopy with `/personvern`. Include the same honeypot field.
 
-- [ ] **Step 1: Add `/gratis` page + metadata**
-- [ ] **Step 2: Wire honeypot on both forms; Header + Footer links**
-- [ ] **Step 3: Commit** `feat: add /gratis lead-magnet landing page`
+- [x] **Step 1: Add `/gratis` page + metadata**
+- [x] **Step 2: Wire honeypot on both forms; Header + Footer links**
+- [x] **Step 3: Commit** `feat: add /gratis lead-magnet landing page`
 
 ---
 
@@ -375,8 +375,8 @@ Keep «Vi selger eller deler aldri … for markedsføringsformål». Resend is a
 
 Do not claim “ingen e-postmarkedsføring” anywhere — that would contradict this feature.
 
-- [ ] **Step 1: Update copy**
-- [ ] **Step 2: Commit** `docs: disclose newsletter and lead-magnet processing`
+- [x] **Step 1: Update copy**
+- [x] **Step 2: Commit** `docs: disclose newsletter and lead-magnet processing`
 
 ---
 
@@ -389,10 +389,10 @@ Do not claim “ingen e-postmarkedsføring” anywhere — that would contradict
 
 Do not add `/gratis` to `robotsDisallow`.
 
-- [ ] **Step 1: Write the failing seo assertion**
-- [ ] **Step 2: Add the path and sitemap priority**
-- [ ] **Step 3: `npm test` green**
-- [ ] **Step 4: Commit** `feat: index /gratis in sitemap`
+- [x] **Step 1: Write the failing seo assertion**
+- [x] **Step 2: Add the path and sitemap priority**
+- [x] **Step 3: `npm test` green**
+- [x] **Step 4: Commit** `feat: index /gratis in sitemap`
 
 ---
 
@@ -400,24 +400,24 @@ Do not add `/gratis` to `robotsDisallow`.
 
 Use a real inbox you control. Prefer `delivered@resend.dev` only for Resend-dashboard delivery checks; a real mailbox is required to open the PDF link.
 
-- [ ] `npm test` passes
-- [ ] `next build` succeeds
-- [ ] `/gratis` renders Bokmål hero, 3 bullets, form, `/personvern` link, shop CTA; no PDF iframe/direct file link
-- [ ] Header «Gratis» and footer «Gratis smakebit» reach `/gratis`
-- [ ] Homepage band still submits to `/api/newsletter`
-- [ ] Invalid email → 400, form error
-- [ ] Honeypot filled → 200, **no** new Resend contact, **no** email
+- [x] `npm test` passes
+- [x] `next build` succeeds
+- [x] `/gratis` renders Bokmål hero, 3 bullets, form, `/personvern` link, shop CTA; no PDF iframe/direct file link
+- [x] Header «Gratis» and footer «Gratis smakebit» reach `/gratis`
+- [x] Homepage band still submits to `/api/newsletter`
+- [x] Invalid email → 400, form error
+- [x] Honeypot filled → 200, **no** new Resend contact, **no** email
 - [ ] Valid signup → 200, success message
 - [ ] Resend dashboard: contact exists, in segment `lead-gratis-ukeplan`, not unsubscribed
 - [ ] Mail arrives **From** `Studentplanlegger <hei@studentplanlegger.no>` (not `onboarding@resend.dev`)
 - [ ] Subject `Gratis ukentlig plan-smakebit`
 - [ ] Button/link opens the **smakebit** (GRATIS-banner, 1 page). Confirm it is **not** `24. Ukentlig Plan.pdf` / not 2 pages / not 318 fields
-- [ ] Repeat submit hits rate limit (429) after 5/hour from the same IP+email
-- [ ] `/personvern` mentions newsletter purpose, Resend, avmelding
-- [ ] `https://www.studentplanlegger.no/sitemap.xml` (preview URL) lists `/gratis`
-- [ ] `/kasse` still 39 / 99 / 149 / 249; Vipps/Stripe code untouched (`git diff` has no checkout/price files)
-- [ ] Paid download of `planners/ukentlig-plan.pdf` still works for a test order **or** confirm `productFileMap` unchanged
-- [ ] Do not complete a live paid checkout unless Nick asks
+- [x] Repeat submit hits rate limit (429) after 5/hour from the same IP+email
+- [x] `/personvern` mentions newsletter purpose, Resend, avmelding
+- [x] `https://www.studentplanlegger.no/sitemap.xml` (preview URL) lists `/gratis`
+- [x] `/kasse` still 39 / 99 / 149 / 249; Vipps/Stripe code untouched (`git diff` has no checkout/price files)
+- [x] Paid download of `planners/ukentlig-plan.pdf` still works for a test order **or** confirm `productFileMap` unchanged
+- [x] Do not complete a live paid checkout unless Nick asks
 
 ---
 

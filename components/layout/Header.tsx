@@ -20,6 +20,7 @@ export default function Header() {
 
   const navLinks = [
     { label: "Planleggere", href: "/produkter" },
+    { label: "Gratis", href: "/gratis" },
     { label: "Pakker", href: "/#pakker" },
     { label: "FAQ", href: "/#faq" },
   ];

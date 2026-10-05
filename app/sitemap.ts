@@ -10,8 +10,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
         ? 1
         : path.startsWith("/produkter")
           ? 0.8
-          : path.startsWith("/guider")
-            ? 0.6
-            : 0.4,
+          : path === "/gratis"
+            ? 0.7
+            : path.startsWith("/guider")
+              ? 0.6
+              : 0.4,
   }));
 }
