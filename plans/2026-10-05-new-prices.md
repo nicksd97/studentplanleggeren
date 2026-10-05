@@ -1,6 +1,6 @@
 # New catalog prices and 5-pack
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Goal:** Charge Nick's new prices everywhere (UI, server-side Vipps/Stripe amounts, metadata and JSON-LD), drop fake comparison prices, and offer any 5 single planners for 99 kr.
 
@@ -55,10 +55,10 @@ Why this, not a selector: the cart already lets the buyer pick any singles, chec
 **Interfaces:**
 - Produces: `SINGLE_PRICE` 39, `FIVE_PACK_SIZE` 5, `FIVE_PACK_PRICE` 99, `THEME_PACK_PRICE` 149, `KOMPLETT_PRICE` 249, `singlesAmountNok(count)`, `priceCheckoutItems` amount includes 5-pack
 
-- [ ] **Step 1: Write failing tests** for catalog prices, 5-pack groups, forged client prices, theme+singles mix, and rejected unknown ids
-- [ ] **Step 2: Run the new tests and confirm they fail**
-- [ ] **Step 3: Update catalog and `priceCheckoutItems`**
-- [ ] **Step 4: Run tests and confirm they pass**
+- [x] **Step 1: Write failing tests** for catalog prices, 5-pack groups, forged client prices, theme+singles mix, and rejected unknown ids
+- [x] **Step 2: Run the new tests and confirm they fail**
+- [x] **Step 3: Update catalog and `priceCheckoutItems`**
+- [x] **Step 4: Run tests and confirm they pass**
 
 ---
 
@@ -74,10 +74,10 @@ Why this, not a selector: the cart already lets the buyer pick any singles, chec
 - Modify: `app/takk/page.tsx`
 - Test: `lib/checkout.test.ts`
 
-- [ ] **Step 1: Write failing tests** that Vipps/Stripe `amountOre` for 5 singles is 9900 and komplett is 24900, including campaign-tagged one-press
-- [ ] **Step 2: Confirm they fail if not already covered**
-- [ ] **Step 3: Cart/kasse/email/takk read charged total; no originalPrice savings**
-- [ ] **Step 4: Confirm one-press Vipps and UTM tags still work**
+- [x] **Step 1: Write failing tests** that Vipps/Stripe `amountOre` for 5 singles is 9900 and komplett is 24900, including campaign-tagged one-press
+- [x] **Step 2: Confirm they fail if not already covered**
+- [x] **Step 3: Cart/kasse/email/takk read charged total; no originalPrice savings**
+- [x] **Step 4: Confirm one-press Vipps and UTM tags still work**
 
 ---
 
@@ -95,16 +95,16 @@ Why this, not a selector: the cart already lets the buyer pick any singles, chec
 - Modify: `lib/catalog.ts`, `lib/faq.ts`, `lib/guides.ts`, `lib/json-ld.ts`, `app/page.tsx`
 - Test: `lib/seo.test.ts`
 
-- [ ] **Step 1: Write failing source assertions** — no `line-through`, no `1225`, no `Spar 71%`, no `fra 79`
-- [ ] **Step 2: Confirm they fail**
-- [ ] **Step 3: Update copy and JSON-LD. OG images have no baked-in prices.**
-- [ ] **Step 4: Confirm they pass**
+- [x] **Step 1: Write failing source assertions** — no `line-through`, no `1225`, no `Spar 71%`, no `fra 79`
+- [x] **Step 2: Confirm they fail**
+- [x] **Step 3: Update copy and JSON-LD. OG images have no baked-in prices.**
+- [x] **Step 4: Confirm they pass**
 
 ---
 
 ### Task 4: Verify, commit, and open the PR
 
-- [ ] **Step 1: Run the full test script and a production build**
-- [ ] **Step 2: Browser-check home, /produkter, cart 5-pack, /kasse total, and one-press Vipps POST amount. Do not charge.**
-- [ ] **Step 3: Update STATE.md and tick this plan**
-- [ ] **Step 4: Commit, push, and open a draft PR. Do not merge.**
+- [x] **Step 1: Run the full test script and a production build**
+- [x] **Step 2: Browser-check home, /produkter, cart 5-pack, /kasse total, and one-press Vipps POST amount. Do not charge.**
+- [x] **Step 3: Update STATE.md and tick this plan**
+- [x] **Step 4: Commit, push, and open a draft PR. Do not merge.**

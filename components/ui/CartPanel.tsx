@@ -100,7 +100,9 @@ export default function CartPanel({
                     <p className="text-sm font-medium text-brand-dark truncate">
                       {item.name}
                     </p>
-                    <p className="text-sm text-brand-medium">{item.price} kr</p>
+                    {(item.type === "bundle" || !pricing?.fivePacks) && (
+                      <p className="text-sm text-brand-medium">{item.price} kr</p>
+                    )}
                   </div>
                   <button
                     onClick={() => removeItem(item.id)}
@@ -125,6 +127,9 @@ export default function CartPanel({
                 {pricing.fivePacks === 1
                   ? `5-pakke: fem planleggere for ${FIVE_PACK_PRICE} kr`
                   : `${pricing.fivePacks} × 5-pakke for ${pricing.fivePacks * FIVE_PACK_PRICE} kr`}
+                {pricing.singleCount % FIVE_PACK_SIZE > 0
+                  ? ` + ${pricing.singleCount % FIVE_PACK_SIZE} enkelt`
+                  : ""}
               </p>
             ) : pricing && pricing.singleCount > 0 && pricing.singleCount < FIVE_PACK_SIZE ? (
               <p className="text-sm text-brand-medium">

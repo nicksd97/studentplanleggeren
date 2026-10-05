@@ -10,7 +10,7 @@ import {
   isCardCheckoutAllowed,
 } from "@/lib/checkout";
 import { cartPricingSummary } from "@/lib/checkout";
-import { FIVE_PACK_PRICE } from "@/lib/products";
+import { FIVE_PACK_PRICE, FIVE_PACK_SIZE, SINGLE_PRICE } from "@/lib/products";
 import Button from "@/components/ui/Button";
 
 export default function KassePage() {
@@ -265,9 +265,11 @@ export default function KassePage() {
                         </button>
                         <span className="text-sm text-brand-dark truncate">{item.name}</span>
                       </div>
-                      <span className="text-sm font-medium text-brand-dark shrink-0">
-                        {item.price} kr
-                      </span>
+                      {(item.type === "bundle" || !pricing?.fivePacks) && (
+                        <span className="text-sm font-medium text-brand-dark shrink-0">
+                          {item.price} kr
+                        </span>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -282,6 +284,20 @@ export default function KassePage() {
                       </span>
                       <span className="text-brand-dark">
                         {pricing.fivePacks * FIVE_PACK_PRICE} kr
+                      </span>
+                    </div>
+                  )}
+                  {pricing &&
+                    pricing.fivePacks > 0 &&
+                    pricing.singleCount % FIVE_PACK_SIZE > 0 && (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-brand-medium">
+                        {pricing.singleCount % FIVE_PACK_SIZE === 1
+                          ? "1 enkeltplanlegger"
+                          : `${pricing.singleCount % FIVE_PACK_SIZE} enkeltplanleggere`}
+                      </span>
+                      <span className="text-brand-dark">
+                        {(pricing.singleCount % FIVE_PACK_SIZE) * SINGLE_PRICE} kr
                       </span>
                     </div>
                   )}
