@@ -11,7 +11,8 @@ Both images now show real, undated pages from the delivered planner PDFs:
   in git (HERO_BASE_COMMIT), so re-running gives the same file.
 
 The paid PDFs are never committed (the repo is public). Put them in the
-git-ignored assets/source/ folder as <slug>.pdf, then:
+git-ignored assets/source/ folder as <slug>.pdf (corrected copies from
+scripts/fix-planner-typos.py in assets/source/fixed/ are used first), then:
 
     pip install pymupdf pillow numpy
     python3 scripts/build-site-images.py
@@ -37,7 +38,8 @@ HERO_BASE_COMMIT = "8c24f4e43397183f1625d89c9b0553c3d89ba49e"
 
 
 def render_page(source: Path, slug: str, page: int, width: int) -> Image.Image:
-    doc = pymupdf.open(source / f"{slug}.pdf")
+    fixed = source / "fixed" / f"{slug}.pdf"
+    doc = pymupdf.open(fixed if fixed.exists() else source / f"{slug}.pdf")
     p = doc[page]
     zoom = width / p.rect.width
     pix = p.get_pixmap(matrix=pymupdf.Matrix(zoom, zoom))
