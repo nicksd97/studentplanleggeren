@@ -50,8 +50,8 @@ Branch: `cursor/ekte-smakebit-og-datoer-6edf`
 
 ### Task 4: Verify and ship
 
-- [x] `npm test`, `npm run lint`, `npm run build`
-- [x] Front page and `/gratis` checked in the browser
+- [x] `npm test` (117 pass) and `npm run build` pass. `npm run lint` has one error in `lib/cart-context.tsx`, which is also on master and not touched here
+- [x] `next start`: front page HTML uses the updated hero and `marketing/3.png`, `/gratis` serves the new bullets, deleted images are not referenced
 - [x] PR against `master` (not merged)
 
 ### Task 5: Nick, after merge
