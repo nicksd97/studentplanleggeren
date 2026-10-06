@@ -6,6 +6,7 @@ import {
   startCheckoutPayment,
   type CheckoutDependencies,
 } from "./checkout";
+import { createSupabaseDiscountStore } from "./discount";
 import { sendOrderConfirmation } from "./email";
 import { createSupabaseOrderStore } from "./order-store";
 import { SITE_ORIGIN } from "./site";
@@ -21,6 +22,7 @@ export function createProductionCheckoutDeps(): CheckoutDependencies {
     mailer: {
       sendOrderConfirmation,
     },
+    discounts: createSupabaseDiscountStore(),
     analytics: {
       recordPurchase: recordPaidPurchase,
     },

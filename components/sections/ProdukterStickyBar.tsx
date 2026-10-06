@@ -45,7 +45,7 @@ export default function ProdukterStickyBar() {
             Studentplanlegger Komplett — alle 25 for {komplett.price} kr
           </p>
           <p className="text-white/60 text-xs hidden sm:block mt-0.5">
-            Alle 25 fyllbare PDF-er + 12 papirmaler
+            Alle 25 fyllbare PDF-er
           </p>
         </div>
         <button

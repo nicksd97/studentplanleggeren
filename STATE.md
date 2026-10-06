@@ -1,52 +1,25 @@
-# Gratis lead magnet — implemented, awaiting ops
+# Linjeforening rabattkoder — implemented
 
-Date: 2026-10-05
-Production HEAD at branch start: `2131435`
-Branch: `cursor/gratis-lead-magnet-plan-e27b`
+Date: 2026-10-06
+Branch: `cursor/linjeforening-rabattkoder-plan-e27b`
+PR: #12
 
 ## Status
 
-Feature implemented on this branch. **Do not merge** until Nick sets Vercel/Supabase ops below. Live signup cannot deliver the PDF until the smakebit is in Storage and `RESEND_LEAD_SEGMENT_ID` is set.
+Feature built on the plan branch. Nick approved the defaults (20 % whole cart after 5-pack, whole kroner, Supabase table, invalid code rejects payment, `?kode=` + one-press Vipps, `discount_code` on the order, UTM untouched).
 
-Plan: `plans/2026-10-05-gratis-lead-magnet.md`
+SQL Nick must run in the Supabase SQL Editor before deploy:
 
-## What shipped
+`supabase/migrations/2026-10-06-discount-codes.sql`
 
-- `/gratis` landing page (Bokmål), Header/Footer links, homepage band posts to the same API
-- `POST /api/newsletter`: validate, honeypot, 5/hour rate limit, Resend Contact + segment, lead mail with signed URL
-- From-address `Studentplanlegger <hei@studentplanlegger.no>` for order mail and lead mail
-- `/personvern` newsletter/lead purpose
-- `/gratis` in `indexablePaths` / sitemap (priority 0.7)
-- Beehiiv TODO removed
-- Prices / Vipps / Stripe / `productFileMap` unchanged
+That file creates `discount_codes` (RLS on, service-role only, no anon read), adds order columns, and seeds the 15 linjeforening codes (20 %, active, expires 2026-12-31 23:59 Europe/Oslo, no usage cap).
 
-## New Vercel env (no secret values)
+If the table is missing: a submitted code is treated as invalid (`Ugyldig kode` in the field; payment with a code is rejected). Checkout without a code still uses catalog prices.
 
-Already present: `RESEND_API_KEY`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`, `SUPABASE_SERVICE_ROLE_KEY`
+## Papirmaler
 
-| Name | Required | What Nick puts there |
-|---|---|---|
-| `RESEND_LEAD_SEGMENT_ID` | Yes for go-live | UUID of Resend segment named `lead-gratis-ukeplan` (Production + Preview) |
-| `LEAD_MAGNET_STORAGE_PATH` | No | Default in code: `leads/gratis-ukentlig-plan-smakebit.pdf` |
-
-`RESEND_API_KEY` must be **full-access** (Contacts + Emails), not sending-only.
-
-## PDF upload (Nick)
-
-This agent has no Supabase credentials, so the file was not uploaded.
-
-1. File: `gratis-ukentlig-plan-smakebit.pdf` (1 page, GRATIS SMAKEBIT). Agent copy: `/home/ubuntu/.cursor/projects/workspace/uploads/gratis-ukentlig-plan-smakebit_3dd0.pdf`.
-2. Supabase Storage → bucket **`products`** (keep private).
-3. Object path: **`leads/gratis-ukentlig-plan-smakebit.pdf`**.
-4. Do **not** upload or link `24. Ukentlig Plan.pdf` / `planners/ukentlig-plan.pdf`.
-
-## Local verification
-
-- `npm test`: 93/93
-- `next build`: `/gratis` static
-- Invalid email → 400; honeypot → 200; 6th signup/hour → 429
-- Valid signup locally → 500 `Kunne ikke lage nedlastingslenke` until Storage + Resend env exist
+Komplett copy now matches delivery: 25 planner PDFs only. Removed “12 papirmaler (prikket, rutenett og linjert)” from catalog, FAQ/JSON-LD, BundleShowcase, BundleCard, and ProdukterStickyBar. Print FAQ and Vane Tracker “rutenett” are unchanged.
 
 ## Not done
 
-Do not merge. Do not complete a live paid checkout. Live mail/PDF check waits on the env/upload above.
+Do not merge until Nick has run the SQL and reviewed the PR.

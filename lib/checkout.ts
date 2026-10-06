@@ -4,6 +4,12 @@ import {
   parseCampaignTags,
   type CampaignTags,
 } from "./attribution";
+import {
+  INVALID_DISCOUNT_PREVIEW_MESSAGE,
+  applyDiscountCode,
+  type DiscountLookup,
+  type DiscountStore,
+} from "./discount";
 import { insertFailureResult } from "./order-insert-error";
 import {
   alleProdukter,
@@ -80,6 +86,10 @@ export type OrderRecord = {
   payment_status: string;
   download_token: string;
   token_expires_at: string;
+  discount_code?: string;
+  list_amount_nok?: number;
+  discount_nok?: number;
+  discount_percent?: number;
 } & CampaignTags;
 
 export type CheckoutDependencies = {
@@ -118,8 +128,12 @@ export type CheckoutDependencies = {
       items: CheckoutItem[];
       downloadToken: string;
       amountNok: number;
+      discountCode?: string;
+      discountNok?: number;
+      discountPercent?: number;
     }): Promise<void>;
   };
+  discounts?: DiscountStore;
   analytics?: {
     recordPurchase(order: OrderRecord): Promise<void>;
   };
@@ -136,6 +150,7 @@ export type StartCheckoutInput = {
   amountNok?: number;
   paymentProvider?: string;
   campaign?: CampaignTags | Record<string, unknown> | string | null;
+  discountCode?: string;
   returnOrigin: string;
 };
 
@@ -198,6 +213,32 @@ export function priceCheckoutItems(
   }
 
   return { items, amountNok: singlesAmountNok(singleCount) + bundleAmountNok };
+}
+
+export async function previewCheckoutDiscount(
+  rawItems: StartCheckoutInput["items"],
+  rawCode: unknown,
+  lookup: (code: string) => Promise<DiscountLookup>,
+) {
+  const priced = priceCheckoutItems(rawItems);
+  if ("error" in priced) {
+    return { ok: false as const, error: priced.error };
+  }
+
+  const applied = await applyDiscountCode(priced.amountNok, rawCode, lookup);
+  if (!applied.ok) {
+    return { ok: false as const, error: INVALID_DISCOUNT_PREVIEW_MESSAGE };
+  }
+
+  return {
+    ok: true as const,
+    amountNok: applied.amountNok,
+    listAmountNok: applied.listAmountNok,
+    discountNok: applied.discountNok,
+    percent: applied.percent,
+    associationName: applied.associationName,
+    code: applied.code,
+  };
 }
 
 export function cartPricingSummary(rawItems: StartCheckoutInput["items"]) {
@@ -296,18 +337,38 @@ export async function startCheckoutPayment(
     return { ok: false, status: 400, error: priced.error };
   }
 
+  const applied = await applyDiscountCode(
+    priced.amountNok,
+    input.discountCode,
+    async (code) => {
+      if (!deps.discounts) return { ok: false as const, reason: "invalid" as const };
+      return deps.discounts.lookup(code);
+    },
+  );
+  if (!applied.ok) {
+    return { ok: false, status: 400, error: applied.error };
+  }
+
   const downloadToken = deps.createDownloadToken();
-  const amountOre = priced.amountNok * 100;
+  const amountOre = applied.amountNok * 100;
   const campaign = parseCampaignTags(input.campaign);
   const pendingOrder = {
     email,
     first_name: firstName,
     last_name: input.lastName?.trim() ?? "",
     items: attachCampaignTags(priced.items, campaign),
-    amount_nok: priced.amountNok,
+    amount_nok: applied.amountNok,
     payment_status: "pending" as const,
     download_token: downloadToken,
     token_expires_at: tokenExpiry(deps.now()).toISOString(),
+    ...(applied.code
+      ? {
+          discount_code: applied.code,
+          list_amount_nok: applied.listAmountNok,
+          discount_nok: applied.discountNok,
+          discount_percent: applied.percent,
+        }
+      : {}),
     ...campaign,
   };
 
@@ -407,6 +468,9 @@ export async function confirmVippsPayment(
             items: updated.items,
             downloadToken: updated.download_token,
             amountNok: updated.amount_nok,
+            discountCode: updated.discount_code,
+            discountNok: updated.discount_nok,
+            discountPercent: updated.discount_percent,
           });
         } catch {
           // Payment is already captured/reserved; do not roll back fulfillment.
@@ -582,6 +646,15 @@ async function finalizePaidOrder(
     };
   }
 
+  const discountCode = completed.discount_code ?? order.discount_code;
+  if (discountCode) {
+    try {
+      await deps.discounts?.incrementRedemption(discountCode);
+    } catch {
+      // Redemption count is reporting-only; never block download or mail.
+    }
+  }
+
   if (hasValidEmail(completed.email)) {
     try {
       await deps.mailer.sendOrderConfirmation({
@@ -590,6 +663,9 @@ async function finalizePaidOrder(
         items: completed.items,
         downloadToken: completed.download_token,
         amountNok: completed.amount_nok,
+        discountCode,
+        discountNok: completed.discount_nok ?? order.discount_nok,
+        discountPercent: completed.discount_percent ?? order.discount_percent,
       });
     } catch {
       // Payment is already captured/reserved; do not roll back fulfillment.

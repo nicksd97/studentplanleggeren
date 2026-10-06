@@ -420,7 +420,7 @@ export const pakker: Bundle[] = [
     id: "komplett",
     slug: "komplett",
     name: "Studentplanlegger Komplett",
-    description: "Alle 25 planleggere + 12 papirmaler. Alt du trenger for å ha full kontroll på studiene.",
+    description: "Alle 25 planleggere. Alt du trenger for å ha full kontroll på studiene.",
     price: KOMPLETT_PRICE,
     productIds: alleProdukter.map((p) => p.id),
     badge: "Best verdi",

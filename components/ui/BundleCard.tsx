@@ -61,7 +61,6 @@ function FeaturedKomplettCard({ bundle }: { bundle: Bundle }) {
               "5 produktivitetsverktøy",
               "3 helse og livsstil",
               "3 sporingsverktøy",
-              "12 papirmaler",
             ].map((item) => (
               <div key={item} className="flex items-center gap-2">
                 <svg

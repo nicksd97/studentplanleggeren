@@ -60,7 +60,13 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
   const orders: OrderRecord[] = [];
   let nextPayment: VippsPayment | null = vippsPayment;
   let nextSession: StripeCheckoutSession | null = null;
-  const emails: Array<{ email: string; downloadToken: string; amountNok?: number }> = [];
+  const emails: Array<{
+    email: string;
+    downloadToken: string;
+    amountNok?: number;
+    discountCode?: string;
+    discountNok?: number;
+  }> = [];
   const createdPayments: Array<{
     reference: string;
     amountOre: number;
@@ -149,8 +155,16 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
           email: input.email,
           downloadToken: input.downloadToken,
           amountNok: input.amountNok,
+          discountCode: input.discountCode,
+          discountNok: input.discountNok,
         });
       },
+    },
+    discounts: {
+      async lookup() {
+        return { ok: false, reason: "invalid" as const };
+      },
+      async incrementRedemption() {},
     },
     analytics: {
       async recordPurchase(order) {
@@ -1158,5 +1172,198 @@ describe("marketing attribution", () => {
     assert.match(layout, /CampaignCapture/);
     assert.match(ordersApi, /campaign/);
     assert.match(ordersApi, /CAMPAIGN_COOKIE/);
+  });
+});
+
+describe("linjeforening discount codes", () => {
+  const abakusRow = {
+    code: "ABAKUS20",
+    association_name: "Abakus, NTNU",
+    percent: 20,
+    active: true,
+    expires_at: "2026-12-31T22:59:00.000Z",
+    max_redemptions: null,
+    redemption_count: 0,
+  };
+
+  function withAbakus(harness = memoryDeps()) {
+    const redemptions: string[] = [];
+    harness.deps.discounts = {
+      async lookup(code) {
+        if (code === "ABAKUS20") return { ok: true, row: abakusRow };
+        return { ok: false, reason: "invalid" };
+      },
+      async incrementRedemption(code) {
+        redemptions.push(code);
+      },
+    };
+    return { harness, redemptions };
+  }
+
+  it("charges Komplett + ABAKUS20 as 19900 øre on Vipps and Stripe", async () => {
+    const { harness } = withAbakus();
+    const vipps = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        amountNok: 1,
+        paymentProvider: "vipps",
+        discountCode: "abakus20",
+        campaign: instagramCampaign,
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    assert.equal(vipps.ok, true);
+    assert.equal(harness.orders[0].amount_nok, 199);
+    assert.equal(harness.orders[0].list_amount_nok, 249);
+    assert.equal(harness.orders[0].discount_nok, 50);
+    assert.equal(harness.orders[0].discount_code, "ABAKUS20");
+    assert.equal(harness.orders[0].utm_source, "instagram");
+    assert.equal(harness.orders[0].items[0].utm_source, "instagram");
+    assert.equal(harness.createdPayments[0].amountOre, 19900);
+
+    const stripe = withAbakus();
+    const started = await startCheckoutPayment(
+      {
+        ...checkoutInput,
+        items: [{ id: "komplett" }],
+        amountNok: 1,
+        paymentProvider: "stripe",
+        discountCode: "ABAKUS20",
+      },
+      stripe.harness.deps,
+    );
+    assert.equal(started.ok, true);
+    assert.equal(stripe.harness.createdSessions[0].amountOre, 19900);
+    assert.equal(stripe.harness.orders[0].amount_nok, 199);
+  });
+
+  it("applies 20 percent after the 5-pack and theme-pack math", async () => {
+    const five = withAbakus();
+    const fiveResult = await startCheckoutPayment(
+      {
+        items: fiveSingles,
+        amountNok: 1,
+        paymentProvider: "vipps",
+        discountCode: "ABAKUS20",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      five.harness.deps,
+    );
+    assert.equal(fiveResult.ok, true);
+    assert.equal(five.harness.createdPayments[0].amountOre, 7900);
+
+    const theme = withAbakus();
+    const themeResult = await startCheckoutPayment(
+      {
+        items: [{ id: "daglig-pakke" }],
+        paymentProvider: "vipps",
+        discountCode: "ABAKUS20",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      theme.harness.deps,
+    );
+    assert.equal(themeResult.ok, true);
+    assert.equal(theme.harness.createdPayments[0].amountOre, 11900);
+  });
+
+  it("rejects an invalid code with 400 and does not start payment", async () => {
+    const { harness } = withAbakus();
+    const result = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        discountCode: "NEI20",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    assert.equal(result.ok, false);
+    if (result.ok) throw new Error("expected invalid code to fail");
+    assert.equal(result.status, 400);
+    assert.match(result.error, /ugyldig/i);
+    assert.equal(harness.orders.length, 0);
+    assert.equal(harness.createdPayments.length, 0);
+  });
+
+  it("keeps full catalog prices when no code is sent", async () => {
+    const { deps, orders, createdPayments } = memoryDeps();
+    const result = await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      deps,
+    );
+    assert.equal(result.ok, true);
+    assert.equal(orders[0].amount_nok, KOMPLETT_PRICE);
+    assert.equal(orders[0].discount_code, undefined);
+    assert.equal(createdPayments[0].amountOre, komplettOre);
+  });
+
+  it("increments redemption only after payment completes, and never blocks fulfillment", async () => {
+    const { harness, redemptions } = withAbakus();
+    await startCheckoutPayment(
+      {
+        items: [{ id: "komplett" }],
+        paymentProvider: "vipps",
+        discountCode: "ABAKUS20",
+        returnOrigin: "https://www.studentplanlegger.no",
+      },
+      harness.deps,
+    );
+    assert.deepEqual(redemptions, []);
+    harness.setPayment(
+      payment({
+        amount: { currency: "NOK", value: 19900 },
+        state: "AUTHORIZED",
+        userDetails: { email: "kari@example.com", firstName: "Kari", lastName: "Hansen" },
+        aggregate: {
+          authorizedAmount: { currency: "NOK", value: 19900 },
+          capturedAmount: { currency: "NOK", value: 0 },
+          cancelledAmount: { currency: "NOK", value: 0 },
+          refundedAmount: { currency: "NOK", value: 0 },
+        },
+      }),
+    );
+    if (harness.deps.discounts) {
+      harness.deps.discounts.incrementRedemption = async () => {
+        redemptions.push("throw");
+        throw new Error("increment failed");
+      };
+    }
+
+    const result = await confirmVippsPayment({ reference: "ord-testref01" }, harness.deps);
+    assert.equal(result.ok, true);
+    assert.equal(harness.orders[0].payment_status, "completed");
+    assert.equal(harness.emails.length, 1);
+    assert.equal(harness.emails[0].amountNok, 199);
+    assert.equal(harness.emails[0].discountCode, "ABAKUS20");
+    assert.equal(harness.emails[0].discountNok, 50);
+    assert.deepEqual(redemptions, ["throw"]);
+  });
+
+  it("sends the stored code from one-press Vipps and has a kasse field without strikethrough", () => {
+    const button = readFileSync(
+      new URL("../components/ui/KomplettVippsButton.tsx", import.meta.url),
+      "utf8",
+    );
+    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const ordersApi = readFileSync(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
+    const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+    const preview = readFileSync(new URL("../app/api/rabattkode/route.ts", import.meta.url), "utf8");
+
+    assert.match(button, /currentDiscountCode/);
+    assert.match(button, /discountCode/);
+    assert.match(kasse, /Rabattkode/);
+    assert.match(kasse, /f\.eks\. ABAKUS20/);
+    assert.match(kasse, /Ugyldig kode/);
+    assert.match(kasse, /discountCode/);
+    assert.equal(kasse.includes("line-through"), false);
+    assert.match(ordersApi, /discountCode/);
+    assert.match(ordersApi, /DISCOUNT_COOKIE/);
+    assert.match(layout, /DiscountCapture/);
+    assert.match(preview, /previewCheckoutDiscount/);
   });
 });
