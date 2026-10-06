@@ -1,25 +1,27 @@
-# Linjeforening rabattkoder — implemented
+# Ekte smakebit og datoer — PR open, not merged
 
 Date: 2026-10-06
-Branch: `cursor/linjeforening-rabattkoder-plan-e27b`
-PR: #12
+Branch: `cursor/ekte-smakebit-og-datoer-6edf`
+Plan: `plans/2026-10-06-ekte-smakebit-og-datoer.md`
 
 ## Status
 
-Feature built on the plan branch. Nick approved the defaults (20 % whole cart after 5-pack, whole kroner, Supabase table, invalid code rejects payment, `?kode=` + one-press Vipps, `discount_code` on the order, UTM untouched).
+- New free sample: `assets/lead-magnet/gratis-ukentlig-plan-smakebit.pdf`. It is page 1 of the real `ukentlig-plan.pdf` (mandag–onsdag, 177 fillable fields) plus a «Gratis smakebit» badge and bottom bar. Rebuild with `python3 scripts/build-lead-magnet.py assets/source/ukentlig-plan.pdf`.
+- Planner PDFs: none of the 25 have visible outdated dates, so none were changed. Audit and non-date typos: `assets/planners-updated/README.md`.
+- Site: the hero image and the front-page «Årlig, månedlig, ukentlig og daglig» card showed 2023/2024 year calendars. Both now show real undated planner pages (`scripts/build-site-images.py`). Three unused images that showed 2023 were deleted.
 
-SQL Nick must run in the Supabase SQL Editor before deploy:
+## Nick, after merge
 
-`supabase/migrations/2026-10-06-discount-codes.sql`
+Upload `assets/lead-magnet/gratis-ukentlig-plan-smakebit.pdf` to Supabase bucket `products` at `leads/gratis-ukentlig-plan-smakebit.pdf` (overwrite the old hand-built sample). Until then, `/gratis` emails still link the old sample.
 
-That file creates `discount_codes` (RLS on, service-role only, no anon read), adds order columns, and seeds the 15 linjeforening codes (20 %, active, expires 2026-12-31 23:59 Europe/Oslo, no usage cap).
+## Rules for later work
 
-If the table is missing: a submitted code is treated as invalid (`Ugyldig kode` in the field; payment with a code is rejected). Checkout without a code still uses catalog prices.
+The GitHub repo is public. Never commit paid planner PDFs. Keep source copies in `assets/source/` (git-ignored) and upload fixed PDFs straight to Supabase `products/planners/`.
 
-## Papirmaler
+---
 
-Komplett copy now matches delivery: 25 planner PDFs only. Removed “12 papirmaler (prikket, rutenett og linjert)” from catalog, FAQ/JSON-LD, BundleShowcase, BundleCard, and ProdukterStickyBar. Print FAQ and Vane Tracker “rutenett” are unchanged.
+# Linjeforening rabattkoder — merged (#12)
 
-## Not done
+SQL Nick must run in the Supabase SQL Editor before the discount codes work: `supabase/migrations/2026-10-06-discount-codes.sql` (creates `discount_codes`, adds order columns, seeds the 15 linjeforening codes at 20 %, expiring 2026-12-31 23:59 Europe/Oslo). If the table is missing, a submitted code is treated as invalid; checkout without a code uses catalog prices.
 
-Do not merge until Nick has run the SQL and reviewed the PR.
+Komplett copy matches delivery: 25 planner PDFs only (no papirmaler).
