@@ -20,6 +20,9 @@
 # production
 /build
 
+# paid planner PDFs (public repo) — keep source copies here, never commit them
+/assets/source/
+
 # misc
 .DS_Store
 *.pem
