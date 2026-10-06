@@ -14,8 +14,8 @@ export const metadata = pageMeta({
 });
 
 const bullets = [
-  "Fyllbare felt for mål, prioriteringer og mandag–onsdag",
-  "Samme visning som de betalte planleggerne",
+  "Fyllbare felt for mål, prioriteringer, gjøremål, vaner og mandag–onsdag",
+  "Ekte side fra Ukentlig Plan — samme design som fullversjonen",
   "Full ukeplan og 24 andre PDF-er i nettbutikken",
 ];
 
