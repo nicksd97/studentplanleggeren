@@ -1,4 +1,5 @@
 import { Resend } from 'resend';
+import { buildLeadMagnetEmail } from './lead-magnet-email';
 import { SITE_EMAIL, SITE_NAME, SITE_ORIGIN } from './site';
 
 export const EMAIL_FROM = `${SITE_NAME} <${SITE_EMAIL}>`;
@@ -15,16 +16,20 @@ async function sendHtmlEmail({
   to,
   subject,
   html,
+  text,
+  headers,
   idempotencyKey,
 }: {
   to: string;
   subject: string;
   html: string;
+  text?: string;
+  headers?: Record<string, string>;
   idempotencyKey?: string;
 }) {
   const resend = getResendClient();
   const { error } = await resend.emails.send(
-    { from: EMAIL_FROM, to, subject, html },
+    { from: EMAIL_FROM, to, subject, html, ...(text ? { text } : {}), ...(headers ? { headers } : {}) },
     idempotencyKey ? { idempotencyKey } : undefined,
   );
   if (error) {
@@ -138,44 +143,14 @@ export async function sendLeadMagnetEmail({
   to: string;
   downloadUrl: string;
 }) {
-  const shopUrl = `${SITE_ORIGIN}/produkter`;
-  const privacyUrl = `${SITE_ORIGIN}/personvern`;
-  const html = `
-    <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 16px">
-      <h1 style="font-size:24px;color:#1a1a2e;margin-bottom:8px">Her er smakebiten din</h1>
-      <p style="color:#555;font-size:16px;line-height:1.6">
-        Takk for at du tok turen innom. Her er den gratis ukentlige plan-smakebiten.
-      </p>
-      <p style="color:#555;font-size:16px;line-height:1.6">
-        Dette er en <strong>GRATIS SMAKEBIT</strong> — <strong>ikke hele produktet</strong>.
-        Én side, så du kan prøve de fyllbare feltene.
-      </p>
-      <a href="${downloadUrl}" style="display:inline-block;background:#6c5ce7;color:#fff;padding:12px 24px;border-radius:8px;text-decoration:none;font-weight:600;margin:16px 0">
-        Last ned smakebiten
-      </a>
-      <p style="color:#555;font-size:16px;line-height:1.6">
-        PDF-en er fyllbar. Vi anbefaler Adobe Acrobat Reader for best opplevelse.
-      </p>
-      <p style="color:#555;font-size:16px;line-height:1.6">
-        Vil du ha hele ukeplanen og de andre planleggerne?
-        <a href="${shopUrl}" style="color:#6c5ce7">Se nettbutikken</a>
-        — 39 kr per stykk, 5-pakke 99 kr, temapakke 149 kr og Komplett 249 kr.
-      </p>
-      <p style="color:#888;font-size:14px;margin-top:24px">
-        Vil du ikke motta flere e-poster? Svar til
-        <a href="mailto:hei@studentplanlegger.no" style="color:#6c5ce7">hei@studentplanlegger.no</a>
-        og be om avmelding. Les
-        <a href="${privacyUrl}" style="color:#6c5ce7">personvernerklæringen</a>.
-      </p>
-      <hr style="border:none;border-top:1px solid #eee;margin:32px 0" />
-      <p style="color:#aaa;font-size:12px">Studentplanlegger.no · NSD Drift</p>
-    </div>
-  `;
+  const { subject, html, text, headers } = buildLeadMagnetEmail(downloadUrl);
 
   await sendHtmlEmail({
     to,
-    subject: 'Gratis ukentlig plan-smakebit',
+    subject,
     html,
+    text,
+    headers,
     idempotencyKey: `lead-magnet/${to.toLowerCase()}`,
   });
 }
