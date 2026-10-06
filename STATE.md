@@ -1,4 +1,25 @@
-# PDF-skrivefeil og produktbilder — PR open, not merged
+# Ny /gratis-e-post — PR open, not merged
+
+Date: 2026-10-06
+Branch: `cursor/gratis-epost-6edf`
+Plan and research: `plans/2026-10-06-gratis-epost.md`
+
+## Status
+
+- The lead-magnet email is rebuilt in `lib/lead-magnet-email.ts`. It uses table layout with inline CSS, a VML button for Outlook, dark mode support, a plain-text part and a `List-Unsubscribe` header. `lib/email.ts` only wires it in; the route and download/token logic are unchanged.
+- Subject: «Smakebiten av Ukentlig Plan er klar». Preheader: «Mandag–onsdag som fyllbar PDF. Last ned nå – lenken virker i 7 dager.»
+- Image: `public/images/email/smakebit.png` (rebuild with `python3 scripts/build-email-images.py`). The email links to it as `https://www.studentplanlegger.no/images/email/smakebit.png`.
+- Upsell: Ukentlig Plan 39 kr and Komplett 249 kr, as plain links with UTM tags. No urgency, reviews or before-prices.
+- No emails were sent. Previews are browser renders; there are no real Litmus or Email on Acid screenshots.
+
+## Nick, after merge
+
+1. Deploy before the next `/gratis` signup, so the image URL is live.
+2. Optional: send yourself a test via `/gratis` and check it in Gmail, Outlook and the iPhone Mail app.
+
+---
+
+# PDF-skrivefeil og produktbilder — merged (#14)
 
 Date: 2026-10-06
 Branch: `cursor/pdf-skrivefeil-6edf`
