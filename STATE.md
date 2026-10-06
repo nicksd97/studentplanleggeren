@@ -1,4 +1,24 @@
-# Ekte smakebit og datoer — PR open, not merged
+# PDF-skrivefeil og produktbilder — PR open, not merged
+
+Date: 2026-10-06
+Branch: `cursor/pdf-skrivefeil-6edf`
+Plan: `plans/2026-10-06-pdf-skrivefeil.md`
+
+## Status
+
+- Typos fixed in 8 paid PDFs: `ukentlig-plan`, `30-dagers-utfordring`, `ukentlig-gjoremaal`, `vane-tracker`, `ukentlig-matplan`, `daglig-gjennomgang`, `daglig-helseplan`, `daglig-planlegger`. Details: `assets/planners-updated/README.md`. The fixed PDFs are **not** in git; rebuild with `python3 scripts/fix-planner-typos.py` (sources in `assets/source/`, output in `assets/source/fixed/`).
+- Product thumbnails: 6 showed the wrong planner and were rebuilt; 5 more rebuilt to show fixed text. `python3 scripts/build-product-thumbnails.py --audit` checks all 25 against `lib/products.ts` (needs poppler `pdftoppm`).
+- Free sample and site images rebuilt from the fixed `ukentlig-plan.pdf` / `daglig-planlegger.pdf`.
+- Known, not fixed: the hero photo's banner says «ÅRLIG PLANLEGER» and «DAGELIG PLANLEGGER» (baked into the photo).
+
+## Nick, after merge
+
+1. Upload the 8 fixed PDFs to Supabase `products/planners/<slug>.pdf` (overwrite, same filenames).
+2. Upload `assets/lead-magnet/gratis-ukentlig-plan-smakebit.pdf` to `products/leads/gratis-ukentlig-plan-smakebit.pdf` (overwrite).
+
+---
+
+# Ekte smakebit og datoer — merged (#13)
 
 Date: 2026-10-06
 Branch: `cursor/ekte-smakebit-og-datoer-6edf`
