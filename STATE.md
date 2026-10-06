@@ -1,4 +1,14 @@
-# Ny /gratis-e-post — PR open, not merged
+# Selvhostede fonter (fix for failed deploy of #15) — PR open, not merged
+
+Date: 2026-10-06
+Branch: `cursor/selvhostede-fonter-6edf`
+
+- `app/layout.tsx` loaded Playfair Display and DM Sans with `next/font/google`, which downloads from Google Fonts during `next build`. If that download fails, the build fails. They are now self-hosted with `next/font/local` from `app/fonts/` (latin woff2 + OFL licences).
+- Nick, after merge: check that the production deploy is READY. Then the #15 email image is live too.
+
+---
+
+# Ny /gratis-e-post — merged (#15), production deploy failed (see above)
 
 Date: 2026-10-06
 Branch: `cursor/gratis-epost-6edf`
