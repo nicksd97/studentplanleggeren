@@ -57,9 +57,9 @@ Branch: `cursor/ekte-smakebit-og-datoer-6edf`
 ### Task 5: Nick, after merge
 
 - [ ] Upload `assets/lead-magnet/gratis-ukentlig-plan-smakebit.pdf` to Supabase bucket `products` at `leads/gratis-ukentlig-plan-smakebit.pdf` (overwrite)
-- [ ] Optional: fix the product typos listed in `assets/planners-updated/README.md` and upload the fixed PDFs directly to Supabase (not to git)
+- [x] Fix the product typos listed in `assets/planners-updated/README.md` → done in `plans/2026-10-06-pdf-skrivefeil.md` (the Supabase upload is tracked there)
 
 ## Out of scope
 
-- Product-image mapping on product cards (several thumbnails show a different planner than their product; see the PR description)
-- Fixing non-date typos inside the paid PDFs
+- Product-image mapping on product cards → fixed in `plans/2026-10-06-pdf-skrivefeil.md`
+- Fixing non-date typos inside the paid PDFs → fixed in `plans/2026-10-06-pdf-skrivefeil.md`
