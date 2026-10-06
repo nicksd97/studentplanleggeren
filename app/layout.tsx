@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, DM_Sans } from "next/font/google";
+import localFont from "next/font/local";
 import CampaignCapture from "@/components/analytics/CampaignCapture";
 import DiscountCapture from "@/components/analytics/DiscountCapture";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
@@ -7,17 +7,19 @@ import { CartProvider } from "@/lib/cart-context";
 import { OG_IMAGE_ALT, OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
 
-const playfair = Playfair_Display({
+// Self-hosted so `next build` never fetches from Google Fonts (a failed fetch fails the deploy).
+const playfair = localFont({
+  src: "./fonts/playfair-display-latin.woff2",
   variable: "--font-display",
-  subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: "400 900",
   display: "swap",
+  adjustFontFallback: "Times New Roman",
 });
 
-const dmSans = DM_Sans({
+const dmSans = localFont({
+  src: "./fonts/dm-sans-latin.woff2",
   variable: "--font-body",
-  subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: "100 1000",
   display: "swap",
 });
 
