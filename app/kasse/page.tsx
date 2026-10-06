@@ -10,6 +10,7 @@ import {
   isCardCheckoutAllowed,
 } from "@/lib/checkout";
 import { cartPricingSummary } from "@/lib/checkout";
+import { currentDiscountCode, rememberDiscountCode } from "@/lib/discount";
 import { FIVE_PACK_PRICE, FIVE_PACK_SIZE, SINGLE_PRICE } from "@/lib/products";
 import Button from "@/components/ui/Button";
 
@@ -26,9 +27,23 @@ export default function KassePage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [loadingProvider, setLoadingProvider] = useState<"vipps" | "stripe" | null>(null);
   const [paymentError, setPaymentError] = useState("");
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState("");
+  const [codeMessage, setCodeMessage] = useState("");
+  const [codeBusy, setCodeBusy] = useState(false);
+  const [applied, setApplied] = useState<{
+    code: string;
+    amountNok: number;
+    listAmountNok: number;
+    discountNok: number;
+    percent: number;
+    associationName: string;
+  } | null>(null);
   const loading = loadingProvider !== null;
 
   const pricing = cartPricingSummary(items);
+  const listAmount = pricing?.amountNok ?? totalPrice;
+  const displayTotal = applied?.amountNok ?? listAmount;
 
   function validate() {
     const errs: Record<string, string> = {};
@@ -47,11 +62,79 @@ export default function KassePage() {
     return errs;
   }
 
+  async function previewCode(code: string) {
+    const trimmed = code.trim();
+    if (!trimmed) {
+      setApplied(null);
+      setCodeError("");
+      setCodeMessage("");
+      return;
+    }
+
+    setCodeBusy(true);
+    setCodeError("");
+    setCodeMessage("");
+    try {
+      const response = await fetch("/api/rabattkode", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          code: trimmed,
+          items: items.map((item) => ({
+            id: item.id,
+            name: item.name,
+            price: item.price,
+            type: item.type,
+          })),
+        }),
+      });
+      const data = (await response.json()) as {
+        ok?: boolean;
+        error?: string;
+        amountNok?: number;
+        listAmountNok?: number;
+        discountNok?: number;
+        percent?: number;
+        associationName?: string;
+        code?: string;
+      };
+      if (!data.ok || !data.code || data.amountNok == null) {
+        setApplied(null);
+        setCodeError(data.error || "Ugyldig kode");
+        return;
+      }
+      rememberDiscountCode(data.code);
+      setApplied({
+        code: data.code,
+        amountNok: data.amountNok,
+        listAmountNok: data.listAmountNok ?? listAmount,
+        discountNok: data.discountNok ?? 0,
+        percent: data.percent ?? 0,
+        associationName: data.associationName ?? "",
+      });
+      setCodeMessage(
+        `Kode ${data.code} er aktiv — ${data.percent} % for ${data.associationName}. Du betaler ${data.amountNok} kr.`,
+      );
+    } catch {
+      setApplied(null);
+      setCodeError("Ugyldig kode");
+    } finally {
+      setCodeBusy(false);
+    }
+  }
+
   useEffect(() => {
     const betaling = new URLSearchParams(window.location.search).get("betaling");
     if (betaling === "avbrutt") {
       setPaymentError("Betalingen ble avbrutt eller mislyktes. Ingen ordre er fullført.");
     }
+    const stored = currentDiscountCode();
+    if (stored) {
+      setCodeInput(stored);
+      void previewCode(stored);
+    }
+    // Preview the landing ?kode= once; later item edits use Bruk.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handlePayment(provider: "vipps" | "stripe") {
@@ -79,6 +162,7 @@ export default function KassePage() {
           amountNok: totalPrice,
           paymentProvider: provider,
           campaign: currentCampaignTags(),
+          discountCode: (applied?.code || codeInput).trim() || undefined,
         }),
       });
 
@@ -301,10 +385,49 @@ export default function KassePage() {
                       </span>
                     </div>
                   )}
+                  <div className="pt-2 border-t border-brand-soft space-y-2">
+                    <label className="block text-sm font-medium text-brand-dark">
+                      Rabattkode
+                    </label>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        value={codeInput}
+                        onChange={(event) => {
+                          setCodeInput(event.target.value);
+                          setCodeError("");
+                          setCodeMessage("");
+                        }}
+                        className="min-w-0 flex-1 rounded-lg border border-brand-soft px-3 py-2.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent"
+                        placeholder="f.eks. ABAKUS20"
+                        autoComplete="off"
+                        spellCheck={false}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => void previewCode(codeInput)}
+                        disabled={codeBusy || loading}
+                        className="shrink-0 rounded-lg border border-brand-soft bg-white px-3 py-2.5 text-sm font-medium text-brand-dark hover:bg-brand-cream/60 disabled:opacity-60"
+                      >
+                        Bruk
+                      </button>
+                    </div>
+                    {codeError ? (
+                      <p className="text-xs text-red-500">Ugyldig kode</p>
+                    ) : null}
+                    {codeMessage ? (
+                      <p className="text-xs text-brand-medium">{codeMessage}</p>
+                    ) : null}
+                  </div>
+                  {applied && applied.discountNok > 0 ? (
+                    <div className="flex justify-between text-sm">
+                      <span className="text-brand-medium">Katalogpris {applied.listAmountNok} kr</span>
+                    </div>
+                  ) : null}
                   <div className="flex justify-between pt-2 border-t border-brand-soft">
                     <span className="font-medium text-brand-dark">Totalt</span>
                     <span className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark">
-                      {totalPrice} kr
+                      {displayTotal} kr
                     </span>
                   </div>
                 </div>

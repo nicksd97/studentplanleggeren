@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test lib/seo.test.ts lib/checkout.test.ts lib/order-store.test.ts lib/attribution.test.ts lib/analytics.test.ts lib/email.test.ts lib/newsletter.test.ts"
+    "test": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test lib/seo.test.ts lib/checkout.test.ts lib/order-store.test.ts lib/attribution.test.ts lib/analytics.test.ts lib/email.test.ts lib/newsletter.test.ts lib/discount.test.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",

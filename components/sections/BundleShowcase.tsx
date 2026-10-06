@@ -15,7 +15,6 @@ const includes = [
   "5 produktivitetsverktøy",
   "3 helse og livsstil",
   "3 sporingsverktøy",
-  "12 papirmaler",
 ];
 
 function BundleButton({

@@ -38,27 +38,37 @@ interface OrderItem {
   price: number;
 }
 
-export async function sendOrderConfirmation({
-  email,
+export function buildOrderConfirmationHtml({
   firstName,
   items,
   downloadToken,
   amountNok,
+  discountCode,
+  discountNok,
+  discountPercent,
 }: {
-  email: string;
   firstName: string;
   items: OrderItem[];
   downloadToken: string;
   amountNok?: number;
+  discountCode?: string;
+  discountNok?: number;
+  discountPercent?: number;
 }) {
   const downloadUrl = `${SITE_ORIGIN}/takk?token=${downloadToken}`;
   const total = amountNok ?? items.reduce((sum, item) => sum + item.price, 0);
-
   const itemListHtml = items
     .map((item) => `<li style="padding:4px 0">${item.name}</li>`)
     .join('');
+  const showDiscount = Boolean(discountCode && discountNok && discountNok > 0);
+  const discountLine = showDiscount
+    ? `<li style="padding:8px 0 0;margin-top:8px;border-top:1px solid #eee">Rabatt ${discountCode} (−${discountPercent ?? 20} %) — −${discountNok} kr</li>`
+    : '';
+  const totalStyle = showDiscount
+    ? 'padding:8px 0 0;font-weight:600'
+    : 'padding:12px 0 0;margin-top:8px;border-top:1px solid #eee;font-weight:600';
 
-  const html = `
+  return `
     <div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 16px">
       <h1 style="font-size:24px;color:#1a1a2e;margin-bottom:8px">Takk for kjøpet, ${firstName}!</h1>
       <p style="color:#555;font-size:16px;line-height:1.6">
@@ -66,7 +76,8 @@ export async function sendOrderConfirmation({
       </p>
       <ul style="list-style:none;padding:0;margin:16px 0;background:#f9f9fb;border-radius:8px;padding:16px">
         ${itemListHtml}
-        <li style="padding:12px 0 0;margin-top:8px;border-top:1px solid #eee;font-weight:600">Totalt — ${total} kr</li>
+        ${discountLine}
+        <li style="${totalStyle}">Totalt — ${total} kr</li>
       </ul>
       <p style="color:#555;font-size:16px;line-height:1.6">
         Last ned produktene dine via lenken under:
@@ -82,6 +93,36 @@ export async function sendOrderConfirmation({
       <p style="color:#aaa;font-size:12px">Studentplanlegger.no · NSD Drift</p>
     </div>
   `;
+}
+
+export async function sendOrderConfirmation({
+  email,
+  firstName,
+  items,
+  downloadToken,
+  amountNok,
+  discountCode,
+  discountNok,
+  discountPercent,
+}: {
+  email: string;
+  firstName: string;
+  items: OrderItem[];
+  downloadToken: string;
+  amountNok?: number;
+  discountCode?: string;
+  discountNok?: number;
+  discountPercent?: number;
+}) {
+  const html = buildOrderConfirmationHtml({
+    firstName,
+    items,
+    downloadToken,
+    amountNok,
+    discountCode,
+    discountNok,
+    discountPercent,
+  });
 
   await sendHtmlEmail({
     to: email,

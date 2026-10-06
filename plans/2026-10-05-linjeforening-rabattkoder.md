@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 >
-> **Do not start this plan until Nick says go.** This file is the spec. No feature code in the plan PR.
+> Nick approved the defaults on 2026-10-06. This file is the spec plus the papirmaler copy fix.
 
 **Goal:** Let a linjeforening member enter a code such as `ABAKUS20` at checkout so Vipps and Stripe charge 20 % off the **server-priced** cart (after the automatic 5-pack), store the code on the order next to existing UTM tags, and show the discount on the receipt mail.
 
@@ -31,12 +31,12 @@
 | One-press Vipps | Read `?kode=` (same as UTM capture) into a cookie, send it with `KomplettVippsButton`. Empty code = full 249. |
 | Invalid code at pay | **Reject** the checkout (400). Do not silently charge full price if a code was sent. |
 | Usage cap | Increment `redemption_count` only when payment becomes `completed`, not on pending. |
-| Papirmaler mismatch | **Copy fix in a later PR**, do not invent 12 paper PDFs in this build. See investigation below. |
+| Papirmaler mismatch | **Copy-only fix in this PR.** Drop the 12-papirmaler claim. Do not invent paper PDFs. |
 
 ## File map
 
 - Create: `plans/2026-10-05-linjeforening-rabattkoder.md` (this file)
-- Create: `scripts/discount-codes.sql` — table + `orders` columns + index
+- Create: `supabase/migrations/2026-10-06-discount-codes.sql` — table + RLS + seed + `orders` columns
 - Create: `lib/discount.ts` — normalize, lookup, apply percent, safe path
 - Create: `lib/discount.test.ts`
 - Modify: `STATE.md`
@@ -60,7 +60,7 @@ Do not put codes in git. Do not hardcode association names in the app except as 
 
 ## Schema
 
-Add to `scripts/schema.sql` and ship `scripts/discount-codes.sql` for Nick to run in the SQL editor:
+Add to `scripts/schema.sql` and ship `supabase/migrations/2026-10-06-discount-codes.sql` for Nick to run in the SQL editor (schema + RLS + 15-code seed):
 
 ```sql
 CREATE TABLE IF NOT EXISTS discount_codes (
@@ -148,7 +148,7 @@ Then `Totalt — 199 kr`. No strikethrough. Extend the mailer input; checkout te
 - Email HTML contains `ABAKUS20` and the charged total
 - No new `line-through` in `app/kasse/page.tsx`
 
-## Investigation: Komplett vs “12 papirmaler” (do not change in the discount build)
+## Investigation: Komplett vs “12 papirmaler” (copy-only fix included)
 
 `bundleFileMap.komplett` is `Object.values(productFileMap).flat()` — **25 planner PDFs only**. There is no paper-template path, no dotted/grid/line SKU, and no calendar extra. After purchase, `/takk` lists whatever `getFilesForItems` returns, so a Komplett buyer gets 25 files, not 37.
 
@@ -173,16 +173,16 @@ Not a false 12-template claim (print, not a bonus SKU):
 1. **Recommended:** Drop the 12-papirmaler claim everywhere above. Komplett = 25 fyllbare planleggere. Update FAQ + JSON-LD in the same PR so Google stops repeating the extra 12.
 2. Only if Nick actually has 12 paper PDFs: upload to `products/planners/` (or `products/paper/`) and add them to `bundleFileMap.komplett` — never invent files.
 
-Do **not** mix that copy/file change into the discount-code implementation unless Nick explicitly says to.
+Nick asked for the copy-only fix in this PR. Claims removed. Print FAQ and Vane Tracker “rutenett” left alone.
 
 ---
 
 ### Task 0: Nick before go
 
-- [ ] Confirm or override the defaults table (whole-cart 20 %, `Math.round`, `?kode=` on one-press).
-- [ ] Send the first code list (`code` + `association_name`). Do not invent foreninger.
-- [ ] Run `scripts/discount-codes.sql` on production Supabase after the feature PR exists.
-- [ ] Decide papirmaler follow-up: copy-only (recommended) vs deliver real PDFs.
+- [x] Confirm or override the defaults table (whole-cart 20 %, `Math.round`, `?kode=` on one-press).
+- [x] Send the first code list (`code` + `association_name`). Do not invent foreninger.
+- [ ] Run `supabase/migrations/2026-10-06-discount-codes.sql` on production Supabase before deploy.
+- [x] Decide papirmaler follow-up: copy-only (recommended) vs deliver real PDFs.
 
 ---
 
@@ -198,11 +198,11 @@ Do **not** mix that copy/file change into the discount-code implementation unles
 - `isDiscountUsable(row, now): boolean` — active, not expired, under cap
 - Lookup takes a client (`from("discount_codes")`) so tests mock it
 
-- [ ] **Step 1: Write failing tests** for normalize, 249→199, 99→79, 39→31, 149→119, inactive/expired/exhausted
-- [ ] **Step 2: Confirm they fail**
-- [ ] **Step 3: Implement `lib/discount.ts`**
-- [ ] **Step 4: `npm test` green for the new file**
-- [ ] **Step 5: Commit** `feat: discount code normalize and 20 percent math`
+- [x] **Step 1: Write failing tests** for normalize, 249→199, 99→79, 39→31, 149→119, inactive/expired/exhausted
+- [x] **Step 2: Confirm they fail**
+- [x] **Step 3: Implement `lib/discount.ts`**
+- [x] **Step 4: `npm test` green for the new file**
+- [x] **Step 5: Commit** `feat: discount code normalize and 20 percent math`
 
 ---
 
@@ -212,15 +212,15 @@ Do **not** mix that copy/file change into the discount-code implementation unles
 - Modify: `lib/checkout.ts` — `StartCheckoutInput.discountCode?: string`; after `priceCheckoutItems`, apply lookup; store list/discount on the pending order
 - Modify: `lib/checkout.test.ts`
 - Modify: `lib/order-store.ts` / `lib/order-store.test.ts` — persist the three new columns
-- Create: `scripts/discount-codes.sql`
+- Create: `supabase/migrations/2026-10-06-discount-codes.sql`
 
 `CheckoutDependencies.discounts.lookup(code)` (or pass a function) so tests do not hit Supabase.
 
-- [ ] **Step 1: Failing tests** — Komplett+ABAKUS20 Vipps/Stripe 19900; five singles 7900; forged client price ignored; bad code 400; UTM still on items
-- [ ] **Step 2: Confirm they fail**
-- [ ] **Step 3: Wire apply + insert columns**
-- [ ] **Step 4: Increment `redemption_count` in `completeIfPending` (or a dedicated store method called after successful confirm). Failure to increment must not block download/email.**
-- [ ] **Step 5: Tests green. Commit** `feat: charge linjeforening discount on Vipps and Stripe`
+- [x] **Step 1: Failing tests** — Komplett+ABAKUS20 Vipps/Stripe 19900; five singles 7900; forged client price ignored; bad code 400; UTM still on items
+- [x] **Step 2: Confirm they fail**
+- [x] **Step 3: Wire apply + insert columns**
+- [x] **Step 4: Increment `redemption_count` in `completeIfPending` (or a dedicated store method called after successful confirm). Failure to increment must not block download/email.**
+- [x] **Step 5: Tests green. Commit** `feat: charge linjeforening discount on Vipps and Stripe`
 
 ---
 
@@ -233,9 +233,9 @@ Do **not** mix that copy/file change into the discount-code implementation unles
 
 Preview POST `{ code, items }` → `{ ok: true, amountNok, listAmountNok, discountNok, percent, associationName }` or `{ ok: false, error }`. Checkout POST still looks up the code itself.
 
-- [ ] **Step 1: Add the kasse field and Bokmål messages (no strikethrough)**
-- [ ] **Step 2: Persist `?kode=` and send it from one-press Vipps**
-- [ ] **Step 3: Commit** `feat: checkout rabattkode field and kode query capture`
+- [x] **Step 1: Add the kasse field and Bokmål messages (no strikethrough)**
+- [x] **Step 2: Persist `?kode=` and send it from one-press Vipps**
+- [x] **Step 3: Commit** `feat: checkout rabattkode field and kode query capture`
 
 ---
 
@@ -245,22 +245,22 @@ Preview POST `{ code, items }` → `{ ok: true, amountNok, listAmountNok, discou
 - Modify: `lib/email.ts`, `lib/email.test.ts`
 - Modify: mailer call sites in `lib/checkout.ts` to pass `{ amountNok, discountCode, discountNok }`
 
-- [ ] **Step 1: Failing source-scan / unit test for ABAKUS20 and charged total**
-- [ ] **Step 2: Implement the extra receipt line**
-- [ ] **Step 3: Commit** `feat: show linjeforening discount on order email`
+- [x] **Step 1: Failing source-scan / unit test for ABAKUS20 and charged total**
+- [x] **Step 2: Implement the extra receipt line**
+- [x] **Step 3: Commit** `feat: show linjeforening discount on order email`
 
 ---
 
 ### Task 5: Manual test (no live charge unless Nick asks)
 
-- [ ] `npm test` and `next build`
-- [ ] Seed one code in local/preview Supabase
-- [ ] `/kasse` with Komplett: invalid code message; valid code totalt 199; Vipps POST `amountOre: 19900`
-- [ ] Five singles + code → 79; six singles list 138 → `Math.round(138 * 0.8) = 110`
-- [ ] One-press with `?kode=ABAKUS20` → 19900; without code → 24900
-- [ ] Completed order has `discount_code` + UTM tags; mail shows the discount
-- [ ] `git diff` has no `line-through` and no catalog price edits
-- [ ] Papirmaler copy still unchanged unless Nick added that follow-up
+- [x] `npm test` and `next build`
+- [ ] Seed: Nick runs `supabase/migrations/2026-10-06-discount-codes.sql` (no DB access in this environment)
+- [x] `/kasse` with Komplett: invalid code message; valid code totalt 199; Vipps POST `amountOre: 19900` (unit-tested)
+- [x] Five singles + code → 79; six singles list 138 → `Math.round(138 * 0.8) = 110`
+- [x] One-press with `?kode=ABAKUS20` → 19900; without code → 24900 (unit-tested cookie/query + button payload)
+- [x] Completed order has `discount_code` + UTM tags; mail shows the discount
+- [x] `git diff` has no `line-through` and no catalog price edits
+- [x] Papirmaler copy-only fix included
 
 ## Out of scope
 

@@ -83,6 +83,65 @@ describe("createSupabaseOrderStore insertPending", () => {
     assert.equal(order.items[0].id, "daglig-gjennomgang");
   });
 
+  it("persists discount_code, list_amount_nok and discount_nok next to UTM on items", async () => {
+    const received: Array<{ body: Record<string, unknown> }> = [];
+    const server = http.createServer((request, response) => {
+      const chunks: Buffer[] = [];
+      request.on("data", (chunk) => chunks.push(chunk as Buffer));
+      request.on("end", () => {
+        if (request.method === "POST" && request.url?.startsWith("/rest/v1/orders")) {
+          const body = JSON.parse(Buffer.concat(chunks).toString() || "{}");
+          received.push({ body });
+          response.writeHead(201, { "content-type": "application/json" });
+          response.end(JSON.stringify({ id: "order-discount", ...body }));
+          return;
+        }
+        response.writeHead(404);
+        response.end();
+      });
+    });
+
+    await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", resolve));
+    const address = server.address();
+    assert.ok(address && typeof address === "object");
+    const store = createSupabaseOrderStore(
+      createClient(`http://127.0.0.1:${address.port}`, "test-anon-key", {
+        auth: { persistSession: false, autoRefreshToken: false },
+      }),
+    );
+
+    try {
+      const order = await store.insertPending({
+        ...pending,
+        amount_nok: 199,
+        discount_code: "ABAKUS20",
+        list_amount_nok: 249,
+        discount_nok: 50,
+        items: [
+          {
+            ...pending.items[0],
+            utm_source: "abakus",
+            utm_medium: "linjeforening",
+            utm_campaign: "komplett",
+          },
+        ],
+      });
+      assert.equal(order.discount_code, "ABAKUS20");
+      assert.equal(order.list_amount_nok, 249);
+      assert.equal(order.discount_nok, 50);
+      assert.equal(order.utm_source, "abakus");
+      assert.equal(received[0].body.discount_code, "ABAKUS20");
+      assert.equal(received[0].body.list_amount_nok, 249);
+      assert.equal(received[0].body.discount_nok, 50);
+      assert.equal("utm_source" in received[0].body, false);
+      assert.equal((received[0].body.items as Array<{ utm_source?: string }>)[0].utm_source, "abakus");
+    } finally {
+      await new Promise<void>((resolve, reject) =>
+        server.close((error) => (error ? reject(error) : resolve())),
+      );
+    }
+  });
+
   it("stores campaign tags on items and does not send unknown utm columns", async () => {
     const received: Array<{ body: Record<string, unknown> }> = [];
     const server = http.createServer((request, response) => {

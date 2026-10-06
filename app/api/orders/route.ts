@@ -6,6 +6,7 @@ import {
   parseCampaignTags,
 } from "@/lib/attribution";
 import { checkoutOrigin, startProductionCheckout } from "@/lib/checkout-server";
+import { DISCOUNT_COOKIE, normalizeDiscountCode, parseDiscountCookie } from "@/lib/discount";
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,6 +15,12 @@ export async function POST(request: NextRequest) {
       parseCampaignTags(body.campaign ?? body),
       parseCampaignCookie(request.cookies.get(CAMPAIGN_COOKIE)?.value),
     );
+    const bodyCode =
+      typeof body.discountCode === "string" ? body.discountCode : undefined;
+    const discountCode =
+      bodyCode !== undefined
+        ? normalizeDiscountCode(bodyCode) ?? bodyCode
+        : parseDiscountCookie(request.cookies.get(DISCOUNT_COOKIE)?.value) ?? undefined;
     const result = await startProductionCheckout({
       email: body.email,
       firstName: body.firstName,
@@ -22,6 +29,7 @@ export async function POST(request: NextRequest) {
       amountNok: body.amountNok,
       paymentProvider: body.paymentProvider,
       campaign,
+      discountCode,
       returnOrigin: checkoutOrigin(request.headers),
     });
 

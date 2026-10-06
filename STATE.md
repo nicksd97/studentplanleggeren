@@ -1,28 +1,25 @@
-# Linjeforening rabattkoder — plan only
+# Linjeforening rabattkoder — implemented
 
-Date: 2026-10-05
-Production HEAD: `9ed55b4` (`/gratis` squash-merged)
+Date: 2026-10-06
 Branch: `cursor/linjeforening-rabattkoder-plan-e27b`
+PR: #12
 
 ## Status
 
-Plan written. **No feature code.** Awaits Nick’s go before building checkout codes.
+Feature built on the plan branch. Nick approved the defaults (20 % whole cart after 5-pack, whole kroner, Supabase table, invalid code rejects payment, `?kode=` + one-press Vipps, `discount_code` on the order, UTM untouched).
 
-Plan file: `plans/2026-10-05-linjeforening-rabattkoder.md`
+SQL Nick must run in the Supabase SQL Editor before deploy:
 
-`/gratis` is live on master. Paid PDFs are in `products/planners/<slug>.pdf`.
+`supabase/migrations/2026-10-06-discount-codes.sql`
 
-## Locked recommendations in the plan
+That file creates `discount_codes` (RLS on, service-role only, no anon read), adds order columns, and seeds the 15 linjeforening codes (20 %, active, expires 2026-12-31 23:59 Europe/Oslo, no usage cap).
 
-- 20 % off the **server** cart after 5-pack math. `amount_nok` stays integer (`Math.round`). Komplett 249 → 199.
-- Codes in Supabase `discount_codes` so Nick can add `ABAKUS20` without a deploy.
-- `?kode=` cookie so one-press Vipps can discount. Invalid code rejects payment.
-- UTM tags stay on `items`; new order columns `discount_code`, `list_amount_nok`, `discount_nok`.
+If the table is missing: a submitted code is treated as invalid (`Ugyldig kode` in the field; payment with a code is rejected). Checkout without a code still uses catalog prices.
 
-## Papirmaler (not in this build)
+## Papirmaler
 
-Komplett delivers 25 planner PDFs only. Copy still promises “12 papirmaler” in `lib/products.ts`, `lib/faq.ts`, `BundleShowcase`, `BundleCard`, `ProdukterStickyBar`. Recommend a later copy-only PR unless Nick has the files.
+Komplett copy now matches delivery: 25 planner PDFs only. Removed “12 papirmaler (prikket, rutenett og linjert)” from catalog, FAQ/JSON-LD, BundleShowcase, BundleCard, and ProdukterStickyBar. Print FAQ and Vane Tracker “rutenett” are unchanged.
 
 ## Not done
 
-Do not implement codes until Nick says go. Do not merge this plan as if it were the feature.
+Do not merge until Nick has run the SQL and reviewed the PR.

@@ -317,4 +317,27 @@ describe("structured data", () => {
     assert.equal(faq.mainEntity[0].name, faqItems[0].question);
     assert.equal(faq.mainEntity[0].acceptedAnswer.text, faqItems[0].answer);
   });
+
+  it("does not promise 12 papirmaler that Komplett does not deliver", () => {
+    const files = [
+      "lib/products.ts",
+      "lib/faq.ts",
+      "components/sections/BundleShowcase.tsx",
+      "components/ui/BundleCard.tsx",
+      "components/sections/ProdukterStickyBar.tsx",
+    ];
+    const joined = files
+      .map((file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8"))
+      .join("\n");
+    assert.equal(/12 papirmaler/i.test(joined), false);
+    assert.equal(/prikket/i.test(joined), false);
+    assert.doesNotMatch(joined, /papirmaler \(prikket, rutenett og linjert/);
+    const komplett = pakker.find((bundle) => bundle.featured);
+    assert.ok(komplett);
+    assert.equal(/papirmal/i.test(komplett.description), false);
+    const komplettFaq = faqItems.find((item) => item.question.includes("komplette pakken"));
+    assert.ok(komplettFaq);
+    assert.equal(/papirmal/i.test(komplettFaq.answer), false);
+    assert.equal(/papirmal/i.test(JSON.stringify(faqPageJsonLd(faqItems))), false);
+  });
 });

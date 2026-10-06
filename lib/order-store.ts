@@ -3,6 +3,9 @@ import type { CheckoutDependencies, CheckoutItem, OrderRecord } from "./checkout
 import { createOrderInsertFailure } from "./order-insert-error";
 import { supabaseAdmin } from "./supabase";
 
+const ORDER_COLUMNS =
+  "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at, discount_code, list_amount_nok, discount_nok, discount_percent";
+
 type OrderRow = {
   id: string;
   email: string;
@@ -15,6 +18,10 @@ type OrderRow = {
   payment_status: string;
   download_token: string;
   token_expires_at: string;
+  discount_code?: string | null;
+  list_amount_nok?: number | null;
+  discount_nok?: number | null;
+  discount_percent?: number | null;
 };
 
 function mapOrder(row: OrderRow): OrderRecord {
@@ -31,6 +38,10 @@ function mapOrder(row: OrderRow): OrderRecord {
     payment_status: row.payment_status,
     download_token: row.download_token,
     token_expires_at: row.token_expires_at,
+    ...(row.discount_code ? { discount_code: row.discount_code } : {}),
+    ...(row.list_amount_nok != null ? { list_amount_nok: row.list_amount_nok } : {}),
+    ...(row.discount_nok != null ? { discount_nok: row.discount_nok } : {}),
+    ...(row.discount_percent != null ? { discount_percent: row.discount_percent } : {}),
     ...tags,
   };
 }
@@ -44,20 +55,30 @@ export function createSupabaseOrderStore(
     async insertPending(data) {
       try {
         const tags = campaignTagsFromItems(data.items) ?? parseCampaignTags(data);
+        const insert: Record<string, unknown> = {
+          email: data.email,
+          first_name: data.first_name,
+          last_name: data.last_name,
+          items: attachCampaignTags(data.items, tags),
+          amount_nok: data.amount_nok,
+          payment_provider: data.payment_provider,
+          payment_id: data.payment_id,
+          payment_status: "pending",
+          download_token: data.download_token,
+          token_expires_at: data.token_expires_at,
+        };
+        if (data.discount_code) {
+          insert.discount_code = data.discount_code;
+          insert.list_amount_nok = data.list_amount_nok;
+          insert.discount_nok = data.discount_nok ?? 0;
+          if (data.discount_percent != null) {
+            insert.discount_percent = data.discount_percent;
+          }
+        }
+
         const { data: order, error } = await client
           .from("orders")
-          .insert({
-            email: data.email,
-            first_name: data.first_name,
-            last_name: data.last_name,
-            items: attachCampaignTags(data.items, tags),
-            amount_nok: data.amount_nok,
-            payment_provider: data.payment_provider,
-            payment_id: data.payment_id,
-            payment_status: "pending",
-            download_token: data.download_token,
-            token_expires_at: data.token_expires_at,
-          })
+          .insert(insert)
           .select()
           .single();
 
@@ -77,9 +98,7 @@ export function createSupabaseOrderStore(
     async findByPaymentId(paymentId) {
       const { data, error } = await client
         .from("orders")
-        .select(
-          "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at",
-        )
+        .select(ORDER_COLUMNS)
         .eq("payment_id", paymentId)
         .maybeSingle();
 
@@ -96,9 +115,7 @@ export function createSupabaseOrderStore(
         .update({ payment_status: "completed" })
         .eq("id", id)
         .eq("payment_status", "pending")
-        .select(
-          "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at",
-        )
+        .select(ORDER_COLUMNS)
         .maybeSingle();
 
       if (error || !data) {
@@ -114,9 +131,7 @@ export function createSupabaseOrderStore(
         .update({ payment_status: "cancelled" })
         .eq("id", id)
         .neq("payment_status", "completed")
-        .select(
-          "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at",
-        )
+        .select(ORDER_COLUMNS)
         .maybeSingle();
 
       if (error || !data) {
@@ -139,9 +154,7 @@ export function createSupabaseOrderStore(
         .from("orders")
         .update(patch)
         .eq("id", id)
-        .select(
-          "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at",
-        )
+        .select(ORDER_COLUMNS)
         .maybeSingle();
 
       if (error || !data) {
