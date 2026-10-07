@@ -19,6 +19,7 @@ export default function GuideList() {
             <Link
               key={guide.slug}
               href={guidePath(guide.slug)}
+              data-cta={`guide_${guide.slug}`}
               className="block bg-white rounded-2xl p-6 md:p-8 border border-brand-soft/60 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-md"
             >
               <h3 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-2">

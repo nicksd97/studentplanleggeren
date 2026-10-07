@@ -1,13 +1,50 @@
 "use client";
 
-import { useState } from "react";
+import { type MouseEvent, useEffect, useRef, useState } from "react";
 import type { Product } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
+import { trackEvent, trackOnce } from "@/lib/track";
+import { priceTierFor } from "@/lib/track-events";
 import Button from "./Button";
+
+const VIEW_THRESHOLD = 0.6;
+const VIEW_DWELL_MS = 1500;
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem, isInCart } = useCart();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const cardRef = useRef<HTMLDivElement>(null);
+  const tier = priceTierFor({ id: product.id, type: "product", price: product.price });
+
+  useEffect(() => {
+    const node = cardRef.current;
+    if (!node || typeof IntersectionObserver === "undefined") return;
+    let timer: number | undefined;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry?.isIntersecting) {
+          timer = window.setTimeout(() => {
+            trackOnce(`view_${product.slug}`, "product_view", { product: product.slug, tier });
+            observer.disconnect();
+          }, VIEW_DWELL_MS);
+        } else if (timer !== undefined) {
+          window.clearTimeout(timer);
+          timer = undefined;
+        }
+      },
+      { threshold: VIEW_THRESHOLD },
+    );
+    observer.observe(node);
+    return () => {
+      observer.disconnect();
+      if (timer !== undefined) window.clearTimeout(timer);
+    };
+  }, [product.slug, tier]);
+
+  function handleCardClick(event: MouseEvent<HTMLDivElement>) {
+    if (event.target instanceof Element && event.target.closest("button, a")) return;
+    trackEvent("product_click", { product: product.slug, tier });
+  }
 
   function handleAdd() {
     if (isInCart(product.id)) {
@@ -22,12 +59,15 @@ export default function ProductCard({ product }: { product: Product }) {
       type: "product",
       image: product.image,
     });
+    trackEvent("add_to_cart", { product: product.slug, tier });
     setFeedback("Lagt til \u2713");
     setTimeout(() => setFeedback(null), 2000);
   }
 
   return (
     <div
+      ref={cardRef}
+      onClick={handleCardClick}
       id={product.slug}
       className="group bg-white rounded-2xl border border-brand-soft overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-2 animate-fade-in flex flex-col h-full"
     >

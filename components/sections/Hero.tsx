@@ -38,10 +38,10 @@ export default function Hero() {
         {/* CTA buttons */}
         <FadeInOnScroll delay={300}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
-            <Button href="#pakker" variant="primary" className="text-base px-8 py-3.5 animate-pulse shadow-[0_0_15px_rgba(196,168,130,0.4)]">
+            <Button href="#pakker" data-cta="hero_komplett" variant="primary" className="text-base px-8 py-3.5 animate-pulse shadow-[0_0_15px_rgba(196,168,130,0.4)]">
               Se komplett pakke — 249 kr
             </Button>
-            <Button href="/produkter" variant="outline" className="text-base px-8 py-3.5">
+            <Button href="/produkter" data-cta="hero_produkter" variant="outline" className="text-base px-8 py-3.5">
               Utforsk planleggerne
             </Button>
           </div>

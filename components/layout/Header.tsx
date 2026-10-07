@@ -19,10 +19,10 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: "Planleggere", href: "/produkter" },
-    { label: "Gratis", href: "/gratis" },
-    { label: "Pakker", href: "/#pakker" },
-    { label: "FAQ", href: "/#faq" },
+    { label: "Planleggere", href: "/produkter", cta: "nav_planleggere" },
+    { label: "Gratis", href: "/gratis", cta: "nav_gratis" },
+    { label: "Pakker", href: "/#pakker", cta: "nav_pakker" },
+    { label: "FAQ", href: "/#faq", cta: "nav_faq" },
   ];
 
   return (
@@ -51,18 +51,21 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  data-cta={link.cta}
                   className="relative text-sm text-brand-medium hover:text-brand-dark transition-colors after:absolute after:-bottom-1 after:left-1/2 after:h-[1.5px] after:w-0 after:-translate-x-1/2 after:bg-brand-dark after:transition-all after:duration-300 hover:after:w-full"
                 >
                   {link.label}
                 </Link>
               ))}
               <KomplettVippsButton
+                source="header"
                 label="Kjøp komplett pakke med Vipps"
                 className="px-5 py-2"
               />
 
               {/* Cart button */}
               <button
+                data-cta="handlekurv_apne"
                 onClick={() => setCartOpen(true)}
                 className="relative p-2 text-brand-medium hover:text-brand-dark transition-colors cursor-pointer"
                 aria-label="Handlekurv"
@@ -81,6 +84,7 @@ export default function Header() {
             {/* Mobile: cart + hamburger */}
             <div className="flex items-center gap-2 md:hidden">
               <button
+                data-cta="handlekurv_apne"
                 onClick={() => setCartOpen(true)}
                 className="relative p-2 text-brand-dark cursor-pointer"
                 aria-label="Handlekurv"
@@ -123,6 +127,7 @@ export default function Header() {
                 <Link
                   key={link.href}
                   href={link.href}
+                  data-cta={link.cta}
                   onClick={() => setMobileOpen(false)}
                   className="block px-4 py-3 text-sm text-brand-medium hover:text-brand-dark hover:bg-brand-pale transition-colors"
                 >
@@ -131,6 +136,7 @@ export default function Header() {
               ))}
               <div className="px-4 pt-2">
                 <KomplettVippsButton
+                  source="header_mobil"
                   fullWidth
                   label="Kjøp komplett pakke med Vipps"
                   className="px-5 py-2.5"
