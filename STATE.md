@@ -1,4 +1,26 @@
-# Selvhostede fonter (fix for failed deploy of #15) — PR open, not merged
+# Klikksporing (Vercel Web Analytics) — PR open, not merged
+
+Date: 2026-10-07
+Branch: `cursor/klikksporing-6edf`
+Event list and where each fires: `plans/2026-10-07-klikksporing.md`
+
+## Status
+
+- `@vercel/analytics` is installed. `<Analytics />` is mounted in `app/layout.tsx` (via `components/analytics/VercelAnalytics.tsx`) with `beforeSend` that strips every query parameter except `utm_*` and `kategori`, so `/takk?token=` never reaches Vercel.
+- Events: `cta_click`, `catalog_view`, `product_view`, `product_click`, `add_to_cart`, `checkout_start`, `purchase`, `download_click`, `lead_signup`, `lead_signup_error`, `discount_applied`, `outbound_click`. They're sent through `trackEvent()` in `lib/track.ts`. No names, emails or form fields are sent.
+- Front-page CTAs use `data-cta="..."` plus one delegated listener (`ClickTracker`), so server components stay server components.
+- Personvern mentions anonymous, cookie-free statistics (updated 7 October 2026).
+- UTM attribution (`lib/attribution.ts`) is unchanged.
+
+## Nick, after merge
+
+1. Vercel → project → Analytics → **Enable** Web Analytics, if it isn't already.
+2. Custom events need **Pro**; Hobby only gets page views. Pro records 2 properties per event. With Web Analytics Plus, set `NEXT_PUBLIC_VA_EVENT_PROPS=8` and redeploy to also get path and UTM on every event.
+3. Check whether `NEXT_PUBLIC_GA_MEASUREMENT_ID` is set in production. Google Analytics sets cookies, which conflicts with personvern.
+
+---
+
+# Selvhostede fonter (fix for failed deploy of #15) — merged (#16)
 
 Date: 2026-10-06
 Branch: `cursor/selvhostede-fonter-6edf`
