@@ -4,6 +4,7 @@ import { type ReactNode, useState } from "react";
 import Link from "next/link";
 
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import { trackEvent } from "@/lib/track";
 
 type Variant = "home" | "gratis";
 
@@ -54,14 +55,20 @@ export default function NewsletterSignup({
       });
       const payload = (await res.json().catch(() => ({}))) as { error?: string };
       if (res.ok) {
+        trackEvent("lead_signup", { form: variant });
         setStatus("success");
         setEmail("");
         setCompany("");
       } else {
+        trackEvent("lead_signup_error", {
+          form: variant,
+          reason: res.status === 429 ? "for_mange" : res.status >= 500 ? "server" : "ugyldig",
+        });
         setErrorMessage(payload.error || "Noe gikk galt. Prøv igjen.");
         setStatus("error");
       }
     } catch {
+      trackEvent("lead_signup_error", { form: variant, reason: "nettverk" });
       setErrorMessage("Noe gikk galt. Prøv igjen.");
       setStatus("error");
     }

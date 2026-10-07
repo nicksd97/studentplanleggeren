@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import CampaignCapture from "@/components/analytics/CampaignCapture";
+import ClickTracker from "@/components/analytics/ClickTracker";
 import DiscountCapture from "@/components/analytics/DiscountCapture";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
+import VercelAnalytics from "@/components/analytics/VercelAnalytics";
 import { CartProvider } from "@/lib/cart-context";
 import { OG_IMAGE_ALT, OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
@@ -52,8 +54,10 @@ export default function RootLayout({
         <CartProvider>
           <CampaignCapture />
           <DiscountCapture />
+          <ClickTracker />
           {children}
         </CartProvider>
+        <VercelAnalytics />
       </body>
     </html>
   );

@@ -8,6 +8,8 @@ import Button from "@/components/ui/Button";
 import { campaignTagsFromItems } from "@/lib/attribution";
 import { useCart } from "@/lib/cart-context";
 import { getFilesForItems } from "@/lib/product-files";
+import { trackEvent, trackOnce } from "@/lib/track";
+import { cartTier } from "@/lib/track-events";
 
 interface OrderData {
   id: string;
@@ -52,6 +54,21 @@ function TakkContent() {
       clearCart();
     }
   }, [order, clearCart]);
+
+  useEffect(() => {
+    if (!order || order.paymentStatus !== "completed") {
+      return;
+    }
+    trackOnce(
+      `purchase_${order.id}`,
+      "purchase",
+      {
+        tier: cartTier(order.items),
+        value: order.amountNok ?? order.items.reduce((sum, item) => sum + item.price, 0),
+      },
+      campaignTagsFromItems(order.items),
+    );
+  }, [order]);
 
   useEffect(() => {
     if (!order || order.paymentStatus !== "completed") {
@@ -219,6 +236,7 @@ function TakkContent() {
                     </span>
                     <a
                       href={`/api/download?token=${token}&file=${encodeURIComponent(file)}`}
+                      onClick={() => trackEvent("download_click", { kind: "kjop", product: fileName })}
                       className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-3 py-1.5 text-xs font-medium text-brand-dark hover:brightness-110 transition-all"
                     >
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

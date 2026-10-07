@@ -4,17 +4,21 @@ import { useRef, useState } from "react";
 import { currentCampaignTags } from "@/lib/attribution";
 import { currentDiscountCode } from "@/lib/discount";
 import { completePackageCartItem } from "@/lib/products";
+import { trackEvent } from "@/lib/track";
 
 type KomplettVippsButtonProps = {
   label?: string;
   className?: string;
   fullWidth?: boolean;
+  /** Where the button sits, for checkout_start analytics. */
+  source?: string;
 };
 
 export default function KomplettVippsButton({
   label = "Kjøp komplett pakke med Vipps",
   className = "",
   fullWidth = false,
+  source = "ukjent",
 }: KomplettVippsButtonProps) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -23,6 +27,7 @@ export default function KomplettVippsButton({
   async function startVipps() {
     if (inFlight.current) return;
     inFlight.current = true;
+    trackEvent("checkout_start", { method: "vipps", tier: "komplett", source });
     setLoading(true);
     setError("");
 

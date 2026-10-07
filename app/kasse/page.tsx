@@ -13,6 +13,8 @@ import { cartPricingSummary } from "@/lib/checkout";
 import { currentDiscountCode, rememberDiscountCode } from "@/lib/discount";
 import { FIVE_PACK_PRICE, FIVE_PACK_SIZE, SINGLE_PRICE } from "@/lib/products";
 import Button from "@/components/ui/Button";
+import { trackEvent, trackOnce } from "@/lib/track";
+import { cartTier } from "@/lib/track-events";
 
 export default function KassePage() {
   const { items, totalPrice, removeItem } = useCart();
@@ -62,7 +64,7 @@ export default function KassePage() {
     return errs;
   }
 
-  async function previewCode(code: string) {
+  async function previewCode(code: string, source: "lagret" | "manuell") {
     const trimmed = code.trim();
     if (!trimmed) {
       setApplied(null);
@@ -104,6 +106,7 @@ export default function KassePage() {
         return;
       }
       rememberDiscountCode(data.code);
+      trackOnce(`rabatt_${data.code}`, "discount_applied", { code: data.code, source });
       setApplied({
         code: data.code,
         amountNok: data.amountNok,
@@ -131,7 +134,7 @@ export default function KassePage() {
     const stored = currentDiscountCode();
     if (stored) {
       setCodeInput(stored);
-      void previewCode(stored);
+      void previewCode(stored, "lagret");
     }
     // Preview the landing ?kode= once; later item edits use Bruk.
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -142,6 +145,11 @@ export default function KassePage() {
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
 
+    trackEvent("checkout_start", {
+      method: provider === "vipps" ? "vipps" : "kort",
+      tier: cartTier(items),
+      source: "kasse",
+    });
     setLoadingProvider(provider);
     setPaymentError("");
 
@@ -207,7 +215,7 @@ export default function KassePage() {
             <p className="text-brand-medium mb-6">
               Legg til produkter før du går til kassen.
             </p>
-            <Button href="/#planleggere" variant="primary">
+            <Button href="/#planleggere" data-cta="kasse_tom_produkter" variant="primary">
               Se produkter
             </Button>
           </div>
@@ -405,7 +413,7 @@ export default function KassePage() {
                       />
                       <button
                         type="button"
-                        onClick={() => void previewCode(codeInput)}
+                        onClick={() => void previewCode(codeInput, "manuell")}
                         disabled={codeBusy || loading}
                         className="shrink-0 rounded-lg border border-brand-soft bg-white px-3 py-2.5 text-sm font-medium text-brand-dark hover:bg-brand-cream/60 disabled:opacity-60"
                       >

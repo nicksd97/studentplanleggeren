@@ -22,7 +22,7 @@ export default function PersonvernPage() {
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-dark mb-8">
             Personvernerklæring
           </h1>
-          <p className="text-brand-muted mb-8">Sist oppdatert: 5. oktober 2026</p>
+          <p className="text-brand-muted mb-8">Sist oppdatert: 7. oktober 2026</p>
 
           <div className="prose prose-brand max-w-none space-y-8 text-brand-dark/80">
             <section>
@@ -115,9 +115,18 @@ export default function PersonvernPage() {
             <section>
               <h2 className="text-xl font-semibold text-brand-dark mb-3">Informasjonskapsler og sporing</h2>
               <p>
-                Vi bruker <strong>ingen sporingscookies</strong> og ingen tredjeparts analyseverktøy.
-                Nettsiden fungerer uten informasjonskapsler utover det som er teknisk nødvendig
-                for handlekurv og kjøpsprosessen.
+                Vi bruker <strong>ingen sporingscookies</strong>. Nettsiden fungerer uten
+                informasjonskapsler utover det som er teknisk nødvendig for handlekurv og
+                kjøpsprosessen.
+              </p>
+              <p>
+                For å forstå hvordan nettsiden brukes, har vi anonym besøksstatistikk fra{" "}
+                <strong>Vercel Web Analytics</strong>. Den bruker ingen informasjonskapsler og lagrer
+                ingenting på enheten din. Vi ser sidevisninger og enkle hendelser, for eksempel at
+                noen trykket på en knapp, la en planlegger i handlekurven eller fullførte et kjøp, med
+                produkt, prisnivå og hvilken kampanjelenke besøket kom fra. Statistikken inneholder
+                ikke navn, e-postadresse eller annet som identifiserer deg, og nedlastingslenker
+                fjernes fra adressene før de sendes. Vercel er databehandler for statistikken.
               </p>
             </section>
 

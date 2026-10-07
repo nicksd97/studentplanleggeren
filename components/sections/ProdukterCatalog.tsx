@@ -1,6 +1,7 @@
 import Link from "next/link";
 import ProductCard from "@/components/ui/ProductCard";
 import ProdukterStickyBar from "@/components/sections/ProdukterStickyBar";
+import TrackView from "@/components/analytics/TrackView";
 import { alleProdukter, categoryGroups } from "@/lib/products";
 import { catalogPath, type Catalog } from "@/lib/catalog";
 
@@ -24,6 +25,7 @@ export default function ProdukterCatalog({
 }) {
   return (
     <>
+      <TrackView event="catalog_view" props={{ category: catalog.key }} />
       <main className="min-h-screen bg-brand-cream pt-24 pb-28">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-10">

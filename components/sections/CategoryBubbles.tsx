@@ -49,6 +49,7 @@ export default function CategoryBubbles() {
               >
                 <a
                   href={`/produkter?kategori=${cat.slug}`}
+                  data-cta={`kategori_${cat.slug}`}
                   className={`inline-block rounded-full px-7 py-3.5 font-medium text-base text-brand-dark shadow-inner transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-2 hover:ring-brand-accent/20 ${cat.color}`}
                 >
                   {cat.label}

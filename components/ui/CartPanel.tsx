@@ -69,6 +69,7 @@ export default function CartPanel({
               <p className="text-brand-medium mb-4">Handlekurven er tom</p>
               <Link
                 href="/produkter"
+                data-cta="handlekurv_produkter"
                 onClick={onClose}
                 className="text-sm text-brand-accent hover:underline font-medium"
               >
@@ -142,7 +143,7 @@ export default function CartPanel({
                 {totalPrice} kr
               </span>
             </div>
-            <Button href="/kasse" variant="primary" fullWidth onClick={onClose}>
+            <Button href="/kasse" data-cta="handlekurv_kasse" variant="primary" fullWidth onClick={onClose}>
               Gå til kassen
             </Button>
             <button

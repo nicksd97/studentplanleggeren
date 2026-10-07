@@ -5,6 +5,8 @@ import type { Bundle } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import Button from "./Button";
 import KomplettVippsButton from "./KomplettVippsButton";
+import { trackEvent } from "@/lib/track";
+import { priceTierFor } from "@/lib/track-events";
 
 function useBundleCart(bundle: Bundle) {
   const { addItem, isInCart } = useCart();
@@ -22,6 +24,7 @@ function useBundleCart(bundle: Bundle) {
       price: bundle.price,
       type: "bundle",
     });
+    trackEvent("add_to_cart", { product: bundle.id, tier: priceTierFor({ id: bundle.id, type: "bundle", price: bundle.price }) });
     setFeedback("Lagt til \u2713");
     setTimeout(() => setFeedback(null), 2000);
   }
@@ -82,6 +85,7 @@ function FeaturedKomplettCard({ bundle }: { bundle: Bundle }) {
           </div>
 
           <KomplettVippsButton
+            source="pakkekort"
             fullWidth
             className="text-base py-4"
             label={`Kjøp komplett pakke med Vipps — ${bundle.price} kr`}

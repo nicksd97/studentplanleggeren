@@ -6,6 +6,8 @@ import { useCart } from "@/lib/cart-context";
 import Button from "@/components/ui/Button";
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
+import { trackEvent } from "@/lib/track";
+import { priceTierFor } from "@/lib/track-events";
 
 const includes = [
   "5 daglige planleggere",
@@ -44,6 +46,7 @@ function BundleButton({
       price: bundle.price,
       type: "bundle",
     });
+    trackEvent("add_to_cart", { product: bundle.id, tier: priceTierFor({ id: bundle.id, type: "bundle", price: bundle.price }) });
     setFeedback("Lagt til \u2713");
     setTimeout(() => setFeedback(null), 2000);
   }
@@ -143,11 +146,13 @@ export default function BundleShowcase() {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <KomplettVippsButton
+                source="pakker"
                 label={`Kjøp komplett pakke med Vipps — ${featured.price} kr`}
                 className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
               />
               <Button
                 href="/produkter"
+                data-cta="pakker_produkter"
                 variant="outline"
                 className="text-lg px-10 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 bg-white/50"
               >

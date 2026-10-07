@@ -55,7 +55,7 @@ export default function GratisPage() {
           </div>
 
           <div className="text-center">
-            <Button href="/produkter" variant="primary" className="text-base px-8 py-3.5">
+            <Button href="/produkter" data-cta="gratis_produkter" variant="primary" className="text-base px-8 py-3.5">
               Se alle planleggerne — fra 39 kr
             </Button>
             <p className="text-sm text-brand-medium mt-4">
