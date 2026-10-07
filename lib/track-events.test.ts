@@ -7,6 +7,7 @@ import {
   outboundTarget,
   priceTierFor,
   propLimit,
+  redactAnalyticsEvent,
   redactAnalyticsUrl,
 } from "./track-events";
 
@@ -82,6 +83,15 @@ describe("redactAnalyticsUrl", () => {
   });
 });
 
+describe("redactAnalyticsEvent", () => {
+  it("keeps the event and only rewrites its URL", () => {
+    assert.deepEqual(redactAnalyticsEvent({ type: "event", url: "https://www.studentplanlegger.no/takk?token=abc" }), {
+      type: "event",
+      url: "https://www.studentplanlegger.no/takk",
+    });
+  });
+});
+
 describe("outboundTarget", () => {
   const site = "www.studentplanlegger.no";
 
@@ -107,7 +117,13 @@ describe("tracking wiring", () => {
     const layout = read("../app/layout.tsx");
     assert.match(layout, /<VercelAnalytics \/>/);
     assert.match(layout, /<ClickTracker \/>/);
-    assert.match(read("../components/analytics/VercelAnalytics.tsx"), /beforeSend=\{beforeSend\}/);
+    assert.match(read("../components/analytics/VercelAnalytics.tsx"), /beforeSend=\{redactAnalyticsEvent\}/);
+  });
+
+  it("queues the URL redaction before any early event", () => {
+    const track = read("./track.ts");
+    assert.match(track, /window\.va\("beforeSend", redactAnalyticsEvent\)/);
+    assert.ok(track.indexOf("ensureQueue();") < track.indexOf("track(name, data)"));
   });
 
   it("never passes form fields or emails to trackEvent", () => {

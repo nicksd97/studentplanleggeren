@@ -1,12 +1,8 @@
 "use client";
 
-import { Analytics, type BeforeSendEvent } from "@vercel/analytics/next";
-import { redactAnalyticsUrl } from "@/lib/track-events";
-
-function beforeSend(event: BeforeSendEvent): BeforeSendEvent {
-  return { ...event, url: redactAnalyticsUrl(event.url) };
-}
+import { Analytics } from "@vercel/analytics/next";
+import { redactAnalyticsEvent } from "@/lib/track-events";
 
 export default function VercelAnalytics() {
-  return <Analytics beforeSend={beforeSend} />;
+  return <Analytics beforeSend={redactAnalyticsEvent} />;
 }

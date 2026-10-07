@@ -104,6 +104,11 @@ export function redactAnalyticsUrl(url: string): string {
   }
 }
 
+/** Shared by <Analytics beforeSend> and the early queue in lib/track.ts. */
+export function redactAnalyticsEvent<T extends { url: string }>(event: T): T {
+  return { ...event, url: redactAnalyticsUrl(event.url) };
+}
+
 const SOCIAL_HOSTS = ["instagram.com", "tiktok.com", "facebook.com", "snapchat.com", "youtube.com", "pinterest.com", "linkedin.com", "x.com", "twitter.com"];
 
 export function outboundTarget(
