@@ -784,7 +784,7 @@ class Renderer:
         v = self.v
         if cover:
             paste_alpha(frame, self.label, (0, 262))
-            paste_alpha(frame, title_block(v.cover_title or v.hook, v.hook_sub, size=110), (0, 318))
+            paste_alpha(frame, title_block(v.cover_title or v.hook, size=110), (0, 318))
             return
         paste_alpha(frame, self.label, (0, 262))
         if t < v.hook_end:
@@ -974,7 +974,7 @@ def video_3() -> Video:
         hook="Morgenplanen min\ntar 5 minutter",
         clock=("07:12", "07:17"),
         battery=91,
-        cover_t=15.4,
+        cover_t=18.5,
         cover_title="Morgenplanen\nmin",
     )
     DP = v.add_page(paid_page("DP", "daglig-planlegger", "Daglig Planlegger"))
@@ -1023,10 +1023,14 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="1,2,3")
     ap.add_argument("--preview", default="", help="comma-separated times; writes PNG stills instead of video")
+    ap.add_argument("--covers-only", action="store_true")
     args = ap.parse_args()
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     for key in args.only.split(","):
         v = VIDEOS[key]()
+        if args.covers_only:
+            Renderer(v).frame(v.cover_t, cover=True).save(OUT_DIR / f"{v.slug}-cover.png", optimize=True)
+            continue
         if args.preview:
             r = Renderer(v)
             for ts in args.preview.split(","):
