@@ -1,4 +1,23 @@
-# Klikksporing (Vercel Web Analytics) — PR open, not merged
+# Video-assets for TikTok og Reels — branch, not merged
+
+Date: 2026-10-09
+Branch: `cursor/video-assets-6edf`
+Plan, research and design choices: `plans/2026-10-09-video-assets.md`
+
+## Status
+
+- `scripts/build-social-videos.py` renders three vertical videos (1080×1920, H.264, 19–22.5 s), a cover for each, and a captions file to `/opt/cursor/artifacts/social-videos/`. None of these are in git.
+- The free sample is shown in full. Paid pages are only shown zoomed in: the renderer fails if one is shown below 1.9 px/pt. Paid PDFs are read from `PAID_DIR`.
+- The videos are silent (with a silent audio track), so a trending sound can be added in TikTok or Instagram.
+
+## Nick
+
+1. Watch them on your phone and post with a trending sound. The captions and hashtags are in `video-captions.md`.
+2. In TikTok, choose the cover PNG as the thumbnail. Leave the caption short so it doesn't cover the iPad.
+
+---
+
+# Klikksporing (Vercel Web Analytics) — merged (#17)
 
 Date: 2026-10-07
 Branch: `cursor/klikksporing-6edf`
