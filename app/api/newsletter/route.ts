@@ -1,12 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import { Resend } from "resend";
+import {
+  CAMPAIGN_COOKIE,
+  mergeCampaignTags,
+  parseCampaignCookie,
+  parseCampaignTags,
+} from "@/lib/attribution";
 import { sendLeadMagnetEmail } from "@/lib/email";
+import {
+  CONSENT_SOURCE_FORM,
+  createSupabaseLeadStore,
+  persistGratisSignup,
+  sendGratisSignupEvent,
+} from "@/lib/leads";
 import {
   allowNewsletterRequest,
   assertSafeLeadMagnetPath,
   isHoneypot,
   leadMagnetStoragePath,
   normalizeEmail,
+  upsertResendSegmentContact,
 } from "@/lib/newsletter";
 import { supabaseAdmin } from "@/lib/supabase";
 
@@ -35,7 +48,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Ugyldig forespørsel" }, { status: 400 });
   }
 
-  const payload = body as { email?: unknown; company?: unknown; website?: unknown };
+  const payload = body as {
+    email?: unknown;
+    company?: unknown;
+    website?: unknown;
+    campaign?: unknown;
+  };
 
   if (isHoneypot(payload)) {
     return NextResponse.json({ success: true });
@@ -88,26 +106,50 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Nyhetsbrev er ikke konfigurert" }, { status: 500 });
   }
 
-  const resend = new Resend(apiKey);
-  const { error: createError } = await resend.contacts.create({
-    email,
-    unsubscribed: false,
-    segments: [{ id: segmentId }],
-  });
+  const campaign = mergeCampaignTags(
+    parseCampaignTags(
+      payload.campaign && typeof payload.campaign === "object"
+        ? (payload.campaign as Record<string, unknown>)
+        : (payload as Record<string, unknown>),
+    ),
+    parseCampaignCookie(request.cookies.get(CAMPAIGN_COOKIE)?.value),
+  );
 
-  if (createError) {
-    const { error: addError } = await resend.contacts.segments.add({
-      email,
-      segmentId,
-    });
-    if (addError) {
-      return NextResponse.json({ error: "Kunne ikke lagre kontakten" }, { status: 502 });
+  const resend = new Resend(apiKey);
+  const contact = await upsertResendSegmentContact(resend, email, segmentId);
+  if (!contact.ok) {
+    return NextResponse.json({ error: "Kunne ikke lagre kontakten" }, { status: 502 });
+  }
+
+  let emailSent = true;
+  try {
+    await sendLeadMagnetEmail({ to: email, downloadUrl: signedUrl });
+  } catch {
+    emailSent = false;
+  }
+
+  let welcomeEnrolled = false;
+  if (contact.isNew) {
+    try {
+      welcomeEnrolled = await sendGratisSignupEvent(resend, email);
+    } catch {
+      welcomeEnrolled = false;
     }
   }
 
   try {
-    await sendLeadMagnetEmail({ to: email, downloadUrl: signedUrl });
+    await persistGratisSignup(createSupabaseLeadStore(), {
+      email,
+      tags: campaign,
+      welcomeEnrolled,
+      unsubscribed: false,
+      consentSource: CONSENT_SOURCE_FORM,
+    });
   } catch {
+    // Lead storage must not break the sample signup.
+  }
+
+  if (!emailSent) {
     return NextResponse.json({ error: "Kunne ikke sende e-post" }, { status: 502 });
   }
 

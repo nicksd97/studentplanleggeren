@@ -8,6 +8,7 @@ import {
   isHoneypot,
   leadMagnetStoragePath,
   normalizeEmail,
+  upsertResendSegmentContact,
 } from "./newsletter";
 
 describe("normalizeEmail", () => {
@@ -81,5 +82,67 @@ describe("lead magnet storage path", () => {
     assert.doesNotThrow(() =>
       assertSafeLeadMagnetPath("leads/gratis-ukentlig-plan-smakebit.pdf"),
     );
+  });
+});
+
+describe("upsertResendSegmentContact", () => {
+  it("treats a successful create as a new signup", async () => {
+    const result = await upsertResendSegmentContact(
+      {
+        contacts: {
+          async create() {
+            return { error: null };
+          },
+          segments: {
+            async add() {
+              throw new Error("should not add when create succeeds");
+            },
+          },
+        },
+      },
+      "ny@student.no",
+      "segment-1",
+    );
+    assert.deepEqual(result, { ok: true, isNew: true });
+  });
+
+  it("treats create-then-segment-add as an existing contact", async () => {
+    const result = await upsertResendSegmentContact(
+      {
+        contacts: {
+          async create() {
+            return { error: { message: "already exists" } };
+          },
+          segments: {
+            async add() {
+              return { error: null };
+            },
+          },
+        },
+      },
+      "gammel@student.no",
+      "segment-1",
+    );
+    assert.deepEqual(result, { ok: true, isNew: false });
+  });
+
+  it("fails when neither create nor segment-add works", async () => {
+    const result = await upsertResendSegmentContact(
+      {
+        contacts: {
+          async create() {
+            return { error: { message: "restricted_api_key" } };
+          },
+          segments: {
+            async add() {
+              return { error: { message: "restricted_api_key" } };
+            },
+          },
+        },
+      },
+      "ny@student.no",
+      "segment-1",
+    );
+    assert.deepEqual(result, { ok: false });
   });
 });

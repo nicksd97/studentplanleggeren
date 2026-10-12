@@ -22,7 +22,7 @@ export default function PersonvernPage() {
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-dark mb-8">
             Personvernerklæring
           </h1>
-          <p className="text-brand-muted mb-8">Sist oppdatert: 7. oktober 2026</p>
+          <p className="text-brand-muted mb-8">Sist oppdatert: 12. oktober 2026</p>
 
           <div className="prose prose-brand max-w-none space-y-8 text-brand-dark/80">
             <section>
@@ -58,8 +58,9 @@ export default function PersonvernPage() {
                 <Link href="/gratis" className="text-brand-accent hover:underline">
                   /gratis
                 </Link>{" "}
-                eller forsiden, samler vi inn e-postadressen din for nyhetsbrev og den gratis
-                ukeplan-smakebiten.
+                eller forsiden, samler vi inn e-postadressen din for nyhetsbrev, velkomstserie og den
+                gratis ukeplan-smakebiten. Hvis du kom via en kampanjelenke, lagrer vi også
+                kampanjeverdiene (UTM) som hører til den påmeldingen.
               </p>
             </section>
 
@@ -71,8 +72,8 @@ export default function PersonvernPage() {
               </p>
               <ul className="list-disc pl-6 space-y-1">
                 <li>
-                  <strong>Formål:</strong> sende den gratis ukeplan-smakebiten og jevnlige e-poster
-                  med studietips og produktinfo.
+                  <strong>Formål:</strong> sende den gratis ukeplan-smakebiten, en velkomstserie og
+                  jevnlige e-poster med studietips og produktinfo.
                 </li>
                 <li>
                   <strong>Rettslig grunnlag:</strong> samtykke (skjemainnsending). Du kan trekke
@@ -82,12 +83,16 @@ export default function PersonvernPage() {
                   <strong>Behandlingsansvarlig:</strong> Studentplanlegger Davidson, org.nr 937416156.
                 </li>
                 <li>
-                  <strong>Databehandler:</strong> Resend (e-postutsending og kontaktliste). Ordre
-                  fortsetter hos Supabase.
+                  <strong>Databehandlere:</strong> Resend (e-postutsending, kontaktliste og
+                  velkomstserie) og Supabase (lead-register og ordre).
                 </li>
                 <li>
-                  <strong>Lagring:</strong> i Resend Contacts, segment lead-gratis-ukeplan, til du
-                  ber om sletting eller avmelding, eller opplysningene ikke lenger er relevante.
+                  <strong>Lagring:</strong> e-postadresse, kilde (for eksempel gratis-ukeplan),
+                  samtykketidspunkt, avmeldingsstatus, kampanje-/UTM-felter når de finnes, og hvilke
+                  e-postkampanjer du har fått (smakebit og velkomstserie). Opplysningene ligger i
+                  Resend Contacts (segment lead-gratis-ukeplan) og i Supabase-tabellene leads og
+                  lead_campaigns, til du ber om sletting eller avmelding, eller opplysningene ikke
+                  lenger er relevante.
                 </li>
                 <li>
                   <strong>Avmelding:</strong> svar til{" "}
@@ -115,9 +120,11 @@ export default function PersonvernPage() {
             <section>
               <h2 className="text-xl font-semibold text-brand-dark mb-3">Informasjonskapsler og sporing</h2>
               <p>
-                Vi bruker <strong>ingen sporingscookies</strong>. Nettsiden fungerer uten
-                informasjonskapsler utover det som er teknisk nødvendig for handlekurv og
-                kjøpsprosessen.
+                Vi bruker <strong>ingen tredjeparts sporingscookies</strong>. Handlekurv og
+                kjøpsprosessen bruker bare det som er teknisk nødvendig. I tillegg setter vi en
+                førsteparts informasjonskapsel <code>sp_campaign</code> i inntil 30 dager med
+                UTM-verdier fra kampanjelenker, slik at vi kan knytte et kjøp eller en
+                /gratis-påmelding til kampanjen du kom fra. Den sendes ikke til annonsenettverk.
               </p>
               <p>
                 For å forstå hvordan nettsiden brukes, har vi anonym besøksstatistikk fra{" "}
@@ -137,7 +144,7 @@ export default function PersonvernPage() {
                 <li>Behandle og levere bestillingen din</li>
                 <li>Sende bekreftelse og nedlastingslenke på e-post</li>
                 <li>Kontakte deg ved eventuelle problemer med bestillingen</li>
-                <li>Sende den gratis smakebiten og nyhetsbrev du har samtykket til</li>
+                <li>Sende den gratis smakebiten, velkomstserie og nyhetsbrev du har samtykket til</li>
               </ul>
               <p>
                 Vi selger eller deler aldri dine personopplysninger med tredjeparter
@@ -148,9 +155,11 @@ export default function PersonvernPage() {
             <section>
               <h2 className="text-xl font-semibold text-brand-dark mb-3">Lagring og sikkerhet</h2>
               <p>
-                Ordreinformasjon lagres sikkert hos vår databaseleverandør (Supabase) med
-                kryptering og tilgangskontroll. Vi beholder opplysningene så lenge det er nødvendig
-                for å oppfylle bestillingen og overholde regnskapsloven.
+                Ordreinformasjon og e-postleads lagres sikkert hos vår databaseleverandør (Supabase)
+                med kryptering og tilgangskontroll. Serveren bruker en tjenestenøkkel; vanlige
+                nettlesere har ikke lese- eller skrivetilgang til lead-tabellene. Vi beholder
+                opplysningene så lenge det er nødvendig for å oppfylle bestillingen, sende e-post
+                du har samtykket til, og overholde regnskapsloven.
               </p>
             </section>
 

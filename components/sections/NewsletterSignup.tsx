@@ -4,6 +4,7 @@ import { type ReactNode, useState } from "react";
 import Link from "next/link";
 
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import { currentCampaignTags } from "@/lib/attribution";
 import { trackEvent } from "@/lib/track";
 
 type Variant = "home" | "gratis";
@@ -51,7 +52,7 @@ export default function NewsletterSignup({
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, company }),
+        body: JSON.stringify({ email, company, campaign: currentCampaignTags() }),
       });
       const payload = (await res.json().catch(() => ({}))) as { error?: string };
       if (res.ok) {
