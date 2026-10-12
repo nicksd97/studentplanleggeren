@@ -1,3 +1,26 @@
+# Lead-lagring og velkomstserie — PR open, not merged
+
+Date: 2026-10-12
+Branch: `cursor/lead-lagring-340d`
+Plan: `plans/2026-10-12-lead-lagring.md`
+
+## Status
+
+- `/api/newsletter` still sends the smakebit from `hei@studentplanlegger.no` and upserts the Resend segment `lead-gratis-ukeplan`. After that, **new** contacts get `resend.events.send({ event: "studentplanlegger.gratis_signup", email })` so the Resend automation «Studentplanlegger gratis – velkomstserie» can start. Event failure is swallowed.
+- New Supabase tables `leads` and `lead_campaigns` (RLS on, service role only). Signup upserts the email with source `gratis-ukeplan`, first-touch UTM from `sp_campaign` / POST `campaign`, consent, and campaigns `gratis-sample` plus `velkomstserie` when the event was accepted.
+- Manual backfill: `npm run backfill-leads` (dry-run) or `npm run backfill-leads -- --apply`. Imports the Resend segment into `leads` with the sample campaign only. Does **not** fire the welcome event.
+- Personvern (Bokmål, 12. oktober 2026) describes lead storage in Resend + Supabase, the welcome series, and the first-party `sp_campaign` cookie.
+
+## Nick, after merge
+
+1. Run `supabase/migrations/2026-10-12-leads.sql` in the Supabase SQL Editor **before** or with the deploy. Until the tables exist, signup still sends the sample mail; lead rows just fail silently.
+2. Deploy. No new env vars. `RESEND_API_KEY` must stay full-access (Contacts + Events), and `RESEND_LEAD_SEGMENT_ID` must stay the UUID of `lead-gratis-ukeplan`.
+3. Confirm the Resend automation «Studentplanlegger gratis – velkomstserie» is enabled and triggered by `studentplanlegger.gratis_signup`.
+4. Import existing segment contacts once, after the migration: `npm run backfill-leads -- --apply` with the same server env. Dry-run first. Existing contacts are **not** enrolled in the welcome series.
+5. Submit `/gratis` once with a new inbox you control and check Resend: sample mail, segment, automation run, and a `leads` row with both campaigns.
+
+---
+
 # Klikksporing (Vercel Web Analytics) — PR open, not merged
 
 Date: 2026-10-07

@@ -55,3 +55,40 @@ export function assertSafeLeadMagnetPath(path: string): void {
     throw new Error("Lead magnet path must not use the commercial weekly plan");
   }
 }
+
+export type ResendSegmentContactClient = {
+  contacts: {
+    create(params: {
+      email: string;
+      unsubscribed: boolean;
+      segments: { id: string }[];
+    }): Promise<{ error?: unknown }>;
+    segments: {
+      add(params: { email: string; segmentId: string }): Promise<{ error?: unknown }>;
+    };
+  };
+};
+
+export async function upsertResendSegmentContact(
+  resend: ResendSegmentContactClient,
+  email: string,
+  segmentId: string,
+): Promise<{ ok: true; isNew: boolean } | { ok: false }> {
+  const { error: createError } = await resend.contacts.create({
+    email,
+    unsubscribed: false,
+    segments: [{ id: segmentId }],
+  });
+  if (!createError) {
+    return { ok: true, isNew: true };
+  }
+
+  const { error: addError } = await resend.contacts.segments.add({
+    email,
+    segmentId,
+  });
+  if (addError) {
+    return { ok: false };
+  }
+  return { ok: true, isNew: false };
+}
