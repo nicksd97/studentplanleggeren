@@ -107,7 +107,11 @@ export async function POST(request: NextRequest) {
   }
 
   const campaign = mergeCampaignTags(
-    parseCampaignTags(payload.campaign ?? payload),
+    parseCampaignTags(
+      payload.campaign && typeof payload.campaign === "object"
+        ? (payload.campaign as Record<string, unknown>)
+        : (payload as Record<string, unknown>),
+    ),
     parseCampaignCookie(request.cookies.get(CAMPAIGN_COOKIE)?.value),
   );
 

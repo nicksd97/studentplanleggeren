@@ -155,9 +155,9 @@ describe("Resend backfill mapping", () => {
     assert.ok(mapped);
     assert.equal(mapped.email, "gammel@student.no");
     assert.equal(mapped.source, LEAD_SOURCE_GRATIS);
-    assert.equal(mapped.consent_source, CONSENT_SOURCE_BACKFILL);
+    assert.equal(mapped.consentSource, CONSENT_SOURCE_BACKFILL);
     assert.equal(mapped.unsubscribed, true);
-    assert.equal(mapped.created_at, "2026-09-01T10:00:00.000Z");
+    assert.equal(mapped.createdAt, "2026-09-01T10:00:00.000Z");
 
     const store = createMemoryLeadStore();
     const result = await importResendContact(store, {
