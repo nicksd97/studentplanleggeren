@@ -2,8 +2,10 @@
 
 import { track } from "@vercel/analytics";
 import { currentCampaignTags, type CampaignTags } from "./attribution";
+import { getGtag } from "./consent";
 import {
   buildEventProps,
+  gaEventParams,
   propLimit,
   redactAnalyticsEvent,
   type TrackEventName,
@@ -36,6 +38,19 @@ export function trackEvent(
       LIMIT,
     );
     track(name, data);
+  } catch {
+    // Analytics must never break the page.
+  }
+  sendToGoogleAnalytics(name, props);
+}
+
+// `gtag` only exists when NEXT_PUBLIC_GA_MEASUREMENT_ID is set (see GoogleAnalytics);
+// Consent Mode decides whether GA may use cookies for the hit.
+function sendToGoogleAnalytics(name: TrackEventName, props: TrackProps): void {
+  try {
+    const gtag = getGtag();
+    const params = gtag && gaEventParams(name, props);
+    if (gtag && params) gtag("event", name, params);
   } catch {
     // Analytics must never break the page.
   }

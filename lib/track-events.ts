@@ -85,6 +85,18 @@ export function buildEventProps(
   return out;
 }
 
+// GA4 accepts 25 parameters per event; page and campaign come from page_location instead.
+export const GA_PARAM_LIMIT = 25;
+
+// /takk sends its own GA4 ecommerce purchase (with transaction_id and currency).
+const GA_SKIPPED_EVENTS = new Set<TrackEventName>(["purchase"]);
+
+/** Parameters for gtag('event', name, ...), or null when the event should not go to GA4. */
+export function gaEventParams(name: TrackEventName, props: TrackProps): Record<string, TrackValue> | null {
+  if (GA_SKIPPED_EVENTS.has(name)) return null;
+  return buildEventProps(props, {}, GA_PARAM_LIMIT);
+}
+
 const KEPT_QUERY_PARAMS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "kategori"];
 
 /** Strips every query parameter except campaign tags and the catalog filter (drops ?token=, etc.). */

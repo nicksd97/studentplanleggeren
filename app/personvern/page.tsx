@@ -2,6 +2,8 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { pageMeta } from "@/lib/site";
 import Link from "next/link";
+import ConsentSettingsButton from "@/components/analytics/ConsentSettingsButton";
+import { configuredMeasurementId } from "@/lib/analytics";
 
 export const metadata = pageMeta({
   title: "Personvernerklæring — Studentplanlegger",
@@ -11,6 +13,7 @@ export const metadata = pageMeta({
 });
 
 export default function PersonvernPage() {
+  const gaEnabled = configuredMeasurementId() !== null;
   return (
     <>
       <Header />
@@ -22,7 +25,7 @@ export default function PersonvernPage() {
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-dark mb-8">
             Personvernerklæring
           </h1>
-          <p className="text-brand-muted mb-8">Sist oppdatert: 12. oktober 2026</p>
+          <p className="text-brand-muted mb-8">Sist oppdatert: 20. oktober 2026</p>
 
           <div className="prose prose-brand max-w-none space-y-8 text-brand-dark/80">
             <section>
@@ -120,8 +123,8 @@ export default function PersonvernPage() {
             <section>
               <h2 className="text-xl font-semibold text-brand-dark mb-3">Informasjonskapsler og sporing</h2>
               <p>
-                Vi bruker <strong>ingen tredjeparts sporingscookies</strong>. Handlekurv og
-                kjøpsprosessen bruker bare det som er teknisk nødvendig. I tillegg setter vi en
+                Uten ditt samtykke bruker vi <strong>ingen tredjeparts sporingscookies</strong>.
+                Handlekurv og kjøpsprosessen bruker bare det som er teknisk nødvendig. I tillegg setter vi en
                 førsteparts informasjonskapsel <code>sp_campaign</code> i inntil 30 dager med
                 UTM-verdier fra kampanjelenker, slik at vi kan knytte et kjøp eller en
                 /gratis-påmelding til kampanjen du kom fra. Den sendes ikke til annonsenettverk.
@@ -134,6 +137,23 @@ export default function PersonvernPage() {
                 produkt, prisnivå og hvilken kampanjelenke besøket kom fra. Statistikken inneholder
                 ikke navn, e-postadresse eller annet som identifiserer deg, og nedlastingslenker
                 fjernes fra adressene før de sendes. Vercel er databehandler for statistikken.
+              </p>
+              <p>
+                Hvis du trykker <strong>Godta</strong> i samtykkebanneret, bruker vi også{" "}
+                <strong>Google Analytics 4</strong> med informasjonskapsler (<code>_ga</code>) for å
+                se hvordan besøkende bruker siden over tid, for eksempel sidevisninger, kampanjelenker
+                (UTM) og knappetrykk. Google Ireland Ltd. er databehandler, og data kan overføres til
+                USA. Uten samtykke settes ingen Google Analytics-informasjonskapsler; Google kan da
+                bare motta anonyme, informasjonskapselfrie signaler (Google Consent Mode). Vi sender
+                aldri navn eller e-postadresse til Google, og annonsefunksjoner er slått av. Valget
+                ditt lagres i nettleseren (<code>localStorage</code>), og du kan trekke samtykket
+                tilbake når som helst{gaEnabled ? "" : "."}
+                {gaEnabled && (
+                  <>
+                    {": "}
+                    <ConsentSettingsButton />.
+                  </>
+                )}
               </p>
             </section>
 

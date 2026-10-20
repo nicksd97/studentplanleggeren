@@ -4,6 +4,7 @@ import { describe, it } from "node:test";
 import {
   buildEventProps,
   cartTier,
+  gaEventParams,
   outboundTarget,
   priceTierFor,
   propLimit,
@@ -134,5 +135,21 @@ describe("tracking wiring", () => {
         assert.doesNotMatch(call, /email|epost|fornavn|etternavn|firstName|form\.|token/i, `${file}: ${call}`);
       }
     }
+  });
+});
+
+describe("gaEventParams", () => {
+  it("forwards click events with cleaned props and no path or campaign", () => {
+    assert.deepEqual(gaEventParams("cta_click", { cta: "gratis_hero" }), { cta: "gratis_hero" });
+    assert.deepEqual(gaEventParams("checkout_start", { method: "vipps", tier: "komplett", source: "forside" }), {
+      method: "vipps",
+      tier: "komplett",
+      source: "forside",
+    });
+    assert.deepEqual(gaEventParams("lead_signup", { form: "gratis", email: "ola@example.com" }), { form: "gratis" });
+  });
+
+  it("skips purchase, which /takk sends to GA4 with transaction_id", () => {
+    assert.equal(gaEventParams("purchase", { tier: "komplett", value: 249 }), null);
   });
 });

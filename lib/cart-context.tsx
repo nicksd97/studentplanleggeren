@@ -29,6 +29,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const saved = sessionStorage.getItem("cart");
+      // Restored after mount: sessionStorage doesn't exist during prerendering.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       if (saved) setItems(JSON.parse(saved));
     } catch {}
   }, []);
