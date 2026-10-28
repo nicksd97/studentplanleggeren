@@ -46,6 +46,9 @@ export function websiteJsonLd(): JsonLd {
   };
 }
 
+const brand = { "@type": "Brand", name: SITE_NAME };
+const seller = { "@id": `${SITE_ORIGIN}/#organization` };
+
 export function productOfferJsonLd(
   item: Bundle | Product,
   path = "/#pakker",
@@ -63,12 +66,19 @@ export function productOfferJsonLd(
     name: item.name,
     description: item.description,
     image,
+    sku: item.id,
+    brand,
+    category:
+      "categoryLabel" in item
+        ? `Fyllbar PDF-planlegger — ${item.categoryLabel}`
+        : "Fyllbare PDF-planleggere",
     offers: {
       "@type": "Offer",
       price: item.price,
       priceCurrency: "NOK",
       availability: "https://schema.org/InStock",
       url: absoluteUrl(`${path}#${item.slug}`),
+      seller,
     },
   };
 }
@@ -80,12 +90,15 @@ export function fivePackOfferJsonLd(): JsonLd {
     name: "5-pakke",
     description: "Velg fem enkeltplanleggere og betal 99 kr.",
     image: absoluteUrl(OG_IMAGE_PATH),
+    brand,
+    category: "Fyllbare PDF-planleggere",
     offers: {
       "@type": "Offer",
       price: FIVE_PACK_PRICE,
       priceCurrency: "NOK",
       availability: "https://schema.org/InStock",
       url: absoluteUrl("/produkter"),
+      seller,
     },
   };
 }

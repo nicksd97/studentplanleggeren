@@ -21,9 +21,11 @@ import {
 import {
   SITE_ORIGIN,
   absoluteUrl,
+  allowedCrawlers,
   indexablePaths,
   pageMeta,
   robotsDisallow,
+  robotsRules,
 } from "./site";
 import {
   resolveCatalog,
@@ -283,6 +285,8 @@ describe("structured data", () => {
     assert.equal(product.offers.price, KOMPLETT_PRICE);
     assert.equal(product.offers.priceCurrency, "NOK");
     assert.ok(typeof product.image === "string" && product.image.startsWith(SITE_ORIGIN));
+    assert.deepEqual(product.brand, { "@type": "Brand", name: "Studentplanlegger" });
+    assert.deepEqual(product.offers.seller, { "@id": `${SITE_ORIGIN}/#organization` });
     assert.equal("aggregateRating" in product, false);
     assert.equal("review" in product, false);
   });
@@ -339,5 +343,89 @@ describe("structured data", () => {
     assert.ok(komplettFaq);
     assert.equal(/papirmal/i.test(komplettFaq.answer), false);
     assert.equal(/papirmal/i.test(JSON.stringify(faqPageJsonLd(faqItems))), false);
+  });
+});
+
+describe("AI crawlers and llms.txt", () => {
+  const llms = readFileSync(new URL("../public/llms.txt", import.meta.url), "utf8");
+  const llmsFull = readFileSync(new URL("../public/llms-full.txt", import.meta.url), "utf8");
+
+  it("explicitly allows search and AI crawlers, including Googlebot", () => {
+    const required = [
+      "GPTBot",
+      "ChatGPT-User",
+      "ClaudeBot",
+      "anthropic-ai",
+      "Google-Extended",
+      "Googlebot",
+      "Bingbot",
+      "PerplexityBot",
+      "Applebot-Extended",
+    ];
+    const rules = robotsRules();
+    for (const bot of required) {
+      assert.ok(allowedCrawlers.includes(bot), `missing ${bot}`);
+      const rule = rules.find((entry) => [entry.userAgent].flat().includes(bot));
+      assert.ok(rule, `no robots group for ${bot}`);
+      assert.equal(rule.allow, "/");
+      assert.ok(!rule.disallow.includes("/"), `${bot} is blocked`);
+    }
+  });
+
+  it("keeps checkout, thanks, and API disallowed for every group", () => {
+    const rules = robotsRules();
+    assert.ok(rules.some((rule) => rule.userAgent === "*"));
+    for (const rule of rules) {
+      assert.ok(!rule.disallow.includes("/"));
+      for (const path of robotsDisallow) {
+        assert.ok(rule.disallow.includes(path), `${rule.userAgent} may crawl ${path}`);
+      }
+    }
+    const route = readFileSync(new URL("../app/robots.ts", import.meta.url), "utf8");
+    assert.match(route, /rules: robotsRules\(\)/);
+  });
+
+  it("links llms.txt from every page's head", () => {
+    const meta = pageMeta({ title: "Test — Studentplanlegger", description: "Test", path: "/gratis" });
+    assert.equal(meta.alternates.types["text/plain"], `${SITE_ORIGIN}/llms.txt`);
+  });
+
+  it("lists every indexable page and contact in llms.txt", () => {
+    assert.match(llms, /^# Studentplanlegger\n/);
+    for (const path of ["/", "/produkter", "/gratis", "/personvern", "/vilkar", ...guidePaths()]) {
+      assert.ok(llms.includes(`](${absoluteUrl(path)})`), `llms.txt misses ${path}`);
+    }
+    assert.ok(llms.includes("hei@studentplanlegger.no"));
+    assert.ok(llms.includes(`${SITE_ORIGIN}/llms-full.txt`));
+    assert.doesNotMatch(llms, /\/kasse|\/takk|\/api\//);
+  });
+
+  it("quotes only live catalog prices", () => {
+    const catalogPrices = new Set([
+      SINGLE_PRICE,
+      FIVE_PACK_PRICE,
+      THEME_PACK_PRICE,
+      KOMPLETT_PRICE,
+      ...pakker.map((bundle) => bundle.price),
+    ]);
+    for (const text of [llms, llmsFull]) {
+      for (const price of [SINGLE_PRICE, FIVE_PACK_PRICE, THEME_PACK_PRICE, KOMPLETT_PRICE]) {
+        assert.ok(text.includes(`${price} kr`), `missing ${price} kr`);
+      }
+      const mentioned = [...text.matchAll(/(\d+)\s*kr\b/g)].map((match) => Number(match[1]));
+      for (const price of mentioned) {
+        assert.ok(catalogPrices.has(price), `unknown price ${price}`);
+      }
+    }
+  });
+
+  it("summarizes every product, bundle, and guide in llms-full.txt", () => {
+    for (const item of [...alleProdukter, ...pakker]) {
+      assert.ok(llmsFull.includes(`- ${item.name} — ${item.price} kr. ${item.description}`), item.name);
+    }
+    for (const guide of guides) {
+      assert.ok(llmsFull.includes(absoluteUrl(guidePath(guide.slug))), guide.slug);
+      assert.ok(llmsFull.includes(guide.description), guide.slug);
+    }
   });
 });

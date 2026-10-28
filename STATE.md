@@ -1,3 +1,22 @@
+# AI-søkbarhet — committed on branch, not merged
+
+Date: 2026-10-28
+Branch: `feat/ai-searchability`
+Plan: `plans/2026-10-28-ai-searchability.md`
+
+## Status
+
+- `public/llms.txt` and `public/llms-full.txt` describe the shop, prices, pages and guides in Bokmål. Every page links to `/llms.txt` from `<head>`.
+- `robots.txt` explicitly allows search and AI crawlers (GPTBot, ClaudeBot, Google-Extended, PerplexityBot, Applebot-Extended and more). `/kasse`, `/takk` and `/api/` stay disallowed for every bot.
+- Product JSON-LD now has `brand`, `sku`, `category` and `offers.seller`.
+
+## Nick, after merge
+
+1. Deploy, then open `/llms.txt`, `/llms-full.txt` and `/robots.txt` on www.
+2. When prices, products or guides change, update both llms files. The tests catch drift.
+
+---
+
 # Lead-lagring og velkomstserie — PR open, not merged
 
 Date: 2026-10-12
