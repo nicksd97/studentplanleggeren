@@ -4,7 +4,7 @@ import { categoryGroups } from "./products";
 export interface PageMeta {
   title: string;
   description: string;
-  alternates: { canonical: string };
+  alternates: { canonical: string; types: Record<string, string> };
   openGraph: {
     title: string;
     description: string;
@@ -26,6 +26,35 @@ export const OG_IMAGE_PATH = "/images/cover.png";
 export const OG_IMAGE_ALT = "Studentplanlegger — 25 fyllbare PDF-planleggere";
 
 export const robotsDisallow = ["/kasse", "/takk", "/api/"];
+
+export const LLMS_TXT_PATH = "/llms.txt";
+export const LLMS_FULL_TXT_PATH = "/llms-full.txt";
+
+// Search and AI crawlers we want to read the shop, for both training and live answers.
+// A named group replaces the `*` group for that bot, so each one gets the same disallows.
+export const allowedCrawlers = [
+  "Googlebot",
+  "Bingbot",
+  "Google-Extended",
+  "GPTBot",
+  "OAI-SearchBot",
+  "ChatGPT-User",
+  "ClaudeBot",
+  "Claude-SearchBot",
+  "Claude-User",
+  "anthropic-ai",
+  "PerplexityBot",
+  "Perplexity-User",
+  "Applebot",
+  "Applebot-Extended",
+];
+
+export function robotsRules(): { userAgent: string | string[]; allow: string; disallow: string[] }[] {
+  return [
+    { userAgent: "*", allow: "/", disallow: robotsDisallow },
+    { userAgent: allowedCrawlers, allow: "/", disallow: robotsDisallow },
+  ];
+}
 
 export function absoluteUrl(path: string): string {
   if (path.startsWith("http://") || path.startsWith("https://")) {
@@ -64,6 +93,7 @@ export function pageMeta({
     description,
     alternates: {
       canonical: url,
+      types: { "text/plain": absoluteUrl(LLMS_TXT_PATH) },
     },
     openGraph: {
       title,

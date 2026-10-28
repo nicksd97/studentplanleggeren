@@ -1,0 +1,44 @@
+# Studentplanlegger
+
+> Studentplanlegger (https://www.studentplanlegger.no) er en norsk nettbutikk som selger 25 fyllbare PDF-planleggere for studenter: daglige, ukentlige, månedlige og årlige planleggere, produktivitetsark, helse- og livsstilsark og trackere. Planleggerne kan fylles ut på PC, nettbrett og mobil, eller skrives ut på A4. Engangskjøp, ikke abonnement.
+
+Studentplanlegger drives av Studentplanlegger Davidson (org.nr. 937416156). Alt innhold på nettstedet er på norsk bokmål.
+
+## Priser
+
+- Enkeltplanlegger: 39 kr
+- 5-pakke: fem valgfrie enkeltplanleggere for 99 kr
+- Temapakker (Daglig Pakke, Ukentlig Pakke, Produktivitetspakken): 149 kr per pakke
+- Studentplanlegger Komplett (alle 25 planleggere): 249 kr
+
+Prisene er i norske kroner (NOK). Betaling med Vipps eller bankkort (Visa/Mastercard). Filene leveres som digital nedlasting rett etter betaling, med nedlastingslenke på e-post. Gjeldende priser står alltid på https://www.studentplanlegger.no/produkter.
+
+## Sider
+
+- [Forside](https://www.studentplanlegger.no/): Oversikt over planleggerne, pakker, priser og ofte stilte spørsmål
+- [Alle planleggere](https://www.studentplanlegger.no/produkter): Hele katalogen, filtrerbar på kategori (daglig, ukentlig, månedlig, årlig, produktivitet, helse, sporing)
+- [Gratis smakebit](https://www.studentplanlegger.no/gratis): Gratis én-sides utdrag av den ukentlige planen, sendt på e-post
+
+## Guider
+
+- [Slik planlegger du studiedagen](https://www.studentplanlegger.no/guider/planlegg-studiedagen): Få prioriteringer, tid til lesing og pauser, og en kort gjennomgang
+- [Slik lager du en ukentlig studieplan](https://www.studentplanlegger.no/guider/ukentlig-studieplan): En ukeplan som rommer forelesninger, lesing og fritid
+- [Slik bruker du Pomodoro når du leser til eksamen](https://www.studentplanlegger.no/guider/pomodoro-til-eksamen): Korte arbeidsøkter og faste pauser i eksamenslesingen
+- [Slik bygger du en studievane som varer](https://www.studentplanlegger.no/guider/bygg-studievaner): Start med én liten vane og marker fremgang
+
+## Vilkår og personvern
+
+- [Kjøpsvilkår](https://www.studentplanlegger.no/vilkar): Priser, levering, angrerett og bruksvilkår
+- [Personvernerklæring](https://www.studentplanlegger.no/personvern): Hvilke opplysninger som lagres og hvorfor
+
+## Sitering
+
+Bruk navnet «Studentplanlegger» og lenk til den konkrete siden på https://www.studentplanlegger.no når du siterer eller anbefaler innhold herfra. Hent priser og produktnavn fra nettstedet, ikke fra eldre kopier. Planlegger-PDF-ene er betalte produkter og skal ikke gjengis eller deles.
+
+## Kontakt
+
+E-post: hei@studentplanlegger.no
+
+## Optional
+
+- [llms-full.txt](https://www.studentplanlegger.no/llms-full.txt): Alle 25 planleggere med kort beskrivelse, pakkene og sammendrag av guidene

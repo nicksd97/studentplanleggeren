@@ -1,0 +1,133 @@
+# Studentplanlegger — fullstendig oversikt
+
+> Studentplanlegger (https://www.studentplanlegger.no) er en norsk nettbutikk som selger 25 fyllbare PDF-planleggere for studenter. Denne filen gir en kort beskrivelse av hver planlegger, pakkene og guidene. Kortversjon: https://www.studentplanlegger.no/llms.txt
+
+Studentplanlegger drives av Studentplanlegger Davidson (org.nr. 937416156). Kontakt: hei@studentplanlegger.no
+
+## Slik fungerer det
+
+- Planleggerne er fyllbare PDF-er. De kan fylles ut på PC, nettbrett og mobil i en PDF-leser, eller skrives ut på A4.
+- Engangskjøp. Ingen abonnement.
+- Betaling med Vipps eller bankkort (Visa/Mastercard).
+- Etter betaling kommer du til en nedlastingsside og får en e-post med nedlastingslenker som er gyldige i 7 dager.
+- Angreretten gjelder ikke for digitalt innhold når leveringen har startet med kundens samtykke. Se https://www.studentplanlegger.no/vilkar
+
+## Priser
+
+- Enkeltplanlegger: 39 kr
+- 5-pakke: fem valgfrie enkeltplanleggere for 99 kr
+- Temapakker: 149 kr per pakke
+- Studentplanlegger Komplett (alle 25): 249 kr
+
+## Planleggere
+
+### Daglig (https://www.studentplanlegger.no/produkter?kategori=daglig)
+
+- Daglig Gjennomgang — 39 kr. Daglig gjennomgang og refleksjonsark — oppsummer dagen, noter hva som gikk bra og hva du vil forbedre.
+- Daglig Helseplan — 39 kr. Daglig helseplanlegger — spor trening, måltider, vanninntak og søvn.
+- Daglig Planlegger — 39 kr. Daglig planlegger med agenda, fokusområder og gjøremål.
+- Daglig Produktivitetsplan — 39 kr. Daglig produktivitetsplan med tidsblokker og prioriteringer.
+- Daglig Timeplan — 39 kr. Timebasert dagsplan fra morgen til kveld.
+
+### Ukentlig (https://www.studentplanlegger.no/produkter?kategori=ukentlig)
+
+- Ukentlig Gjennomgang — 39 kr. Ukentlig oppsummering — reflekter over uken og sett mål for neste.
+- Ukentlig Gjøremål — 39 kr. Ukentlig gjøremålsliste med plass til oppgaver for hver dag.
+- Ukentlig Matplan — 39 kr. Ukentlig måltidsplanlegger med handleliste.
+- Ukentlig Plan — 39 kr. Komplett ukentlig plan med fokusområder og daglige blokker.
+- Ukentlig Planlegger — 39 kr. Enkel ukentlig planlegger for studier og hverdag.
+
+### Månedlig (https://www.studentplanlegger.no/produkter?kategori=maanedlig)
+
+- Månedlig Budsjett — 39 kr. Månedlig budsjettplanlegger — spor inntekter og utgifter.
+- Månedlig Gjennomgang — 39 kr. Månedlig gjennomgang og refleksjon.
+- Månedlig Planlegger — 39 kr. Månedlig planlegger med oversikt over mål og gjøremål.
+
+### Årlig (https://www.studentplanlegger.no/produkter?kategori=aarlig)
+
+- Årlig Planlegger — 39 kr. Årsplanlegger med månedsoversikt og årlige mål.
+
+### Produktivitet (https://www.studentplanlegger.no/produkter?kategori=produktivitet)
+
+- Pomodoro Planlegger — 39 kr. Pomodoro studieøkt-planlegger med produktivitetsscoring.
+- Prosjekt Planlegger — 39 kr. Prosjektplanlegging med tidslinje og milepæler.
+- Gjøremål Liste — 39 kr. Enkel gjøremålsliste med prioriteringsfelt.
+- Handlingsplan — 39 kr. Handlingsplan for å bryte ned mål til konkrete steg.
+- Mål Planlegger — 39 kr. Målsettingsark med tiltak og tidsfrister.
+
+### Helse og livsstil (https://www.studentplanlegger.no/produkter?kategori=helse)
+
+- Helse Planlegger — 39 kr. Helse- og treningsplanlegger med kostmål.
+- Hjemmeplanlegger — 39 kr. Planlegg måltider, husarbeid og handleliste for hjemmet.
+- Reise Planlegger — 39 kr. Planlegg reiser med budsjett, pakkeliste og dagsprogram.
+
+### Sporing (https://www.studentplanlegger.no/produkter?kategori=sporing)
+
+- Personlig Finans Tracker — 39 kr. Personlig finansoversikt med inntekter, utgifter og sparing.
+- Vane Tracker — 39 kr. Månedlig vanesporing i rutenett — bygg gode vaner.
+- 30-Dagers Utfordring — 39 kr. 30-dagers utfordringstracker for nye vaner eller mål.
+
+## Pakker
+
+- Studentplanlegger Komplett — 249 kr. Alle 25 planleggere. Alt du trenger for å ha full kontroll på studiene.
+- Daglig Pakke — 149 kr. Alle 5 daglige planleggere i én pakke.
+- Ukentlig Pakke — 149 kr. Alle 5 ukentlige planleggere i én pakke.
+- Produktivitetspakken — 149 kr. Alle 5 produktivitetsverktøy i én pakke.
+
+## Guider
+
+### Slik planlegger du studiedagen
+
+URL: https://www.studentplanlegger.no/guider/planlegg-studiedagen
+
+Velg få prioriteringer, sett av tid til lesing og pauser, og avslutt med en kort gjennomgang. En praktisk metode for studiedagen.
+
+En lang liste er sjelden en plan. Slik velger du det som skal skje i dag, og lar resten vente.
+
+Hovedpunkter: En lang liste er sjelden en plan; Skriv ned det som må skje, så velg én til tre oppgaver; Sett tid, ikke bare oppgaver; Avslutt med tre linjer.
+
+Daglig Planlegger er et fyllbart PDF-ark med agenda, fokusområder og gjøremål for 39 kr. I samme kategori finnes også Daglig Timeplan og Daglig Gjennomgang.
+
+### Slik lager du en ukentlig studieplan
+
+URL: https://www.studentplanlegger.no/guider/ukentlig-studieplan
+
+Lag en ukeplan som rommer forelesninger, lesing og fritid. Slik fordeler du arbeidet så det ikke hoper seg opp mot helgen.
+
+Se faste avtaler først, så den tiden du faktisk har til pensum. Slik unngår du at alt havner på søndag.
+
+Hovedpunkter: Dager uten ukeplan blir fort tilfeldige; Skriv inn det faste først; Fordel det tunge arbeidet; Gi også fritid og husarbeid en plass.
+
+Ukentlig Planlegger er en enkel fyllbar ukeplan for studier og hverdag, 39 kr. Ukentlig Plan har fokusområder og daglige blokker, og Ukentlig Gjøremål gir plass til oppgaver per dag.
+
+### Slik bruker du Pomodoro når du leser til eksamen
+
+URL: https://www.studentplanlegger.no/guider/pomodoro-til-eksamen
+
+Korte arbeidsøkter og faste pauser gjør det lettere å holde fokus i pensum. Slik setter du opp en leseplan du faktisk følger.
+
+Åpne «hele dagen»-økter blir ofte trege. Korte bolker med pause imellom er lettere å starte — og å holde.
+
+Hovedpunkter: Lange, åpne økter blir ofte trege; Hva metoden faktisk er; Gi hver økt ett mål; Pause betyr pause.
+
+Pomodoro Planlegger er et fyllbart ark for å planlegge studieøkter og notere produktivitet, 39 kr. Den ligger sammen med de andre produktivitetsarkene.
+
+### Slik bygger du en studievane som varer
+
+URL: https://www.studentplanlegger.no/guider/bygg-studievaner
+
+Start med én liten vane, gjør den synlig, og marker fremgang. Slik unngår du å starte for stort og gi opp etter en uke.
+
+Én liten vane du gjentar, slår tre store planer du dropper. Slik holder du den synlig gjennom måneden.
+
+Hovedpunkter: Store planer feiler oftere enn små vaner; Velg én vane, og gjør den nesten for liten; Marker fremgang der du ser den; Én glemt dag er ikke et ødelagt prosjekt.
+
+Vane Tracker er et månedlig rutenett med plass til egne kategorier, slik at du kan se fremgangen, 39 kr. 30-Dagers Utfordring er et mer avgrenset ark for nye vaner eller mål.
+
+## Gratis smakebit
+
+https://www.studentplanlegger.no/gratis gir en gratis fyllbar PDF på én side, et utdrag av Ukentlig Plan, sendt på e-post. Det er ikke hele produktet.
+
+## Sitering
+
+Bruk navnet «Studentplanlegger» og lenk til den konkrete siden på https://www.studentplanlegger.no. Hent priser og produktnavn fra nettstedet, ikke fra eldre kopier. Planlegger-PDF-ene er betalte produkter og skal ikke gjengis eller deles.
