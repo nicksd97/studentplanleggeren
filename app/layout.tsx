@@ -28,8 +28,11 @@ const dmSans = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
   icons: {
-    icon: "/favicon.png",
-    apple: "/favicon.png",
+    icon: [
+      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.png", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180" }],
   },
   openGraph: {
     siteName: SITE_NAME,
