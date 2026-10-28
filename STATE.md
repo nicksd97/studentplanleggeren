@@ -1,3 +1,21 @@
+# Brand favicon — replace stock Next.js icon
+
+Date: 2026-10-28
+Branch: `cursor/favicon-3e8d`
+Plan: `plans/2026-10-28-favicon.md`
+
+## Status
+
+- Live `/favicon.ico` was still the default Next.js 25931-byte icon. `app/favicon.ico` is now a 16×16 + 32×32 Studentplanlegger ICO.
+- `public/favicon.png` already was the brand logo; left unchanged. Added 32×32 `app/icon.png` and 180×180 apple icons. Layout `icons` metadata lists the `.ico`, the PNG, and the apple touch icon.
+- No product or feature changes.
+
+## Nick, after merge
+
+Hard-refresh or open `/favicon.ico` on the production host. It must not be 25931 bytes or the Next.js “N” mark.
+
+---
+
 # Lead-lagring og velkomstserie — PR open, not merged
 
 Date: 2026-10-12
