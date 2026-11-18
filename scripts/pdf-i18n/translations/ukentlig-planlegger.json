@@ -1,0 +1,560 @@
+{
+ "slug": "ukentlig-planlegger",
+ "source": "ukentlig-planlegger.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "UKENTLIG",
+   "font": "Montserrat-SemiBold",
+   "size": 24.0,
+   "bbox": [
+    35.3,
+    36.7,
+    184.1,
+    54.7
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "WEEKLY",
+   "de": "WOCHEN",
+   "sv": "VECKO",
+   "da": "UGE",
+   "es": "PLAN",
+   "fr": "PLANNING",
+   "scale": {
+    "fr": 0.9
+   }
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "PLAN",
+   "font": "Montserrat-Regular",
+   "size": 24.0,
+   "bbox": [
+    197.0,
+    36.7,
+    274.4,
+    54.7
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PLAN",
+   "de": "PLAN",
+   "sv": "PLAN",
+   "da": "PLAN",
+   "es": "SEMANAL",
+   "fr": "HEBDOMADAIRE",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "Uke :",
+   "font": "Montserrat-Regular",
+   "size": 7.7,
+   "bbox": [
+    449.9,
+    54.9,
+    472.0,
+    60.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Week :",
+   "de": "Woche :",
+   "sv": "Vecka :",
+   "da": "Uge :",
+   "es": "Semana :",
+   "fr": "Semaine :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "FOKUS",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    341.5,
+    85.4,
+    386.9,
+    93.7
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "FOCUS",
+   "de": "FOKUS",
+   "sv": "FOKUS",
+   "da": "FOKUS",
+   "es": "ENFOQUE",
+   "fr": "FOCUS"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "MAN",
+   "font": "Montserrat-SemiBold",
+   "size": 12.0,
+   "bbox": [
+    41.3,
+    107.0,
+    74.6,
+    116.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MON",
+   "de": "MO",
+   "sv": "MÅN",
+   "da": "MAN",
+   "es": "LUN",
+   "fr": "LUN"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "TIR",
+   "font": "Montserrat-SemiBold",
+   "size": 12.0,
+   "bbox": [
+    41.3,
+    207.8,
+    63.9,
+    216.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TUE",
+   "de": "DI",
+   "sv": "TIS",
+   "da": "TIR",
+   "es": "MAR",
+   "fr": "MAR"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "PRIORITERINGER",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    341.5,
+    208.9,
+    458.2,
+    217.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "PRIORITIES",
+   "de": "PRIORITÄTEN",
+   "sv": "PRIORITERINGAR",
+   "da": "PRIORITETER",
+   "es": "PRIORIDADES",
+   "fr": "PRIORITÉS"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "1",
+   "font": "Montserrat-Regular",
+   "size": 7.4,
+   "bbox": [
+    344.8,
+    234.0,
+    347.5,
+    239.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "1",
+   "de": "1",
+   "sv": "1",
+   "da": "1",
+   "es": "1",
+   "fr": "1"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "2",
+   "font": "Montserrat-Regular",
+   "size": 7.4,
+   "bbox": [
+    344.8,
+    258.1,
+    349.0,
+    263.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "2",
+   "de": "2",
+   "sv": "2",
+   "da": "2",
+   "es": "2",
+   "fr": "2"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "3",
+   "font": "Montserrat-Regular",
+   "size": 7.4,
+   "bbox": [
+    344.8,
+    282.1,
+    349.0,
+    287.7
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "3",
+   "de": "3",
+   "sv": "3",
+   "da": "3",
+   "es": "3",
+   "fr": "3"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "4",
+   "font": "Montserrat-Regular",
+   "size": 7.4,
+   "bbox": [
+    344.8,
+    306.2,
+    349.7,
+    311.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "4",
+   "de": "4",
+   "sv": "4",
+   "da": "4",
+   "es": "4",
+   "fr": "4"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "ONS",
+   "font": "Montserrat-SemiBold",
+   "size": 12.0,
+   "bbox": [
+    41.3,
+    308.5,
+    71.4,
+    317.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WED",
+   "de": "MI",
+   "sv": "ONS",
+   "da": "ONS",
+   "es": "MIÉ",
+   "fr": "MER"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "GJØREMÅL",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    341.5,
+    331.1,
+    415.4,
+    339.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TO DO",
+   "de": "TO-DOS",
+   "sv": "ATT GÖRA",
+   "da": "GØREMÅL",
+   "es": "POR HACER",
+   "fr": "À FAIRE"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "TOR",
+   "font": "Montserrat-SemiBold",
+   "size": 12.0,
+   "bbox": [
+    41.3,
+    409.3,
+    70.5,
+    418.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "THU",
+   "de": "DO",
+   "sv": "TOR",
+   "da": "TOR",
+   "es": "JUE",
+   "fr": "JEU"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "FRE",
+   "font": "Montserrat-SemiBold",
+   "size": 12.0,
+   "bbox": [
+    41.3,
+    510.0,
+    68.9,
+    519.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "FRI",
+   "de": "FR",
+   "sv": "FRE",
+   "da": "FRE",
+   "es": "VIE",
+   "fr": "VEN"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "VANER",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    341.5,
+    514.9,
+    387.4,
+    523.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "HABITS",
+   "de": "GEWOHNHEITEN",
+   "sv": "VANOR",
+   "da": "VANER",
+   "es": "HÁBITOS",
+   "fr": "HABITUDES"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "M",
+   "font": "Montserrat-Light",
+   "size": 7.7,
+   "bbox": [
+    471.2,
+    518.4,
+    478.6,
+    524.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "M",
+   "de": "M",
+   "sv": "M",
+   "da": "M",
+   "es": "L",
+   "fr": "L"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "T",
+   "font": "Montserrat-Light",
+   "size": 7.7,
+   "bbox": [
+    485.2,
+    518.4,
+    489.6,
+    524.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "T",
+   "de": "D",
+   "sv": "T",
+   "da": "T",
+   "es": "M",
+   "fr": "M"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "O",
+   "font": "Montserrat-Light",
+   "size": 7.7,
+   "bbox": [
+    496.8,
+    518.4,
+    503.3,
+    524.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "W",
+   "de": "M",
+   "sv": "O",
+   "da": "O",
+   "es": "X",
+   "fr": "M"
+  },
+  {
+   "id": "p1-020",
+   "page": 1,
+   "src": "T",
+   "font": "Montserrat-Light",
+   "size": 7.7,
+   "bbox": [
+    509.4,
+    518.4,
+    513.7,
+    524.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "T",
+   "de": "D",
+   "sv": "T",
+   "da": "T",
+   "es": "J",
+   "fr": "J"
+  },
+  {
+   "id": "p1-021",
+   "page": 1,
+   "src": "F",
+   "font": "Montserrat-Light",
+   "size": 7.7,
+   "bbox": [
+    523.5,
+    518.7,
+    528.3,
+    524.4
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "F",
+   "de": "F",
+   "sv": "F",
+   "da": "F",
+   "es": "V",
+   "fr": "V"
+  },
+  {
+   "id": "p1-022",
+   "page": 1,
+   "src": "L",
+   "font": "Montserrat-Light",
+   "size": 7.7,
+   "bbox": [
+    536.5,
+    518.7,
+    541.0,
+    524.4
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "S",
+   "de": "S",
+   "sv": "L",
+   "da": "L",
+   "es": "S",
+   "fr": "S"
+  },
+  {
+   "id": "p1-023",
+   "page": 1,
+   "src": "S",
+   "font": "Montserrat-Light",
+   "size": 7.7,
+   "bbox": [
+    548.6,
+    518.4,
+    553.3,
+    524.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "S",
+   "de": "S",
+   "sv": "S",
+   "da": "S",
+   "es": "D",
+   "fr": "D"
+  },
+  {
+   "id": "p1-024",
+   "page": 1,
+   "src": "LØR",
+   "font": "Montserrat-SemiBold",
+   "size": 12.0,
+   "bbox": [
+    41.3,
+    610.8,
+    69.7,
+    619.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "SAT",
+   "de": "SA",
+   "sv": "LÖR",
+   "da": "LØR",
+   "es": "SÁB",
+   "fr": "SAM"
+  },
+  {
+   "id": "p1-025",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    341.5,
+    657.0,
+    404.6,
+    665.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES"
+  },
+  {
+   "id": "p1-026",
+   "page": 1,
+   "src": "SØN",
+   "font": "Montserrat-SemiBold",
+   "size": 12.0,
+   "bbox": [
+    41.3,
+    711.5,
+    71.8,
+    720.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "SUN",
+   "de": "SO",
+   "sv": "SÖN",
+   "da": "SØN",
+   "es": "DOM",
+   "fr": "DIM"
+  }
+ ]
+}

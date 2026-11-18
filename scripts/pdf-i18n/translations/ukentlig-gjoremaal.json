@@ -1,0 +1,240 @@
+{
+ "slug": "ukentlig-gjoremaal",
+ "source": "ukentlig-gjoremaal.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "UKENTLIG",
+   "font": "Montserrat-SemiBold",
+   "size": 24.0,
+   "bbox": [
+    36.0,
+    36.2,
+    184.8,
+    54.2
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "WEEKLY",
+   "de": "WOCHEN",
+   "sv": "VECKANS",
+   "da": "UGENS",
+   "es": "TAREAS",
+   "fr": "TÂCHES"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "GJØREMÅL",
+   "font": "Montserrat-Regular",
+   "size": 24.0,
+   "bbox": [
+    197.7,
+    36.2,
+    357.9,
+    54.2
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "TO-DO LIST",
+   "de": "AUFGABEN",
+   "sv": "ATT GÖRA",
+   "da": "GØREMÅL",
+   "es": "SEMANALES",
+   "fr": "DE LA SEMAINE",
+   "join": [
+    "de"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "Uke :",
+   "font": "Montserrat-Regular",
+   "size": 10.0,
+   "bbox": [
+    470.0,
+    67.9,
+    498.7,
+    75.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Week :",
+   "de": "Woche :",
+   "sv": "Vecka :",
+   "da": "Uge :",
+   "es": "Semana :",
+   "fr": "Semaine :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "MANDAG",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    82.9,
+    112.6,
+    154.6,
+    122.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "MONDAY",
+   "de": "MONTAG",
+   "sv": "MÅNDAG",
+   "da": "MANDAG",
+   "es": "LUNES",
+   "fr": "LUNDI"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "TIRSDAG",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    263.9,
+    112.6,
+    334.2,
+    122.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TUESDAY",
+   "de": "DIENSTAG",
+   "sv": "TISDAG",
+   "da": "TIRSDAG",
+   "es": "MARTES",
+   "fr": "MARDI"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "ONSDAG",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    441.0,
+    112.6,
+    509.6,
+    122.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WEDNESDAY",
+   "de": "MITTWOCH",
+   "sv": "ONSDAG",
+   "da": "ONSDAG",
+   "es": "MIÉRCOLES",
+   "fr": "MERCREDI"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "TORSDAG",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    75.0,
+    338.7,
+    152.1,
+    348.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "THURSDAY",
+   "de": "DONNERSTAG",
+   "sv": "TORSDAG",
+   "da": "TORSDAG",
+   "es": "JUEVES",
+   "fr": "JEUDI"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "FREDAG",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    276.1,
+    338.7,
+    341.6,
+    348.4
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "FRIDAY",
+   "de": "FREITAG",
+   "sv": "FREDAG",
+   "da": "FREDAG",
+   "es": "VIERNES",
+   "fr": "VENDREDI"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "LØRDAG",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    450.2,
+    338.7,
+    517.3,
+    348.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "SATURDAY",
+   "de": "SAMSTAG",
+   "sv": "LÖRDAG",
+   "da": "LØRDAG",
+   "es": "SÁBADO",
+   "fr": "SAMEDI"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "SØNDAG",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    85.4,
+    564.8,
+    154.0,
+    574.5
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SUNDAY",
+   "de": "SONNTAG",
+   "sv": "SÖNDAG",
+   "da": "SØNDAG",
+   "es": "DOMINGO",
+   "fr": "DIMANCHE"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    372.9,
+    564.8,
+    448.1,
+    574.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES"
+  }
+ ]
+}

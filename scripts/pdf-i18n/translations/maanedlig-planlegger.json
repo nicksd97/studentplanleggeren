@@ -1,0 +1,284 @@
+{
+ "slug": "maanedlig-planlegger",
+ "source": "maanedlig-planlegger.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "MÅNEDLIG",
+   "font": "Montserrat-SemiBold",
+   "size": 24.0,
+   "bbox": [
+    36.0,
+    36.2,
+    194.6,
+    54.2
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "MONTHLY",
+   "de": "MONATS",
+   "sv": "MÅNADS",
+   "da": "MÅNEDS",
+   "es": "PLAN",
+   "fr": "PLANNING"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "PLAN",
+   "font": "Montserrat-Regular",
+   "size": 24.0,
+   "bbox": [
+    207.5,
+    36.2,
+    285.0,
+    54.2
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PLAN",
+   "de": "PLAN",
+   "sv": "PLAN",
+   "da": "PLAN",
+   "es": "MENSUAL",
+   "fr": "MENSUEL",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "MÅNED :",
+   "font": "Montserrat-Regular",
+   "size": 10.0,
+   "bbox": [
+    460.1,
+    55.8,
+    512.4,
+    63.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MONTH :",
+   "de": "MONAT :",
+   "sv": "MÅNAD :",
+   "da": "MÅNED :",
+   "es": "MES :",
+   "fr": "MOIS :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "MAN",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    56.4,
+    94.2,
+    92.4,
+    103.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "MON",
+   "de": "MO",
+   "sv": "MÅN",
+   "da": "MAN",
+   "es": "LUN",
+   "fr": "LUN"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "TIR",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    137.0,
+    94.2,
+    161.5,
+    103.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TUE",
+   "de": "DI",
+   "sv": "TIS",
+   "da": "TIR",
+   "es": "MAR",
+   "fr": "MAR"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "ONS",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    210.3,
+    94.2,
+    242.9,
+    103.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "WED",
+   "de": "MI",
+   "sv": "ONS",
+   "da": "ONS",
+   "es": "MIÉ",
+   "fr": "MER"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "TOR",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    290.0,
+    94.2,
+    321.7,
+    103.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "THU",
+   "de": "DO",
+   "sv": "TOR",
+   "da": "TOR",
+   "es": "JUE",
+   "fr": "JEU"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "FRE",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    370.4,
+    94.2,
+    400.2,
+    103.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "FRI",
+   "de": "FR",
+   "sv": "FRE",
+   "da": "FRE",
+   "es": "VIE",
+   "fr": "VEN"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "LØR",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    445.7,
+    94.2,
+    476.4,
+    103.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SAT",
+   "de": "SA",
+   "sv": "LÖR",
+   "da": "LØR",
+   "es": "SÁB",
+   "fr": "SAM"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "SØN",
+   "font": "Montserrat-SemiBold",
+   "size": 13.0,
+   "bbox": [
+    520.8,
+    94.2,
+    553.9,
+    103.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SUN",
+   "de": "SO",
+   "sv": "SÖN",
+   "da": "SØN",
+   "es": "DOM",
+   "fr": "DIM"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "GJØREMÅL",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    37.0,
+    580.6,
+    106.2,
+    589.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TO DO",
+   "de": "TO-DOS",
+   "sv": "ATT GÖRA",
+   "da": "GØREMÅL",
+   "es": "POR HACER",
+   "fr": "À FAIRE"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "MÅL",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    320.4,
+    580.6,
+    347.5,
+    589.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "GOALS",
+   "de": "ZIELE",
+   "sv": "MÅL",
+   "da": "MÅL",
+   "es": "METAS",
+   "fr": "OBJECTIFS"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "Notater",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    320.4,
+    673.4,
+    366.5,
+    682.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Notes",
+   "de": "Notizen",
+   "sv": "Anteckningar",
+   "da": "Noter",
+   "es": "Notas",
+   "fr": "Notes"
+  }
+ ]
+}

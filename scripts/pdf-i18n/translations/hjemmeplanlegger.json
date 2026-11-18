@@ -1,0 +1,281 @@
+{
+ "slug": "hjemmeplanlegger",
+ "source": "hjemmeplanlegger.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "HJEMMEPLANLEGGING",
+   "font": "Montserrat-SemiBold",
+   "size": 19.7,
+   "bbox": [
+    34.6,
+    30.3,
+    293.5,
+    45.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "HOME PLANNER",
+   "de": "HAUSHALTSPLANER",
+   "sv": "HEMPLANERING",
+   "da": "HJEMMEPLANLÆGNING",
+   "es": "PLANIFICADOR DEL HOGAR",
+   "fr": "PLANNING DE LA MAISON"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "UKENTLIGE MÅLTIDER",
+   "font": "Montserrat-Bold",
+   "size": 10.6,
+   "bbox": [
+    35.6,
+    70.4,
+    171.3,
+    78.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WEEKLY MEALS",
+   "de": "MAHLZEITEN DER WOCHE",
+   "sv": "VECKANS MÅLTIDER",
+   "da": "UGENS MÅLTIDER",
+   "es": "COMIDAS DE LA SEMANA",
+   "fr": "REPAS DE LA SEMAINE"
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "DAG",
+   "font": "Montserrat-Regular",
+   "size": 9.6,
+   "bbox": [
+    46.8,
+    92.9,
+    70.8,
+    100.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "DAY",
+   "de": "TAG",
+   "sv": "DAG",
+   "da": "DAG",
+   "es": "DÍA",
+   "fr": "JOUR"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "FROKOST",
+   "font": "Montserrat-Regular",
+   "size": 9.6,
+   "bbox": [
+    106.3,
+    92.9,
+    161.2,
+    100.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BREAKFAST",
+   "de": "FRÜHSTÜCK",
+   "sv": "FRUKOST",
+   "da": "MORGENMAD",
+   "es": "DESAYUNO",
+   "fr": "PETIT-DÉJEUNER"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "LUNSJ",
+   "font": "Montserrat-Regular",
+   "size": 9.6,
+   "bbox": [
+    239.8,
+    92.9,
+    276.6,
+    100.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "LUNCH",
+   "de": "MITTAGESSEN",
+   "sv": "LUNCH",
+   "da": "FROKOST",
+   "es": "ALMUERZO",
+   "fr": "DÉJEUNER"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "MIDDAG",
+   "font": "Montserrat-Regular",
+   "size": 9.6,
+   "bbox": [
+    356.7,
+    92.9,
+    405.2,
+    100.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "DINNER",
+   "de": "ABENDESSEN",
+   "sv": "MIDDAG",
+   "da": "AFTENSMAD",
+   "es": "CENA",
+   "fr": "DÎNER"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "SNACKS",
+   "font": "Montserrat-Regular",
+   "size": 9.6,
+   "bbox": [
+    476.3,
+    92.9,
+    522.5,
+    100.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SNACKS",
+   "de": "SNACKS",
+   "sv": "MELLANMÅL",
+   "da": "SNACKS",
+   "es": "TENTEMPIÉS",
+   "fr": "EN-CAS"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "HANDLE LISTE",
+   "font": "Montserrat-Bold",
+   "size": 10.6,
+   "bbox": [
+    35.9,
+    274.7,
+    123.7,
+    282.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "SHOPPING LIST",
+   "de": "EINKAUFSLISTE",
+   "sv": "INKÖPSLISTA",
+   "da": "INDKØBSLISTE",
+   "es": "LISTA DE LA COMPRA",
+   "fr": "LISTE DE COURSES"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "HUS ARBEID",
+   "font": "Montserrat-Bold",
+   "size": 10.6,
+   "bbox": [
+    35.9,
+    497.5,
+    111.7,
+    505.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "CHORES",
+   "de": "HAUSARBEIT",
+   "sv": "HUSHÅLLSSYSSLOR",
+   "da": "HUSARBEJDE",
+   "es": "TAREAS DEL HOGAR",
+   "fr": "TÂCHES MÉNAGÈRES"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "DAG",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    36.0,
+    519.6,
+    60.1,
+    526.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DAY",
+   "de": "TAG",
+   "sv": "DAG",
+   "da": "DAG",
+   "es": "DÍA",
+   "fr": "JOUR"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "GJØREMÅL",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    85.9,
+    519.6,
+    150.3,
+    526.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TO DO",
+   "de": "TO-DOS",
+   "sv": "ATT GÖRA",
+   "da": "GØREMÅL",
+   "es": "POR HACER",
+   "fr": "À FAIRE",
+   "align_manual": true
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "ÆREND",
+   "font": "Montserrat-Bold",
+   "size": 11.96,
+   "bbox": [
+    35.9,
+    716.1,
+    86.6,
+    725.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "ERRANDS",
+   "de": "ERLEDIGUNGEN",
+   "sv": "ÄRENDEN",
+   "da": "ÆRINDER",
+   "es": "RECADOS",
+   "fr": "COMMISSIONS"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-Bold",
+   "size": 11.96,
+   "bbox": [
+    237.6,
+    716.1,
+    300.7,
+    725.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES",
+   "align_manual": true
+  }
+ ]
+}

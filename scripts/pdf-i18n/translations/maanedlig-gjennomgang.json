@@ -1,0 +1,662 @@
+{
+ "slug": "maanedlig-gjennomgang",
+ "source": "maanedlig-gjennomgang.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "MÅNEDLIG",
+   "font": "Montserrat-Regular",
+   "size": 23.1,
+   "bbox": [
+    36.0,
+    36.0,
+    187.4,
+    53.4
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "MONTHLY",
+   "de": "MONATS",
+   "sv": "MÅNADS",
+   "da": "MÅNEDS",
+   "es": "PLAN",
+   "fr": "PLANNING"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "PLAN",
+   "font": "Montserrat-SemiBold",
+   "size": 23.1,
+   "bbox": [
+    199.8,
+    36.0,
+    274.7,
+    53.4
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PLAN",
+   "de": "PLAN",
+   "sv": "PLAN",
+   "da": "PLAN",
+   "es": "MENSUAL",
+   "fr": "MENSUEL",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "M",
+   "font": "Raleway-Medium",
+   "size": 17.9,
+   "bbox": [
+    224.4,
+    84.7,
+    240.1,
+    98.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "M",
+   "de": "M",
+   "sv": "M",
+   "da": "M",
+   "es": "L",
+   "fr": "L"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "T",
+   "font": "Raleway-Medium",
+   "size": 17.9,
+   "bbox": [
+    357.3,
+    84.7,
+    368.3,
+    98.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "T",
+   "de": "D",
+   "sv": "T",
+   "da": "T",
+   "es": "M",
+   "fr": "M"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "O",
+   "font": "Raleway-Medium",
+   "size": 17.9,
+   "bbox": [
+    486.9,
+    84.7,
+    500.3,
+    98.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "W",
+   "de": "M",
+   "sv": "O",
+   "da": "O",
+   "es": "X",
+   "fr": "M"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "MANDAG",
+   "font": "Raleway-Regular",
+   "size": 10.0,
+   "bbox": [
+    207.5,
+    102.6,
+    255.3,
+    110.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "MONDAY",
+   "de": "MONTAG",
+   "sv": "MÅNDAG",
+   "da": "MANDAG",
+   "es": "LUNES",
+   "fr": "LUNDI"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "TIRSDAG",
+   "font": "Raleway-Regular",
+   "size": 10.0,
+   "bbox": [
+    339.1,
+    102.6,
+    385.5,
+    110.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TUESDAY",
+   "de": "DIENSTAG",
+   "sv": "TISDAG",
+   "da": "TIRSDAG",
+   "es": "MARTES",
+   "fr": "MARDI"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "ONSDAG",
+   "font": "Raleway-Regular",
+   "size": 10.0,
+   "bbox": [
+    471.4,
+    102.6,
+    516.5,
+    110.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "WEDNESDAY",
+   "de": "MITTWOCH",
+   "sv": "ONSDAG",
+   "da": "ONSDAG",
+   "es": "MIÉRCOLES",
+   "fr": "MERCREDI"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "MÅL",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    36.1,
+    106.6,
+    59.3,
+    114.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "GOALS",
+   "de": "ZIELE",
+   "sv": "MÅL",
+   "da": "MÅL",
+   "es": "METAS",
+   "fr": "OBJECTIFS"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "PRIORITERINGER",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    36.1,
+    227.4,
+    131.2,
+    234.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "PRIORITIES",
+   "de": "PRIORITÄTEN",
+   "sv": "PRIORITERINGAR",
+   "da": "PRIORITETER",
+   "es": "PRIORIDADES",
+   "fr": "PRIORITÉS"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "1",
+   "font": "Montserrat-Light",
+   "size": 8.5,
+   "bbox": [
+    37.1,
+    246.1,
+    40.1,
+    252.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "1",
+   "de": "1",
+   "sv": "1",
+   "da": "1",
+   "es": "1",
+   "fr": "1"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "2",
+   "font": "Montserrat-Light",
+   "size": 8.5,
+   "bbox": [
+    37.1,
+    264.9,
+    41.9,
+    271.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "2",
+   "de": "2",
+   "sv": "2",
+   "da": "2",
+   "es": "2",
+   "fr": "2"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "3",
+   "font": "Montserrat-Light",
+   "size": 8.5,
+   "bbox": [
+    37.1,
+    283.7,
+    41.9,
+    290.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "3",
+   "de": "3",
+   "sv": "3",
+   "da": "3",
+   "es": "3",
+   "fr": "3"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "4",
+   "font": "Montserrat-Light",
+   "size": 8.5,
+   "bbox": [
+    37.1,
+    302.5,
+    42.7,
+    308.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "4",
+   "de": "4",
+   "sv": "4",
+   "da": "4",
+   "es": "4",
+   "fr": "4"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "5",
+   "font": "Montserrat-Light",
+   "size": 8.5,
+   "bbox": [
+    37.1,
+    321.3,
+    41.9,
+    327.7
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "5",
+   "de": "5",
+   "sv": "5",
+   "da": "5",
+   "es": "5",
+   "fr": "5"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "GJØREMÅL",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    36.1,
+    347.4,
+    95.8,
+    354.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TO DO",
+   "de": "TO-DOS",
+   "sv": "ATT GÖRA",
+   "da": "GØREMÅL",
+   "es": "POR HACER",
+   "fr": "À FAIRE"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    35.0,
+    656.6,
+    86.6,
+    664.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "HVA JEG HAR OPPNÅDD",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    166.5,
+    656.6,
+    303.6,
+    664.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHAT I ACHIEVED",
+   "de": "WAS ICH ERREICHT HABE",
+   "sv": "DET HÄR HAR JAG UPPNÅTT",
+   "da": "DET HAR JEG OPNÅET",
+   "es": "LO QUE HE LOGRADO",
+   "fr": "CE QUE J'AI ACCOMPLI"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "TING JEG HAR LÆRT",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    369.6,
+    656.6,
+    482.7,
+    664.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHAT I LEARNED",
+   "de": "WAS ICH GELERNT HABE",
+   "sv": "DET HÄR HAR JAG LÄRT MIG",
+   "da": "DET HAR JEG LÆRT",
+   "es": "LO QUE HE APRENDIDO",
+   "fr": "CE QUE J'AI APPRIS"
+  },
+  {
+   "id": "p2-001",
+   "page": 2,
+   "src": "Måned :",
+   "font": "Montserrat-Regular",
+   "size": 11.6,
+   "bbox": [
+    417.6,
+    42.8,
+    472.8,
+    51.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Month :",
+   "de": "Monat :",
+   "sv": "Månad :",
+   "da": "Måned :",
+   "es": "Mes :",
+   "fr": "Mois :"
+  },
+  {
+   "id": "p2-002",
+   "page": 2,
+   "src": "T",
+   "font": "Raleway-Medium",
+   "size": 17.9,
+   "bbox": [
+    96.3,
+    84.7,
+    107.3,
+    98.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "T",
+   "de": "D",
+   "sv": "T",
+   "da": "T",
+   "es": "J",
+   "fr": "J"
+  },
+  {
+   "id": "p2-003",
+   "page": 2,
+   "src": "F",
+   "font": "Raleway-Medium",
+   "size": 17.9,
+   "bbox": [
+    227.1,
+    84.7,
+    237.6,
+    98.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "F",
+   "de": "F",
+   "sv": "F",
+   "da": "F",
+   "es": "V",
+   "fr": "V"
+  },
+  {
+   "id": "p2-004",
+   "page": 2,
+   "src": "L",
+   "font": "Raleway-Medium",
+   "size": 17.9,
+   "bbox": [
+    357.5,
+    84.7,
+    367.9,
+    98.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "S",
+   "de": "S",
+   "sv": "L",
+   "da": "L",
+   "es": "S",
+   "fr": "S"
+  },
+  {
+   "id": "p2-005",
+   "page": 2,
+   "src": "S",
+   "font": "Raleway-Medium",
+   "size": 17.9,
+   "bbox": [
+    488.0,
+    84.7,
+    498.9,
+    98.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "S",
+   "de": "S",
+   "sv": "S",
+   "da": "S",
+   "es": "D",
+   "fr": "D"
+  },
+  {
+   "id": "p2-006",
+   "page": 2,
+   "src": "TORSDAG",
+   "font": "Raleway-Regular",
+   "size": 10.0,
+   "bbox": [
+    78.1,
+    102.6,
+    128.7,
+    110.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "THURSDAY",
+   "de": "DONNERSTAG",
+   "sv": "TORSDAG",
+   "da": "TORSDAG",
+   "es": "JUEVES",
+   "fr": "JEUDI"
+  },
+  {
+   "id": "p2-007",
+   "page": 2,
+   "src": "FREDAG",
+   "font": "Raleway-Regular",
+   "size": 10.0,
+   "bbox": [
+    212.2,
+    102.6,
+    256.0,
+    110.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "FRIDAY",
+   "de": "FREITAG",
+   "sv": "FREDAG",
+   "da": "FREDAG",
+   "es": "VIERNES",
+   "fr": "VENDREDI"
+  },
+  {
+   "id": "p2-008",
+   "page": 2,
+   "src": "LØRDAG",
+   "font": "Raleway-Regular",
+   "size": 10.0,
+   "bbox": [
+    341.8,
+    102.6,
+    385.5,
+    110.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SATURDAY",
+   "de": "SAMSTAG",
+   "sv": "LÖRDAG",
+   "da": "LØRDAG",
+   "es": "SÁBADO",
+   "fr": "SAMEDI"
+  },
+  {
+   "id": "p2-009",
+   "page": 2,
+   "src": "SØNDAG",
+   "font": "Raleway-Regular",
+   "size": 10.0,
+   "bbox": [
+    470.1,
+    102.6,
+    516.0,
+    110.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SUNDAY",
+   "de": "SONNTAG",
+   "sv": "SÖNDAG",
+   "da": "SØNDAG",
+   "es": "DOMINGO",
+   "fr": "DIMANCHE"
+  },
+  {
+   "id": "p2-010",
+   "page": 2,
+   "src": "MINNER / HVORDAN FØLER DU DEG DENNE",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    307.6,
+    648.9,
+    547.3,
+    656.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MEMORIES / HOW DO YOU FEEL THIS",
+   "de": "ERINNERUNGEN / WIE FÜHLST DU DICH IN",
+   "sv": "MINNEN / HUR KÄNNER DU DIG DEN HÄR",
+   "da": "MINDER / HVORDAN HAR DU DET DENNE",
+   "es": "RECUERDOS / ¿CÓMO TE SIENTES ESTE",
+   "fr": "SOUVENIRS / COMMENT TE SENS-TU CE"
+  },
+  {
+   "id": "p2-011",
+   "page": 2,
+   "src": "TING JEG MÅ FORBEDRE TIL NESTE MÅNED",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    36.0,
+    656.6,
+    265.0,
+    664.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHAT TO IMPROVE NEXT MONTH",
+   "de": "WAS ICH NÄCHSTEN MONAT VERBESSERE",
+   "sv": "DET SKA JAG FÖRBÄTTRA NÄSTA MÅNAD",
+   "da": "DET SKAL JEG FORBEDRE NÆSTE MÅNED",
+   "es": "QUÉ MEJORAR EL PRÓXIMO MES",
+   "fr": "À AMÉLIORER LE MOIS PROCHAIN"
+  },
+  {
+   "id": "p2-012",
+   "page": 2,
+   "src": "MÅNEDEN?",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    307.6,
+    660.8,
+    370.3,
+    668.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MONTH?",
+   "de": "DIESEM MONAT?",
+   "sv": "MÅNADEN?",
+   "da": "MÅNED?",
+   "es": "MES?",
+   "fr": "MOIS-CI ?"
+  }
+ ]
+}

@@ -1,0 +1,452 @@
+{
+ "slug": "reise-planlegger",
+ "source": "reise-planlegger.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "REISE",
+   "font": "Montserrat-SemiBold",
+   "size": 22.6,
+   "bbox": [
+    36.0,
+    35.9,
+    116.0,
+    52.9
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "TRAVEL",
+   "de": "REISE",
+   "sv": "RESE",
+   "da": "REJSE",
+   "es": "PLANIFICADOR",
+   "fr": "PLANNING"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "PLANLEGGER",
+   "font": "Montserrat-Regular",
+   "size": 22.6,
+   "bbox": [
+    128.1,
+    35.9,
+    313.5,
+    52.9
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PLANNER",
+   "de": "PLANER",
+   "sv": "PLANERARE",
+   "da": "PLANLÆGGER",
+   "es": "DE VIAJE",
+   "fr": "DE VOYAGE",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "DESTINASJON(ER)",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    91.3,
+    160.6,
+    99.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DESTINATION(S)",
+   "de": "REISEZIEL(E)",
+   "sv": "RESMÅL",
+   "da": "DESTINATION(ER)",
+   "es": "DESTINO(S)",
+   "fr": "DESTINATION(S)"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "NÅR",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    406.8,
+    91.3,
+    434.8,
+    99.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHEN",
+   "de": "WANN",
+   "sv": "NÄR",
+   "da": "HVORNÅR",
+   "es": "CUÁNDO",
+   "fr": "QUAND"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "BUDSJETT",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    174.9,
+    196.8,
+    244.4,
+    205.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BUDGET",
+   "de": "BUDGET",
+   "sv": "BUDGET",
+   "da": "BUDGET",
+   "es": "PREVISTO",
+   "fr": "BUDGET"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "UTGIFT",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    197.8,
+    84.1,
+    206.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "EXPENSE",
+   "de": "AUSGABE",
+   "sv": "UTGIFT",
+   "da": "UDGIFT",
+   "es": "GASTO",
+   "fr": "DÉPENSE"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    262.0,
+    197.8,
+    318.0,
+    206.0
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "STEDER Å BESØKE",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    389.1,
+    197.8,
+    516.1,
+    206.0
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "PLACES TO VISIT",
+   "de": "SEHENSWÜRDIGKEITEN",
+   "sv": "PLATSER ATT BESÖKA",
+   "da": "STEDER AT BESØGE",
+   "es": "LUGARES PARA VISITAR",
+   "fr": "LIEUX À VISITER"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "FLY",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    40.4,
+    224.3,
+    60.0,
+    231.7
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "FLIGHTS",
+   "de": "FLÜGE",
+   "sv": "FLYG",
+   "da": "FLY",
+   "es": "VUELOS",
+   "fr": "VOLS"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "TRANSPORT",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    40.4,
+    255.7,
+    107.5,
+    263.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TRANSPORT",
+   "de": "TRANSPORT",
+   "sv": "TRANSPORT",
+   "da": "TRANSPORT",
+   "es": "TRANSPORTE",
+   "fr": "TRANSPORT"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "HOTELL",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    40.4,
+    287.1,
+    83.7,
+    294.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "HOTEL",
+   "de": "HOTEL",
+   "sv": "HOTELL",
+   "da": "HOTEL",
+   "es": "HOTEL",
+   "fr": "HÔTEL"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "MAT",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    40.4,
+    318.5,
+    63.9,
+    325.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "FOOD",
+   "de": "ESSEN",
+   "sv": "MAT",
+   "da": "MAD",
+   "es": "COMIDA",
+   "fr": "REPAS"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "SHOPPING",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    40.4,
+    349.9,
+    99.8,
+    357.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "SHOPPING",
+   "de": "SHOPPING",
+   "sv": "SHOPPING",
+   "da": "SHOPPING",
+   "es": "COMPRAS",
+   "fr": "SHOPPING"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "ANNET",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    40.4,
+    381.3,
+    78.3,
+    388.7
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "OTHER",
+   "de": "SONSTIGES",
+   "sv": "ÖVRIGT",
+   "da": "ANDET",
+   "es": "OTROS",
+   "fr": "AUTRES"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "STEDER Å SPISE",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    399.6,
+    408.9,
+    510.6,
+    417.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "PLACES TO EAT",
+   "de": "RESTAURANTS",
+   "sv": "STÄLLEN ATT ÄTA PÅ",
+   "da": "STEDER AT SPISE",
+   "es": "DÓNDE COMER",
+   "fr": "OÙ MANGER"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "TOTAL",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    40.4,
+    444.0,
+    74.9,
+    451.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TOTAL",
+   "de": "GESAMT",
+   "sv": "TOTALT",
+   "da": "TOTAL",
+   "es": "TOTAL",
+   "fr": "TOTAL"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "ADRESSEN TIL STEDET/STEDENE JEG BOR",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    485.2,
+    325.4,
+    493.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "ADDRESS(ES) WHERE I'M STAYING",
+   "de": "ADRESSE(N) MEINER UNTERKUNFT",
+   "sv": "ADRESS(ER) DÄR JAG BOR",
+   "da": "ADRESSE(R) HVOR JEG BOR",
+   "es": "DIRECCIÓN(ES) DEL ALOJAMIENTO",
+   "fr": "ADRESSE(S) DE L'HÉBERGEMENT"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "STEDER Å SHOPPE",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    392.8,
+    620.0,
+    521.0,
+    628.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "PLACES TO SHOP",
+   "de": "SHOPPING",
+   "sv": "STÄLLEN ATT SHOPPA PÅ",
+   "da": "STEDER AT SHOPPE",
+   "es": "DÓNDE COMPRAR",
+   "fr": "OÙ FAIRE DU SHOPPING"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "KONTAKTPERSONER I NØDSTILFELLER",
+   "font": "Montserrat-SemiBold",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    660.5,
+    301.9,
+    668.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "EMERGENCY CONTACTS",
+   "de": "NOTFALLKONTAKTE",
+   "sv": "KONTAKTER VID NÖDFALL",
+   "da": "KONTAKTER I NØDSTILFÆLDE",
+   "es": "CONTACTOS DE EMERGENCIA",
+   "fr": "CONTACTS D'URGENCE"
+  },
+  {
+   "id": "p1-020",
+   "page": 1,
+   "src": "NAVN",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    91.3,
+    685.1,
+    125.6,
+    692.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "NAME",
+   "de": "NAME",
+   "sv": "NAMN",
+   "da": "NAVN",
+   "es": "NOMBRE",
+   "fr": "NOM"
+  },
+  {
+   "id": "p1-021",
+   "page": 1,
+   "src": "KONTAKT NR.",
+   "font": "Montserrat-Medium",
+   "size": 9.9,
+   "bbox": [
+    212.7,
+    685.1,
+    295.2,
+    692.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "PHONE NO.",
+   "de": "TELEFON",
+   "sv": "TELEFONNR.",
+   "da": "TELEFONNR.",
+   "es": "TELÉFONO",
+   "fr": "TÉLÉPHONE"
+  }
+ ]
+}

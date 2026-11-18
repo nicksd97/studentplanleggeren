@@ -1,0 +1,137 @@
+{
+ "slug": "gjoremaal-liste",
+ "source": "gjoremaal-liste.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "GJØREMÅL",
+   "font": "Montserrat-Regular",
+   "size": 19.7,
+   "bbox": [
+    35.8,
+    29.3,
+    157.7,
+    44.1
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "TO-DO",
+   "de": "TO-DO-",
+   "sv": "ATT GÖRA-",
+   "da": "TO DO-",
+   "es": "LISTA DE",
+   "fr": "LISTE DE"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "LISTE",
+   "font": "Montserrat-SemiBold",
+   "size": 19.7,
+   "bbox": [
+    165.5,
+    29.3,
+    225.8,
+    44.1
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "LIST",
+   "de": "LISTE",
+   "sv": "LISTA",
+   "da": "LISTE",
+   "es": "TAREAS",
+   "fr": "TÂCHES",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "Dato:",
+   "font": "Montserrat-Regular",
+   "size": 8.7,
+   "bbox": [
+    456.3,
+    46.8,
+    481.6,
+    53.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Date:",
+   "de": "Datum:",
+   "sv": "Datum:",
+   "da": "Dato:",
+   "es": "Fecha:",
+   "fr": "Date :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "TOP PRIORITIES",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    35.5,
+    76.4,
+    132.1,
+    84.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TOP PRIORITIES",
+   "de": "TOP-PRIORITÄTEN",
+   "sv": "TOPPRIORITERINGAR",
+   "da": "TOPPRIORITETER",
+   "es": "PRIORIDADES",
+   "fr": "PRIORITÉS"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "Å GJØRE",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    35.7,
+    136.3,
+    87.3,
+    144.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TO DO",
+   "de": "TO-DOS",
+   "sv": "ATT GÖRA",
+   "da": "GØREMÅL",
+   "es": "POR HACER",
+   "fr": "À FAIRE"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    36.7,
+    709.7,
+    93.6,
+    717.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES"
+  }
+ ]
+}

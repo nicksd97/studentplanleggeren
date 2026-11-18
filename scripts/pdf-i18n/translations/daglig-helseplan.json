@@ -1,0 +1,410 @@
+{
+ "slug": "daglig-helseplan",
+ "source": "daglig-helseplan.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "DAGLIG",
+   "font": "Montserrat-SemiBold",
+   "size": 22.6,
+   "bbox": [
+    36.0,
+    32.9,
+    141.9,
+    49.9
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "DAILY",
+   "de": "TAGES",
+   "sv": "DAGS",
+   "da": "DAGS",
+   "es": "PLAN",
+   "fr": "PLANNING"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "PLAN",
+   "font": "Montserrat-Regular",
+   "size": 22.6,
+   "bbox": [
+    154.0,
+    32.9,
+    227.0,
+    49.9
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PLAN",
+   "de": "PLAN",
+   "sv": "PLAN",
+   "da": "PLAN",
+   "es": "DIARIO",
+   "fr": "QUOTIDIEN",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "Dato :",
+   "font": "Montserrat-Regular",
+   "size": 9.9,
+   "bbox": [
+    451.5,
+    56.1,
+    486.9,
+    63.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Date :",
+   "de": "Datum :",
+   "sv": "Datum :",
+   "da": "Dato :",
+   "es": "Fecha :",
+   "fr": "Date :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "AGENDA",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    92.8,
+    93.1,
+    101.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "SCHEDULE",
+   "de": "TAGESABLAUF",
+   "sv": "SCHEMA",
+   "da": "PROGRAM",
+   "es": "AGENDA",
+   "fr": "PROGRAMME"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "FOKUS",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    350.3,
+    92.8,
+    395.7,
+    101.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "FOCUS",
+   "de": "FOKUS",
+   "sv": "FOKUS",
+   "da": "FOKUS",
+   "es": "ENFOQUE",
+   "fr": "FOCUS"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "TIMER MED SØVN",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    350.8,
+    269.5,
+    470.9,
+    277.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "HOURS OF SLEEP",
+   "de": "SCHLAFSTUNDEN",
+   "sv": "TIMMAR SÖMN",
+   "da": "TIMERS SØVN",
+   "es": "HORAS DE SUEÑO",
+   "fr": "HEURES DE SOMMEIL"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "--",
+   "font": "Montserrat-Regular",
+   "size": 8.9,
+   "bbox": [
+    418.9,
+    295.6,
+    425.7,
+    302.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "--",
+   "de": "--",
+   "sv": "--",
+   "da": "--",
+   "es": "--",
+   "fr": "--"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "TIM",
+   "font": "Montserrat-Regular",
+   "size": 8.9,
+   "bbox": [
+    541.3,
+    295.6,
+    557.6,
+    302.3
+   ],
+   "align": "right",
+   "chain": null,
+   "en": "HRS",
+   "de": "STD",
+   "sv": "TIM",
+   "da": "TIM",
+   "es": "H",
+   "fr": "H"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "HUMØR",
+   "font": "Montserrat-Medium",
+   "size": 10.6,
+   "bbox": [
+    351.4,
+    337.7,
+    400.6,
+    345.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MOOD",
+   "de": "STIMMUNG",
+   "sv": "HUMÖR",
+   "da": "HUMØR",
+   "es": "ÁNIMO",
+   "fr": "HUMEUR"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "VELLVÆRE",
+   "font": "Montserrat-Medium",
+   "size": 10.6,
+   "bbox": [
+    350.8,
+    408.0,
+    421.2,
+    415.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WELL-BEING",
+   "de": "WOHLBEFINDEN",
+   "sv": "VÄLMÅENDE",
+   "da": "VELVÆRE",
+   "es": "BIENESTAR",
+   "fr": "BIEN-ÊTRE"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "MÅLTIDER",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    573.5,
+    105.4,
+    581.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MEALS",
+   "de": "MAHLZEITEN",
+   "sv": "MÅLTIDER",
+   "da": "MÅLTIDER",
+   "es": "COMIDAS",
+   "fr": "REPAS"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "TRENING",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    350.8,
+    573.5,
+    411.0,
+    581.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "EXERCISE",
+   "de": "TRAINING",
+   "sv": "TRÄNING",
+   "da": "TRÆNING",
+   "es": "EJERCICIO",
+   "fr": "SPORT"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "F",
+   "font": "Poppins-Regular",
+   "size": 8.9,
+   "bbox": [
+    41.2,
+    597.9,
+    45.7,
+    604.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "B",
+   "de": "F",
+   "sv": "F",
+   "da": "M",
+   "es": "D",
+   "fr": "P"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "L",
+   "font": "Poppins-Regular",
+   "size": 8.9,
+   "bbox": [
+    41.2,
+    621.0,
+    45.1,
+    627.7
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "L",
+   "de": "M",
+   "sv": "L",
+   "da": "F",
+   "es": "A",
+   "fr": "M"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "M",
+   "font": "Poppins-Regular",
+   "size": 8.9,
+   "bbox": [
+    41.2,
+    644.1,
+    48.9,
+    650.8
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "D",
+   "de": "A",
+   "sv": "M",
+   "da": "A",
+   "es": "C",
+   "fr": "S"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "K",
+   "font": "Poppins-Regular",
+   "size": 8.9,
+   "bbox": [
+    41.2,
+    667.2,
+    46.6,
+    673.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "S",
+   "de": "S",
+   "sv": "K",
+   "da": "S",
+   "es": "M",
+   "fr": "C"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "V",
+   "font": "Poppins-Regular",
+   "size": 8.9,
+   "bbox": [
+    41.2,
+    690.3,
+    47.3,
+    697.0
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "W",
+   "de": "W",
+   "sv": "V",
+   "da": "V",
+   "es": "AG",
+   "fr": "E"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    722.1,
+    99.1,
+    730.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "JEG ER TAKKNEMELIG FOR",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    351.4,
+    722.1,
+    534.3,
+    730.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "I'M GRATEFUL FOR",
+   "de": "ICH BIN DANKBAR FÜR",
+   "sv": "JAG ÄR TACKSAM FÖR",
+   "da": "JEG ER TAKNEMMELIG FOR",
+   "es": "DOY GRACIAS POR",
+   "fr": "JE SUIS RECONNAISSANT(E) POUR"
+  }
+ ]
+}
