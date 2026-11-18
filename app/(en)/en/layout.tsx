@@ -1,29 +1,16 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
 import CampaignCapture from "@/components/analytics/CampaignCapture";
 import ClickTracker from "@/components/analytics/ClickTracker";
 import DiscountCapture from "@/components/analytics/DiscountCapture";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import VercelAnalytics from "@/components/analytics/VercelAnalytics";
 import { CartProvider } from "@/lib/cart-context";
-import { OG_IMAGE_ALT, OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from "@/lib/site";
-import "./globals.css";
+import { OG_IMAGE_ALT_EN, OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from "@/lib/site";
+import { dmSans, playfair } from "../../fonts";
+import "../../globals.css";
 
-// Self-hosted so `next build` never fetches from Google Fonts (a failed fetch fails the deploy).
-const playfair = localFont({
-  src: "./fonts/playfair-display-latin.woff2",
-  variable: "--font-display",
-  weight: "400 900",
-  display: "swap",
-  adjustFontFallback: "Times New Roman",
-});
-
-const dmSans = localFont({
-  src: "./fonts/dm-sans-latin.woff2",
-  variable: "--font-body",
-  weight: "100 1000",
-  display: "swap",
-});
+// Root layout for the English site under /en, so the server-rendered <html> says lang="en".
+// Mirrors app/(nb)/layout.tsx; the cart lives in sessionStorage and is shared across both.
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
@@ -33,20 +20,20 @@ export const metadata: Metadata = {
   },
   openGraph: {
     siteName: SITE_NAME,
-    locale: "nb_NO",
+    locale: "en_GB",
     type: "website",
-    images: [{ url: OG_IMAGE_PATH, alt: OG_IMAGE_ALT }],
+    images: [{ url: OG_IMAGE_PATH, alt: OG_IMAGE_ALT_EN }],
   },
 };
 
-export default function RootLayout({
+export default function EnglishRootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
     <html
-      lang="nb"
+      lang="en"
       className={`${playfair.variable} ${dmSans.variable} antialiased`}
     >
       <body className="min-h-screen">

@@ -1,29 +1,62 @@
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import type { Locale } from "@/lib/i18n/config";
 
-export default function Testimonials() {
-  const testimonials = [
-    {
-      quote:
-        "Daglig Planleggeren har forandret morgenrutinen min. Jeg bruker 5 minutter på å planlegge dagen og får mye mer gjort.",
-      name: "Ida M.",
-      study: "Juss, UiO",
-      initials: "IM",
-    },
-    {
-      quote:
-        "Ukentlig Plan er genial for semesterplanlegging. Endelig ser jeg hele uken i ett blikk i stedet for å glemme ting.",
-      name: "Thea K.",
-      study: "Sykepleie, NTNU",
-      initials: "TK",
-    },
-    {
-      quote:
-        "Elsker at jeg kan fylle inn direkte på iPaden. Slipper å skrive ut, og det ser fortsatt pent ut.",
-      name: "Nora S.",
-      study: "Økonomi, NHH",
-      initials: "NS",
-    },
-  ];
+const people = [
+  { name: "Ida M.", initials: "IM" },
+  { name: "Thea K.", initials: "TK" },
+  { name: "Nora S.", initials: "NS" },
+];
+
+const copy = {
+  nb: {
+    label: "✦ Fra studenter som deg ✦",
+    heading: "Hva andre sier",
+    note: null,
+    quotes: [
+      {
+        quote:
+          "Daglig Planleggeren har forandret morgenrutinen min. Jeg bruker 5 minutter på å planlegge dagen og får mye mer gjort.",
+        study: "Juss, UiO",
+      },
+      {
+        quote:
+          "Ukentlig Plan er genial for semesterplanlegging. Endelig ser jeg hele uken i ett blikk i stedet for å glemme ting.",
+        study: "Sykepleie, NTNU",
+      },
+      {
+        quote:
+          "Elsker at jeg kan fylle inn direkte på iPaden. Slipper å skrive ut, og det ser fortsatt pent ut.",
+        study: "Økonomi, NHH",
+      },
+    ],
+  },
+  en: {
+    label: "✦ From students like you ✦",
+    heading: "What others say",
+    note: "Quotes translated from Norwegian.",
+    quotes: [
+      {
+        quote:
+          "The Daily Planner has changed my morning routine. I spend 5 minutes planning the day and get much more done.",
+        study: "Law, UiO",
+      },
+      {
+        quote:
+          "The Weekly Plan is brilliant for planning the semester. I can finally see the whole week at a glance instead of forgetting things.",
+        study: "Nursing, NTNU",
+      },
+      {
+        quote:
+          "Love that I can fill it in directly on my iPad. No need to print, and it still looks nice.",
+        study: "Economics, NHH",
+      },
+    ],
+  },
+};
+
+export default function Testimonials({ locale = "nb" }: { locale?: Locale }) {
+  const t = copy[locale];
+  const testimonials = t.quotes.map((quote, index) => ({ ...quote, ...people[index] }));
 
   return (
     <section className="bg-brand-cream py-24 md:py-32">
@@ -31,11 +64,12 @@ export default function Testimonials() {
         <FadeInOnScroll>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Fra studenter som deg ✦
+              {t.label}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
-              Hva andre sier
+              {t.heading}
             </h2>
+            {t.note && <p className="text-xs text-brand-medium mt-3">{t.note}</p>}
           </div>
         </FadeInOnScroll>
 

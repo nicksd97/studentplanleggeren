@@ -2,6 +2,8 @@ import { FIVE_PACK_PRICE, type Bundle, type Product } from "./products";
 import type { Catalog } from "./catalog";
 import { catalogPath } from "./catalog";
 import type { faqItems } from "./faq";
+import { localizePath, type Locale } from "./i18n/config";
+import { localizeBundle, localizeProduct } from "./i18n/products";
 import {
   LEGAL_NAME,
   OG_IMAGE_PATH,
@@ -32,14 +34,14 @@ export function organizationJsonLd(): JsonLd {
   };
 }
 
-export function websiteJsonLd(): JsonLd {
+export function websiteJsonLd(locale: Locale = "nb"): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "WebSite",
     "@id": `${SITE_ORIGIN}/#website`,
     name: SITE_NAME,
     url: SITE_ORIGIN,
-    inLanguage: "nb-NO",
+    inLanguage: locale === "en" ? ["nb-NO", "en"] : "nb-NO",
     publisher: {
       "@id": `${SITE_ORIGIN}/#organization`,
     },
@@ -49,9 +51,12 @@ export function websiteJsonLd(): JsonLd {
 export function productOfferJsonLd(
   item: Bundle | Product,
   path = "/#pakker",
-  options: { includeContext?: boolean } = {},
+  options: { includeContext?: boolean; locale?: Locale } = {},
 ): JsonLd {
   const includeContext = options.includeContext ?? true;
+  const locale = options.locale ?? "nb";
+  const localized =
+    "productIds" in item ? localizeBundle(item, locale) : localizeProduct(item, locale);
   const image =
     "image" in item && typeof item.image === "string"
       ? absoluteUrl(`/images/products/${item.image}`)
@@ -60,37 +65,40 @@ export function productOfferJsonLd(
   return {
     ...(includeContext ? { "@context": "https://schema.org" } : {}),
     "@type": "Product",
-    name: item.name,
-    description: item.description,
+    name: localized.name,
+    description: localized.description,
     image,
     offers: {
       "@type": "Offer",
       price: item.price,
       priceCurrency: "NOK",
       availability: "https://schema.org/InStock",
-      url: absoluteUrl(`${path}#${item.slug}`),
+      url: absoluteUrl(`${localizePath(path, locale)}#${item.slug}`),
     },
   };
 }
 
-export function fivePackOfferJsonLd(): JsonLd {
+export function fivePackOfferJsonLd(locale: Locale = "nb"): JsonLd {
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: "5-pakke",
-    description: "Velg fem enkeltplanleggere og betal 99 kr.",
+    name: locale === "en" ? "5-pack" : "5-pakke",
+    description:
+      locale === "en"
+        ? "Choose any five single planners and pay NOK 99. The planners are in Norwegian (Bokmål)."
+        : "Velg fem enkeltplanleggere og betal 99 kr.",
     image: absoluteUrl(OG_IMAGE_PATH),
     offers: {
       "@type": "Offer",
       price: FIVE_PACK_PRICE,
       priceCurrency: "NOK",
       availability: "https://schema.org/InStock",
-      url: absoluteUrl("/produkter"),
+      url: absoluteUrl(localizePath("/produkter", locale)),
     },
   };
 }
 
-export function productListJsonLd(catalog: Catalog): JsonLd {
+export function productListJsonLd(catalog: Catalog, locale: Locale = "nb"): JsonLd {
   const path = catalogPath(catalog.key);
   return {
     "@context": "https://schema.org",
@@ -99,7 +107,7 @@ export function productListJsonLd(catalog: Catalog): JsonLd {
     itemListElement: catalog.products.map((product, index) => ({
       "@type": "ListItem",
       position: index + 1,
-      item: productOfferJsonLd(product, path, { includeContext: false }),
+      item: productOfferJsonLd(product, path, { includeContext: false, locale }),
     })),
   };
 }

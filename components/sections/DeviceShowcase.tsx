@@ -1,45 +1,77 @@
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import type { Locale } from "@/lib/i18n/config";
 
-const cards = [
-  {
-    image: "/images/marketing/1.png",
-    alt: "Fyll inn planleggeren digitalt på PC, Mac, iPad eller nettbrett",
-    label: "Fyll inn digitalt",
-    subtext: "Bruk på PC, Mac, iPad eller nettbrett",
-  },
-  {
-    image: "/images/marketing/3.png",
-    alt: "Årlig, månedlig, ukentlig og daglig planleggere",
-    label: "Årlig, månedlig, ukentlig og daglig",
-    subtext: "Planleggere for alle behov",
-  },
-  {
-    image: "/images/marketing/2.png",
-    alt: "Tilgjengelig i flere størrelser: A4, A5, Letter og Half Letter",
-    label: "Flere størrelser",
-    subtext: "A4, A5, Letter og Half Letter",
-  },
-];
+const images = ["/images/marketing/1.png", "/images/marketing/3.png", "/images/marketing/2.png"];
 
-export default function DeviceShowcase() {
+const copy = {
+  nb: {
+    label: "✦ Bruk den overalt ✦",
+    heading: "Fungerer på alle enheter",
+    intro:
+      "Fyll ut planleggerne digitalt på PC, Mac, iPad eller nettbrett — eller skriv ut på papir. Du velger.",
+    cards: [
+      {
+        alt: "Fyll inn planleggeren digitalt på PC, Mac, iPad eller nettbrett",
+        label: "Fyll inn digitalt",
+        subtext: "Bruk på PC, Mac, iPad eller nettbrett",
+      },
+      {
+        alt: "Årlig, månedlig, ukentlig og daglig planleggere",
+        label: "Årlig, månedlig, ukentlig og daglig",
+        subtext: "Planleggere for alle behov",
+      },
+      {
+        alt: "Tilgjengelig i flere størrelser: A4, A5, Letter og Half Letter",
+        label: "Flere størrelser",
+        subtext: "A4, A5, Letter og Half Letter",
+      },
+    ],
+  },
+  en: {
+    label: "✦ Use it anywhere ✦",
+    heading: "Works on every device",
+    intro:
+      "Fill in the planners digitally on a PC, Mac, iPad or tablet — or print them on paper. Your choice.",
+    cards: [
+      {
+        alt: "Fill in the planner digitally on a PC, Mac, iPad or tablet",
+        label: "Fill in digitally",
+        subtext: "Use on a PC, Mac, iPad or tablet",
+      },
+      {
+        alt: "Yearly, monthly, weekly and daily planners",
+        label: "Yearly, monthly, weekly and daily",
+        subtext: "Planners for every need",
+      },
+      {
+        alt: "Available in several sizes: A4, A5, Letter and Half Letter",
+        label: "Several sizes",
+        subtext: "A4, A5, Letter and Half Letter",
+      },
+    ],
+  },
+};
+
+export default function DeviceShowcase({ locale = "nb" }: { locale?: Locale }) {
+  const t = copy[locale];
+  const cards = t.cards.map((card, index) => ({ ...card, image: images[index] }));
   return (
     <section className="py-24 md:py-32 bg-brand-cream">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
         <FadeInOnScroll>
           {/* Label */}
           <p className="text-center text-sm font-medium text-brand-accent mb-3">
-            ✦ Bruk den overalt ✦
+            {t.label}
           </p>
 
           {/* Heading */}
           <h2 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark text-center mb-4 text-shadow-sm">
-            Fungerer på alle enheter
+            {t.heading}
           </h2>
 
           {/* Subtext */}
           <p className="text-brand-medium text-center max-w-xl mx-auto mb-16">
-            Fyll ut planleggerne digitalt på PC, Mac, iPad eller nettbrett — eller
-            skriv ut på papir. Du velger.
+            {t.intro}
           </p>
         </FadeInOnScroll>
 

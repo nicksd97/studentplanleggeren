@@ -5,6 +5,19 @@ import { currentCampaignTags } from "@/lib/attribution";
 import { currentDiscountCode } from "@/lib/discount";
 import { completePackageCartItem } from "@/lib/products";
 import { trackEvent } from "@/lib/track";
+import { translateApiError } from "@/lib/i18n/api-errors";
+import { useLocale } from "@/lib/i18n/use-locale";
+
+const copy = {
+  nb: {
+    label: "Kjøp komplett pakke med Vipps",
+    error: "Kunne ikke starte Vipps-betaling",
+  },
+  en: {
+    label: "Buy the complete bundle with Vipps",
+    error: "Could not start the Vipps payment",
+  },
+};
 
 type KomplettVippsButtonProps = {
   label?: string;
@@ -15,7 +28,7 @@ type KomplettVippsButtonProps = {
 };
 
 export default function KomplettVippsButton({
-  label = "Kjøp komplett pakke med Vipps",
+  label,
   className = "",
   fullWidth = false,
   source = "ukjent",
@@ -23,6 +36,8 @@ export default function KomplettVippsButton({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const inFlight = useRef(false);
+  const locale = useLocale();
+  const t = copy[locale];
 
   async function startVipps() {
     if (inFlight.current) return;
@@ -47,10 +62,10 @@ export default function KomplettVippsButton({
         window.location.assign(data.redirectUrl);
         return;
       }
-      setError(data.error || "Kunne ikke starte Vipps-betaling");
+      setError(translateApiError(data.error, locale, t.error));
       inFlight.current = false;
     } catch {
-      setError("Kunne ikke starte Vipps-betaling");
+      setError(t.error);
       inFlight.current = false;
     } finally {
       setLoading(false);
@@ -74,7 +89,7 @@ export default function KomplettVippsButton({
             <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
           </svg>
         ) : (
-          label
+          label ?? t.label
         )}
       </button>
       {error ? <p className="mt-2 text-center text-xs text-red-500">{error}</p> : null}

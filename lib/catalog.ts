@@ -1,3 +1,4 @@
+import type { Locale } from "./i18n/config";
 import {
   alleProdukter,
   categoryGroups,
@@ -65,6 +66,64 @@ const categoryCopy: Record<
   },
 };
 
+const categoryCopyEn: Record<
+  CatalogKey,
+  { title: string; description: string; heading: string }
+> = {
+  alle: {
+    title: "All planners — Studentplanlegger",
+    description:
+      "25 fillable PDF planners for students, written in Norwegian (Bokmål). NOK 39 each, any five for NOK 99, or bundles from NOK 149.",
+    heading: "All planners",
+  },
+  daglig: {
+    title: "Daily planners — Studentplanlegger",
+    description:
+      "5 daily PDF planners for students, in Norwegian (Bokmål). Agenda, schedule, health and productivity — fill in on screen or print.",
+    heading: "Daily planners",
+  },
+  ukentlig: {
+    title: "Weekly planners — Studentplanlegger",
+    description:
+      "5 weekly PDF planners in Norwegian (Bokmål). Weekly plan, to-dos, meal plan and weekly review for students.",
+    heading: "Weekly planners",
+  },
+  maanedlig: {
+    title: "Monthly planners — Studentplanlegger",
+    description:
+      "Monthly budget, monthly review and monthly planner as fillable PDFs for students, in Norwegian (Bokmål).",
+    heading: "Monthly planners",
+  },
+  aarlig: {
+    title: "Yearly planner — Studentplanlegger",
+    description:
+      "Yearly planner with a month-by-month overview and goals for the year. Fillable PDF in Norwegian (Bokmål).",
+    heading: "Yearly planner",
+  },
+  produktivitet: {
+    title: "Productivity planners — Studentplanlegger",
+    description:
+      "Pomodoro, project plan, to-do list, action plan and goal planner as fillable PDFs in Norwegian (Bokmål).",
+    heading: "Productivity planners",
+  },
+  helse: {
+    title: "Health & lifestyle — Studentplanlegger",
+    description:
+      "Health planner, home planner and travel planner. Fillable PDFs for students, in Norwegian (Bokmål).",
+    heading: "Health & lifestyle",
+  },
+  sporing: {
+    title: "Tracking tools — Studentplanlegger",
+    description:
+      "Habit tracker, finance tracker and 30-day challenge. Fillable PDFs for students, in Norwegian (Bokmål).",
+    heading: "Tracking tools",
+  },
+};
+
+function copyFor(locale: Locale) {
+  return locale === "en" ? categoryCopyEn : categoryCopy;
+}
+
 export function catalogPath(key: string | undefined): string {
   if (!key || key === "alle") {
     return "/produkter";
@@ -83,16 +142,16 @@ export function resolveCatalog(kategori: string | undefined): Catalog {
   return { key: group.key, products: group.products };
 }
 
-export function catalogTitle(key: string): string {
-  return categoryCopy[normalizeKey(key)].title;
+export function catalogTitle(key: string, locale: Locale = "nb"): string {
+  return copyFor(locale)[normalizeKey(key)].title;
 }
 
-export function catalogDescription(key: string): string {
-  return categoryCopy[normalizeKey(key)].description;
+export function catalogDescription(key: string, locale: Locale = "nb"): string {
+  return copyFor(locale)[normalizeKey(key)].description;
 }
 
-export function catalogHeading(key: string): string {
-  return categoryCopy[normalizeKey(key)].heading;
+export function catalogHeading(key: string, locale: Locale = "nb"): string {
+  return copyFor(locale)[normalizeKey(key)].heading;
 }
 
 function normalizeKey(key: string): CatalogKey {

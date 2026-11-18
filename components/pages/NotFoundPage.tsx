@@ -1,14 +1,25 @@
 import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-export const metadata = {
-  title: "Siden finnes ikke — Studentplanlegger",
-  description:
-    "Denne siden finnes ikke. Gå til Studentplanlegger for å se de fyllbare PDF-planleggerne.",
-  robots: { index: false, follow: true },
+import { localizePath, type Locale } from "@/lib/i18n/config";
+
+const copy = {
+  nb: {
+    heading: "Siden finnes ikke",
+    text: "Vi fant ikke siden du leter etter. Se planleggerne, eller gå tilbake til forsiden.",
+    home: "Til forsiden",
+    planners: "Se planleggerne",
+  },
+  en: {
+    heading: "Page not found",
+    text: "We couldn't find the page you're looking for. Browse the planners, or go back to the home page.",
+    home: "Go to the home page",
+    planners: "See the planners",
+  },
 };
 
-export default function NotFound() {
+export default function NotFoundPage({ locale }: { locale: Locale }) {
+  const t = copy[locale];
   return (
     <>
       <Header />
@@ -18,29 +29,26 @@ export default function NotFound() {
             404
           </p>
           <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-4">
-            Siden finnes ikke
+            {t.heading}
           </h1>
-          <p className="text-brand-medium mb-8">
-            Vi fant ikke siden du leter etter. Se planleggerne, eller gå tilbake til
-            forsiden.
-          </p>
+          <p className="text-brand-medium mb-8">{t.text}</p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
-              href="/"
+              href={localizePath("/", locale)}
               className="inline-flex items-center rounded-full bg-brand-accent px-6 py-2.5 text-sm font-bold text-brand-dark hover:brightness-110 transition-all"
             >
-              Til forsiden
+              {t.home}
             </Link>
             <Link
-              href="/produkter"
+              href={localizePath("/produkter", locale)}
               className="inline-flex items-center rounded-full border border-brand-soft px-6 py-2.5 text-sm font-medium text-brand-dark hover:bg-white transition-all"
             >
-              Se planleggerne
+              {t.planners}
             </Link>
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

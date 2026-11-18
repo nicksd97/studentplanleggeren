@@ -1,16 +1,19 @@
+import type { MetadataRoute } from "next";
 import { guidePaths } from "./guides";
+import { languageAlternates, localizePath, locales, ogLocale, type Locale } from "./i18n/config";
 import { categoryGroups } from "./products";
 
 export interface PageMeta {
   title: string;
   description: string;
-  alternates: { canonical: string };
+  alternates: { canonical: string; languages?: Record<string, string> };
   openGraph: {
     title: string;
     description: string;
     url: string;
     siteName: string;
     locale: string;
+    alternateLocale?: string[];
     type: "website";
     images: { url: string; alt: string }[];
   };
@@ -24,8 +27,9 @@ export const LEGAL_NAME = "Studentplanlegger Davidson";
 export const ORG_NUMBER = "937416156";
 export const OG_IMAGE_PATH = "/images/cover.png";
 export const OG_IMAGE_ALT = "Studentplanlegger — 25 fyllbare PDF-planleggere";
+export const OG_IMAGE_ALT_EN = "Studentplanlegger — 25 fillable PDF planners in Norwegian";
 
-export const robotsDisallow = ["/kasse", "/takk", "/api/"];
+export const robotsDisallow = ["/kasse", "/takk", "/api/", "/en/kasse", "/en/takk"];
 
 export function absoluteUrl(path: string): string {
   if (path.startsWith("http://") || path.startsWith("https://")) {
@@ -47,35 +51,64 @@ export function indexablePaths(): string[] {
   ];
 }
 
+function sitemapPriority(path: string): number {
+  return path === "/"
+    ? 1
+    : path.startsWith("/produkter")
+      ? 0.8
+      : path === "/gratis"
+        ? 0.7
+        : path.startsWith("/guider")
+          ? 0.6
+          : 0.4;
+}
+
+/** One sitemap entry per page and language, each listing every language version (hreflang). */
+export function sitemapEntries(): MetadataRoute.Sitemap {
+  return indexablePaths().flatMap((path) => {
+    const languages = languageAlternates(path, absoluteUrl);
+    return locales.map((locale) => ({
+      url: absoluteUrl(localizePath(path, locale)),
+      changeFrequency: path === "/" ? ("weekly" as const) : ("monthly" as const),
+      priority: sitemapPriority(path),
+      alternates: { languages },
+    }));
+  });
+}
+
 export function pageMeta({
   title,
   description,
   path,
   index = true,
+  locale = "nb",
 }: {
   title: string;
   description: string;
+  /** The Bokmål path; English pages pass the same path with locale "en". */
   path: string;
   index?: boolean;
+  locale?: Locale;
 }): PageMeta {
-  const url = absoluteUrl(path);
+  const url = absoluteUrl(localizePath(path, locale));
   return {
     title,
     description,
-    alternates: {
-      canonical: url,
-    },
+    alternates: index
+      ? { canonical: url, languages: languageAlternates(path, absoluteUrl) }
+      : { canonical: url },
     openGraph: {
       title,
       description,
       url,
       siteName: SITE_NAME,
-      locale: "nb_NO",
+      locale: ogLocale[locale],
+      alternateLocale: [ogLocale[locale === "nb" ? "en" : "nb"]],
       type: "website",
       images: [
         {
           url: OG_IMAGE_PATH,
-          alt: OG_IMAGE_ALT,
+          alt: locale === "nb" ? OG_IMAGE_ALT : OG_IMAGE_ALT_EN,
         },
       ],
     },

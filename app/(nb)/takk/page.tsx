@@ -10,6 +10,9 @@ import { useCart } from "@/lib/cart-context";
 import { getFilesForItems } from "@/lib/product-files";
 import { trackEvent, trackOnce } from "@/lib/track";
 import { cartTier } from "@/lib/track-events";
+import { localizePath, type Locale } from "@/lib/i18n/config";
+import { itemDisplayName } from "@/lib/i18n/products";
+import { useLocale } from "@/lib/i18n/use-locale";
 
 interface OrderData {
   id: string;
@@ -27,6 +30,8 @@ function TakkContent() {
   const searchParams = useSearchParams();
   const token = searchParams.get("token");
   const { clearCart } = useCart();
+  const locale = useLocale();
+  const t = copy[locale];
   const [order, setOrder] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(() => Boolean(token));
   const [error, setError] = useState(() => !token);
@@ -154,13 +159,13 @@ function TakkContent() {
           </div>
         </div>
         <h1 className="font-[family-name:var(--font-display)] text-3xl font-bold text-brand-dark mb-3">
-          Noe gikk galt
+          {t.errorTitle}
         </h1>
         <p className="text-brand-medium mb-10">
-          Vi kunne ikke finne ordren din. Sjekk e-posten din eller kontakt oss for hjelp.
+          {t.errorText}
         </p>
-        <Button href="/" variant="primary">
-          Tilbake til forsiden
+        <Button href={localizePath("/", locale)} variant="primary">
+          {t.home}
         </Button>
       </div>
     );
@@ -191,30 +196,31 @@ function TakkContent() {
       </div>
 
       <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-3">
-        {isPaid ? "Takk for kjøpet!" : isCancelled ? "Betalingen ble avbrutt" : "Venter på betaling"}
+        {isPaid ? t.paidTitle : isCancelled ? t.cancelledTitle : t.pendingTitle}
       </h1>
       <p className="text-brand-medium mb-10">
         {isPaid ? (
           order.email.includes("@") ? (
             <>
-              En bekreftelse er sendt til{" "}
+              {t.confirmationSent}{" "}
               <span className="font-medium text-brand-dark">{order.email}</span>
             </>
           ) : (
-            "Nedlastingen er klar. Ta vare på denne siden hvis du ikke har fått e-post."
+            t.readyNoEmail
           )
         ) : isCancelled ? (
-          "Betalingen ble ikke bekreftet, så nedlastingen er ikke aktivert."
+          t.cancelledText
         ) : (
-          "Vi venter på bekreftelse av betalingen. Ikke lukk siden."
+          t.pendingText
         )}
       </p>
 
       {/* Download section */}
       <div className="bg-white rounded-2xl border border-brand-soft p-6 md:p-8 mb-8 text-left">
         <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark mb-4">
-          Dine produkter
+          {t.products}
         </h2>
+        {t.languageNote && <p className="text-xs text-brand-medium mb-4">{t.languageNote}</p>}
 
         {order.paymentStatus === "completed" && !isExpired ? (
           <>
@@ -242,15 +248,15 @@ function TakkContent() {
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                       </svg>
-                      Last ned
+                      {t.download}
                     </a>
                   </li>
                 );
               })}
             </ul>
             <p className="text-xs text-brand-medium/60 mt-4 text-center">
-              {downloadsLeft} nedlastinger gjenstår &middot; Lenken utløper{" "}
-              {expiryDate.toLocaleDateString("nb-NO", {
+              {t.downloadsLeft(downloadsLeft)} &middot; {t.expires}{" "}
+              {expiryDate.toLocaleDateString(t.dateLocale, {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
@@ -266,7 +272,7 @@ function TakkContent() {
                   className="flex items-center justify-between gap-3 rounded-xl bg-brand-pale/50 p-3"
                 >
                   <span className="text-sm font-medium text-brand-dark truncate">
-                    {item.name}
+                    {itemDisplayName(item, locale)}
                   </span>
                   <button
                     disabled
@@ -275,28 +281,28 @@ function TakkContent() {
                     <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                     </svg>
-                    Last ned
+                    {t.download}
                   </button>
                 </li>
               ))}
             </ul>
             <p className="text-xs text-brand-medium/60 mt-4 text-center">
-              {isExpired
-                ? "Nedlastingslenken har utl\u00f8pt. Kontakt oss for hjelp."
-                : "Nedlasting aktiveres n\u00e5r betalingen er bekreftet"}
+              {isExpired ? t.expired : t.activatesOnPayment}
             </p>
           </>
         )}
       </div>
 
-      <Button href="/" variant="primary">
-        Tilbake til forsiden
+      <Button href={localizePath("/", locale)} variant="primary">
+        {t.home}
       </Button>
     </div>
   );
 }
 
+// Also rendered at /en/takk; the language comes from the URL.
 export default function TakkPage() {
+  const locale = useLocale();
   return (
     <>
       <Header />
@@ -305,7 +311,50 @@ export default function TakkPage() {
           <TakkContent />
         </Suspense>
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }
+
+const copy = {
+  nb: {
+    errorTitle: "Noe gikk galt",
+    errorText: "Vi kunne ikke finne ordren din. Sjekk e-posten din eller kontakt oss for hjelp.",
+    home: "Tilbake til forsiden",
+    paidTitle: "Takk for kjøpet!",
+    cancelledTitle: "Betalingen ble avbrutt",
+    pendingTitle: "Venter på betaling",
+    confirmationSent: "En bekreftelse er sendt til",
+    readyNoEmail: "Nedlastingen er klar. Ta vare på denne siden hvis du ikke har fått e-post.",
+    cancelledText: "Betalingen ble ikke bekreftet, så nedlastingen er ikke aktivert.",
+    pendingText: "Vi venter på bekreftelse av betalingen. Ikke lukk siden.",
+    products: "Dine produkter",
+    languageNote: null,
+    download: "Last ned",
+    downloadsLeft: (count: number) => `${count} nedlastinger gjenstår`,
+    expires: "Lenken utløper",
+    dateLocale: "nb-NO",
+    expired: "Nedlastingslenken har utl\u00f8pt. Kontakt oss for hjelp.",
+    activatesOnPayment: "Nedlasting aktiveres n\u00e5r betalingen er bekreftet",
+  },
+  en: {
+    errorTitle: "Something went wrong",
+    errorText: "We couldn't find your order. Check your email or contact us for help.",
+    home: "Back to the home page",
+    paidTitle: "Thank you for your purchase!",
+    cancelledTitle: "The payment was cancelled",
+    pendingTitle: "Waiting for payment",
+    confirmationSent: "A confirmation has been sent to",
+    readyNoEmail: "Your download is ready. Keep this page if you haven't received an email.",
+    cancelledText: "The payment wasn't confirmed, so the download hasn't been activated.",
+    pendingText: "We're waiting for the payment to be confirmed. Please don't close this page.",
+    products: "Your products",
+    languageNote: "File names and planner contents are in Norwegian (Bokmål).",
+    download: "Download",
+    downloadsLeft: (count: number) => `${count} downloads left`,
+    expires: "The link expires",
+    dateLocale: "en-GB",
+    expired: "The download link has expired. Contact us for help.",
+    activatesOnPayment: "Downloads are activated once the payment is confirmed",
+  },
+} satisfies Record<Locale, unknown>;

@@ -11,7 +11,8 @@ import FAQ from "@/components/sections/FAQ";
 import NewsletterSignup from "@/components/sections/NewsletterSignup";
 import GuideList from "@/components/sections/GuideList";
 import JsonLd from "@/components/seo/JsonLd";
-import { faqItems } from "@/lib/faq";
+import { getFaqItems } from "@/lib/faq";
+import type { Locale } from "@/lib/i18n/config";
 import {
   faqPageJsonLd,
   fivePackOfferJsonLd,
@@ -20,34 +21,14 @@ import {
   websiteJsonLd,
 } from "@/lib/json-ld";
 import { pakker } from "@/lib/products";
-import { pageMeta } from "@/lib/site";
 
-export const metadata = {
-  ...pageMeta({
-    title: "Studentplanlegger — Få orden på studiene",
-    description:
-      "25 fyllbare PDF-planleggere for norske studenter. 39 kr per stykk, 5-pakke 99 kr, temapakker 149 kr og komplett pakke 249 kr.",
-    path: "/",
-  }),
-  keywords: [
-    "studentplanlegger",
-    "planlegger student",
-    "ukentlig plan",
-    "daglig planlegger",
-    "vane tracker",
-    "pomodoro planlegger",
-    "fyllbar pdf",
-    "studieplanlegger",
-  ],
-};
-
-export default function Home() {
+export default function HomePage({ locale }: { locale: Locale }) {
   const structuredData = [
     organizationJsonLd(),
-    websiteJsonLd(),
-    faqPageJsonLd(faqItems),
-    ...pakker.map((bundle) => productOfferJsonLd(bundle, "/#pakker")),
-    fivePackOfferJsonLd(),
+    websiteJsonLd(locale),
+    faqPageJsonLd(getFaqItems(locale)),
+    ...pakker.map((bundle) => productOfferJsonLd(bundle, "/#pakker", { locale })),
+    fivePackOfferJsonLd(locale),
   ];
 
   return (
@@ -55,18 +36,18 @@ export default function Home() {
       <Header />
       <JsonLd data={structuredData} />
       <main>
-        <Hero />
-        <DeviceShowcase />
+        <Hero locale={locale} />
+        <DeviceShowcase locale={locale} />
         <CategoryBubbles />
-        <PainPoints />
+        <PainPoints locale={locale} />
         <BundleShowcase />
-        <HowItWorks />
-        <Testimonials />
-        <FAQ />
-        <GuideList />
+        <HowItWorks locale={locale} />
+        <Testimonials locale={locale} />
+        <FAQ locale={locale} />
+        <GuideList locale={locale} />
         <NewsletterSignup />
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }

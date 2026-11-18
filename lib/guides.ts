@@ -1,4 +1,6 @@
 import { catalogPath } from "./catalog";
+import { localizePath, type Locale } from "./i18n/config";
+import { guidesEn } from "./i18n/guides";
 import { alleProdukter, categoryGroups, type Product } from "./products";
 
 export type GuideCatalogKey = "daglig" | "ukentlig" | "produktivitet" | "sporing";
@@ -195,20 +197,24 @@ export const guides: Guide[] = [
   },
 ];
 
-export function guidePath(slug: string): string {
-  return `/guider/${slug}`;
+export function getGuides(locale: Locale = "nb"): Guide[] {
+  return locale === "en" ? guidesEn : guides;
+}
+
+export function guidePath(slug: string, locale: Locale = "nb"): string {
+  return localizePath(`/guider/${slug}`, locale);
 }
 
 export function guidePaths(): string[] {
   return guides.map((guide) => guidePath(guide.slug));
 }
 
-export function getGuide(slug: string): Guide | undefined {
-  return guides.find((guide) => guide.slug === slug);
+export function getGuide(slug: string, locale: Locale = "nb"): Guide | undefined {
+  return getGuides(locale).find((guide) => guide.slug === slug);
 }
 
-export function guideProductHref(guide: Guide): string {
-  return catalogPath(guide.catalogKey);
+export function guideProductHref(guide: Guide, locale: Locale = "nb"): string {
+  return localizePath(catalogPath(guide.catalogKey), locale);
 }
 
 export function guideProduct(guide: Guide): Product | undefined {

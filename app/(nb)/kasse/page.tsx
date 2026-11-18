@@ -15,10 +15,17 @@ import { FIVE_PACK_PRICE, FIVE_PACK_SIZE, SINGLE_PRICE } from "@/lib/products";
 import Button from "@/components/ui/Button";
 import { trackEvent, trackOnce } from "@/lib/track";
 import { cartTier } from "@/lib/track-events";
+import { translateApiError } from "@/lib/i18n/api-errors";
+import { localizePath, type Locale } from "@/lib/i18n/config";
+import { itemDisplayName } from "@/lib/i18n/products";
+import { useLocale } from "@/lib/i18n/use-locale";
 
+// Also rendered at /en/kasse; the language comes from the URL.
 export default function KassePage() {
   const { items, totalPrice, removeItem } = useCart();
   const cardCheckoutAllowed = isCardCheckoutAllowed();
+  const locale = useLocale();
+  const t = copy[locale];
 
   const [form, setForm] = useState({
     fornavn: "",
@@ -49,17 +56,17 @@ export default function KassePage() {
 
   function validate() {
     const errs: Record<string, string> = {};
-    if (!form.fornavn.trim()) errs.fornavn = "Fornavn er påkrevd";
-    if (!form.etternavn.trim()) errs.etternavn = "Etternavn er påkrevd";
+    if (!form.fornavn.trim()) errs.fornavn = t.errors.firstName;
+    if (!form.etternavn.trim()) errs.etternavn = t.errors.lastName;
     if (!form.epost.trim()) {
-      errs.epost = "E-post er påkrevd";
+      errs.epost = t.errors.email;
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.epost)) {
-      errs.epost = "Ugyldig e-postadresse";
+      errs.epost = t.errors.emailInvalid;
     }
     if (!form.epostBekreft.trim()) {
-      errs.epostBekreft = "Bekreft e-posten din";
+      errs.epostBekreft = t.errors.confirm;
     } else if (form.epost !== form.epostBekreft) {
-      errs.epostBekreft = "E-postadressene stemmer ikke overens";
+      errs.epostBekreft = t.errors.mismatch;
     }
     return errs;
   }
@@ -102,7 +109,7 @@ export default function KassePage() {
       };
       if (!data.ok || !data.code || data.amountNok == null) {
         setApplied(null);
-        setCodeError(data.error || "Ugyldig kode");
+        setCodeError(data.error || t.invalidCode);
         return;
       }
       rememberDiscountCode(data.code);
@@ -115,12 +122,10 @@ export default function KassePage() {
         percent: data.percent ?? 0,
         associationName: data.associationName ?? "",
       });
-      setCodeMessage(
-        `Kode ${data.code} er aktiv — ${data.percent} % for ${data.associationName}. Du betaler ${data.amountNok} kr.`,
-      );
+      setCodeMessage(t.codeActive(data.code, data.percent ?? 0, data.associationName ?? "", data.amountNok));
     } catch {
       setApplied(null);
-      setCodeError("Ugyldig kode");
+      setCodeError(t.invalidCode);
     } finally {
       setCodeBusy(false);
     }
@@ -129,7 +134,7 @@ export default function KassePage() {
   useEffect(() => {
     const betaling = new URLSearchParams(window.location.search).get("betaling");
     if (betaling === "avbrutt") {
-      setPaymentError("Betalingen ble avbrutt eller mislyktes. Ingen ordre er fullført.");
+      setPaymentError(t.cancelled);
     }
     const stored = currentDiscountCode();
     if (stored) {
@@ -181,9 +186,9 @@ export default function KassePage() {
         return;
       }
 
-      setPaymentError(data.error || "Noe gikk galt. Pr\u00f8v igjen.");
+      setPaymentError(translateApiError(data.error, locale, t.genericError));
     } catch {
-      setPaymentError("Noe gikk galt. Pr\u00f8v igjen.");
+      setPaymentError(t.genericError);
     } finally {
       setLoadingProvider(null);
     }
@@ -210,17 +215,17 @@ export default function KassePage() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
             <h1 className="font-[family-name:var(--font-display)] text-2xl font-bold text-brand-dark mb-3">
-              Handlekurven er tom
+              {t.emptyTitle}
             </h1>
             <p className="text-brand-medium mb-6">
-              Legg til produkter før du går til kassen.
+              {t.emptyText}
             </p>
-            <Button href="/#planleggere" data-cta="kasse_tom_produkter" variant="primary">
-              Se produkter
+            <Button href={localizePath("/#planleggere", locale)} data-cta="kasse_tom_produkter" variant="primary">
+              {t.seeProducts}
             </Button>
           </div>
         </main>
-        <Footer />
+        <Footer locale={locale} />
       </>
     );
   }
@@ -231,24 +236,24 @@ export default function KassePage() {
       <main className="min-h-screen pt-28 pb-20 px-4">
         <div className="mx-auto max-w-5xl">
           <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-8 text-center text-shadow-sm">
-            Kasse
+            {t.title}
           </h1>
 
           {/* Progress Indicator */}
           <div className="flex items-center justify-center gap-3 mb-10 text-sm font-medium">
             <span className="flex items-center gap-2 text-brand-dark font-bold">
               <span className="h-6 w-6 rounded-full bg-brand-accent text-brand-dark flex items-center justify-center text-xs shadow-sm">1</span>
-              Info
+              {t.steps[0]}
             </span>
             <span className="w-8 h-[2px] bg-brand-accent/30 rounded-full"></span>
             <span className="flex items-center gap-2 text-brand-medium">
               <span className="h-6 w-6 rounded-full border-2 border-brand-soft flex items-center justify-center text-xs">2</span>
-              Betaling
+              {t.steps[1]}
             </span>
             <span className="w-8 h-[2px] bg-brand-soft rounded-full"></span>
             <span className="flex items-center gap-2 text-brand-medium">
               <span className="h-6 w-6 rounded-full border-2 border-brand-soft flex items-center justify-center text-xs">3</span>
-              Nedlasting
+              {t.steps[2]}
             </span>
           </div>
 
@@ -257,13 +262,13 @@ export default function KassePage() {
             <div className="lg:col-span-3">
               <div className="bg-white rounded-xl shadow-sm border border-brand-soft p-8">
                 <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-6">
-                  Dine opplysninger
+                  {t.details}
                 </h2>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                   <div>
                     <label className="block text-sm font-medium text-brand-dark mb-1.5">
-                      Fornavn
+                      {t.firstName}
                     </label>
                     <input
                       type="text"
@@ -272,7 +277,7 @@ export default function KassePage() {
                       className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
                         errors.fornavn ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                       }`}
-                      placeholder="Ola"
+                      placeholder={t.firstNamePlaceholder}
                     />
                     {errors.fornavn && (
                       <p className="text-xs text-red-500 mt-1">{errors.fornavn}</p>
@@ -280,7 +285,7 @@ export default function KassePage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-brand-dark mb-1.5">
-                      Etternavn
+                      {t.lastName}
                     </label>
                     <input
                       type="text"
@@ -289,7 +294,7 @@ export default function KassePage() {
                       className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
                         errors.etternavn ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                       }`}
-                      placeholder="Nordmann"
+                      placeholder={t.lastNamePlaceholder}
                     />
                     {errors.etternavn && (
                       <p className="text-xs text-red-500 mt-1">{errors.etternavn}</p>
@@ -299,7 +304,7 @@ export default function KassePage() {
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium text-brand-dark mb-1.5">
-                    E-post
+                    {t.email}
                   </label>
                   <input
                     type="email"
@@ -317,7 +322,7 @@ export default function KassePage() {
 
                 <div>
                   <label className="block text-sm font-medium text-brand-dark mb-1.5">
-                    Bekreft e-post
+                    {t.confirmEmail}
                   </label>
                   <input
                     type="email"
@@ -339,7 +344,7 @@ export default function KassePage() {
             <div className="lg:col-span-2">
               <div className="bg-white rounded-xl shadow-sm border border-brand-soft p-8 sticky top-24">
                 <h2 className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark mb-6">
-                  Ordresammendrag
+                  {t.summary}
                 </h2>
 
                 <ul className="space-y-3 mb-6">
@@ -349,17 +354,17 @@ export default function KassePage() {
                         <button
                           onClick={() => removeItem(item.id)}
                           className="text-brand-medium hover:text-red-500 transition-colors shrink-0 cursor-pointer"
-                          aria-label={`Fjern ${item.name}`}
+                          aria-label={t.remove(itemDisplayName(item, locale))}
                         >
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
-                        <span className="text-sm text-brand-dark truncate">{item.name}</span>
+                        <span className="text-sm text-brand-dark truncate">{itemDisplayName(item, locale)}</span>
                       </div>
                       {(item.type === "bundle" || !pricing?.fivePacks) && (
                         <span className="text-sm font-medium text-brand-dark shrink-0">
-                          {item.price} kr
+                          {t.price(item.price)}
                         </span>
                       )}
                     </li>
@@ -371,11 +376,11 @@ export default function KassePage() {
                     <div className="flex justify-between text-sm">
                       <span className="text-brand-medium">
                         {pricing.fivePacks === 1
-                          ? "5-pakke"
-                          : `${pricing.fivePacks} × 5-pakke`}
+                          ? t.fivePack
+                          : `${pricing.fivePacks} × ${t.fivePack}`}
                       </span>
                       <span className="text-brand-dark">
-                        {pricing.fivePacks * FIVE_PACK_PRICE} kr
+                        {t.price(pricing.fivePacks * FIVE_PACK_PRICE)}
                       </span>
                     </div>
                   )}
@@ -384,18 +389,16 @@ export default function KassePage() {
                     pricing.singleCount % FIVE_PACK_SIZE > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-brand-medium">
-                        {pricing.singleCount % FIVE_PACK_SIZE === 1
-                          ? "1 enkeltplanlegger"
-                          : `${pricing.singleCount % FIVE_PACK_SIZE} enkeltplanleggere`}
+                        {t.singles(pricing.singleCount % FIVE_PACK_SIZE)}
                       </span>
                       <span className="text-brand-dark">
-                        {(pricing.singleCount % FIVE_PACK_SIZE) * SINGLE_PRICE} kr
+                        {t.price((pricing.singleCount % FIVE_PACK_SIZE) * SINGLE_PRICE)}
                       </span>
                     </div>
                   )}
                   <div className="pt-2 border-t border-brand-soft space-y-2">
                     <label className="block text-sm font-medium text-brand-dark">
-                      Rabattkode
+                      {t.discountCode}
                     </label>
                     <div className="flex gap-2">
                       <input
@@ -407,7 +410,7 @@ export default function KassePage() {
                           setCodeMessage("");
                         }}
                         className="min-w-0 flex-1 rounded-lg border border-brand-soft px-3 py-2.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent"
-                        placeholder="f.eks. ABAKUS20"
+                        placeholder={t.discountPlaceholder}
                         autoComplete="off"
                         spellCheck={false}
                       />
@@ -417,11 +420,11 @@ export default function KassePage() {
                         disabled={codeBusy || loading}
                         className="shrink-0 rounded-lg border border-brand-soft bg-white px-3 py-2.5 text-sm font-medium text-brand-dark hover:bg-brand-cream/60 disabled:opacity-60"
                       >
-                        Bruk
+                        {t.apply}
                       </button>
                     </div>
                     {codeError ? (
-                      <p className="text-xs text-red-500">Ugyldig kode</p>
+                      <p className="text-xs text-red-500">{t.invalidCode}</p>
                     ) : null}
                     {codeMessage ? (
                       <p className="text-xs text-brand-medium">{codeMessage}</p>
@@ -429,13 +432,13 @@ export default function KassePage() {
                   </div>
                   {applied && applied.discountNok > 0 ? (
                     <div className="flex justify-between text-sm">
-                      <span className="text-brand-medium">Katalogpris {applied.listAmountNok} kr</span>
+                      <span className="text-brand-medium">{t.listPrice(applied.listAmountNok)}</span>
                     </div>
                   ) : null}
                   <div className="flex justify-between pt-2 border-t border-brand-soft">
-                    <span className="font-medium text-brand-dark">Totalt</span>
+                    <span className="font-medium text-brand-dark">{t.total}</span>
                     <span className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark">
-                      {displayTotal} kr
+                      {t.price(displayTotal)}
                     </span>
                   </div>
                 </div>
@@ -455,14 +458,14 @@ export default function KassePage() {
                       </svg>
                     ) : (
                       <>
-                        Betal med Vipps
+                        {t.payVipps}
                         <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
-                          Anbefalt
+                          {t.recommended}
                         </span>
                       </>
                     )}
                   </button>
-                  <p className="text-center text-xs text-brand-medium">eller</p>
+                  <p className="text-center text-xs text-brand-medium">{t.or}</p>
                   <button
                     type="button"
                     onClick={() => handlePayment("stripe")}
@@ -480,14 +483,14 @@ export default function KassePage() {
                         <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
                         </svg>
-                        Betal med kort
+                        {t.payCard}
                       </>
                     )}
                   </button>
                 </div>
                 {!cardCheckoutAllowed && (
                   <p className="text-center text-xs text-brand-medium mb-3">
-                    {CARD_CHECKOUT_DISABLED_MESSAGE}
+                    {locale === "nb" ? CARD_CHECKOUT_DISABLED_MESSAGE : t.cardDisabled}
                   </p>
                 )}
 
@@ -496,17 +499,108 @@ export default function KassePage() {
                 )}
 
                 <p className="text-center text-xs text-brand-medium mb-2">
-                  Trygg betaling · Umiddelbar nedlasting
+                  {t.secure}
                 </p>
                 <p className="text-center text-[10px] text-brand-medium/60">
-                  Ved å kjøpe godtar du våre kjøpsvilkår
+                  {t.acceptTerms}
                 </p>
               </div>
             </div>
           </div>
         </div>
       </main>
-      <Footer />
+      <Footer locale={locale} />
     </>
   );
 }
+
+const copy = {
+  nb: {
+    errors: {
+      firstName: "Fornavn er påkrevd",
+      lastName: "Etternavn er påkrevd",
+      email: "E-post er påkrevd",
+      emailInvalid: "Ugyldig e-postadresse",
+      confirm: "Bekreft e-posten din",
+      mismatch: "E-postadressene stemmer ikke overens",
+    },
+    invalidCode: "Ugyldig kode",
+    codeActive: (code: string, percent: number, association: string, amount: number) =>
+      `Kode ${code} er aktiv — ${percent} % for ${association}. Du betaler ${amount} kr.`,
+    cancelled: "Betalingen ble avbrutt eller mislyktes. Ingen ordre er fullført.",
+    genericError: "Noe gikk galt. Pr\u00f8v igjen.",
+    emptyTitle: "Handlekurven er tom",
+    emptyText: "Legg til produkter før du går til kassen.",
+    seeProducts: "Se produkter",
+    title: "Kasse",
+    steps: ["Info", "Betaling", "Nedlasting"],
+    details: "Dine opplysninger",
+    firstName: "Fornavn",
+    firstNamePlaceholder: "Ola",
+    lastName: "Etternavn",
+    lastNamePlaceholder: "Nordmann",
+    email: "E-post",
+    confirmEmail: "Bekreft e-post",
+    summary: "Ordresammendrag",
+    remove: (name: string) => `Fjern ${name}`,
+    price: (amount: number) => `${amount} kr`,
+    fivePack: "5-pakke",
+    singles: (count: number) => (count === 1 ? "1 enkeltplanlegger" : `${count} enkeltplanleggere`),
+    discountCode: "Rabattkode",
+    discountPlaceholder: "f.eks. ABAKUS20",
+    apply: "Bruk",
+    listPrice: (amount: number) => `Katalogpris ${amount} kr`,
+    total: "Totalt",
+    payVipps: "Betal med Vipps",
+    recommended: "Anbefalt",
+    or: "eller",
+    payCard: "Betal med kort",
+    cardDisabled: CARD_CHECKOUT_DISABLED_MESSAGE,
+    secure: "Trygg betaling · Umiddelbar nedlasting",
+    acceptTerms: "Ved å kjøpe godtar du våre kjøpsvilkår",
+  },
+  en: {
+    errors: {
+      firstName: "First name is required",
+      lastName: "Last name is required",
+      email: "Email is required",
+      emailInvalid: "Invalid email address",
+      confirm: "Please confirm your email",
+      mismatch: "The email addresses don't match",
+    },
+    invalidCode: "Invalid code",
+    codeActive: (code: string, percent: number, association: string, amount: number) =>
+      `Code ${code} is active — ${percent}% for ${association}. You pay NOK ${amount}.`,
+    cancelled: "The payment was cancelled or failed. No order has been completed.",
+    genericError: "Something went wrong. Please try again.",
+    emptyTitle: "Your cart is empty",
+    emptyText: "Add some products before you go to checkout.",
+    seeProducts: "See products",
+    title: "Checkout",
+    steps: ["Details", "Payment", "Download"],
+    details: "Your details",
+    firstName: "First name",
+    firstNamePlaceholder: "Jane",
+    lastName: "Last name",
+    lastNamePlaceholder: "Smith",
+    email: "Email",
+    confirmEmail: "Confirm email",
+    summary: "Order summary",
+    remove: (name: string) => `Remove ${name}`,
+    price: (amount: number) => `NOK ${amount}`,
+    fivePack: "5-pack",
+    singles: (count: number) => (count === 1 ? "1 single planner" : `${count} single planners`),
+    discountCode: "Discount code",
+    discountPlaceholder: "e.g. ABAKUS20",
+    apply: "Apply",
+    listPrice: (amount: number) => `List price NOK ${amount}`,
+    total: "Total",
+    payVipps: "Pay with Vipps",
+    recommended: "Recommended",
+    or: "or",
+    payCard: "Pay by card",
+    cardDisabled: "Card payment isn't available yet. Please pay with Vipps.",
+    secure: "Secure payment · Instant download · Planners in Norwegian (Bokmål)",
+    acceptTerms: "By purchasing, you accept our terms of sale",
+  },
+} satisfies Record<Locale, unknown>;

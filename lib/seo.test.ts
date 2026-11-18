@@ -259,7 +259,7 @@ describe("structured data", () => {
       "components/sections/HowItWorks.tsx",
       "components/sections/ProductGrid.tsx",
       "components/sections/Bundles.tsx",
-      "app/kasse/page.tsx",
+      "app/(nb)/kasse/page.tsx",
     ];
     const joined = files
       .map((file) => readFileSync(new URL(`../${file}`, import.meta.url), "utf8"))

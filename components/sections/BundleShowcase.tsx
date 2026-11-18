@@ -8,16 +8,58 @@ import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
 import { trackEvent } from "@/lib/track";
 import { priceTierFor } from "@/lib/track-events";
+import { localizePath, type Locale } from "@/lib/i18n/config";
+import { itemDisplayName, localizeBundle } from "@/lib/i18n/products";
+import { useLocale } from "@/lib/i18n/use-locale";
 
-const includes = [
-  "5 daglige planleggere",
-  "5 ukentlige planleggere",
-  "3 månedlige planleggere",
-  "1 årsplanlegger",
-  "5 produktivitetsverktøy",
-  "3 helse og livsstil",
-  "3 sporingsverktøy",
-];
+const copy = {
+  nb: {
+    label: "✦ Alt du trenger ✦",
+    heading: "Studentplanlegger Komplett",
+    includedTitle: "25 planleggere inkludert:",
+    includes: [
+      "5 daglige planleggere",
+      "5 ukentlige planleggere",
+      "3 månedlige planleggere",
+      "1 årsplanlegger",
+      "5 produktivitetsverktøy",
+      "3 helse og livsstil",
+      "3 sporingsverktøy",
+    ],
+    currency: "kr",
+    buyKomplett: (price: number) => `Kjøp komplett pakke med Vipps — ${price} kr`,
+    seeAll: "Se alle 25 planleggere",
+    orPick: "✦ Eller velg en pakke ✦",
+    packsNote: "Temapakker 149 kr. Velg fem enkeltplanleggere i handlekurven for 99 kr.",
+    bundleMeta: (count: number, price: number) => `${count} planleggere · ${price} kr`,
+    buy: "Kjøp",
+    alreadyInCart: "Allerede i handlekurven",
+    added: "Lagt til \u2713",
+  },
+  en: {
+    label: "✦ Everything you need ✦",
+    heading: "Studentplanlegger Complete",
+    includedTitle: "25 planners included:",
+    includes: [
+      "5 daily planners",
+      "5 weekly planners",
+      "3 monthly planners",
+      "1 yearly planner",
+      "5 productivity tools",
+      "3 health & lifestyle",
+      "3 tracking tools",
+    ],
+    currency: "NOK",
+    buyKomplett: (price: number) => `Buy the complete bundle with Vipps — NOK ${price}`,
+    seeAll: "See all 25 planners",
+    orPick: "✦ Or pick a bundle ✦",
+    packsNote: "Theme bundles NOK 149. Put any five single planners in the cart for NOK 99.",
+    bundleMeta: (count: number, price: number) => `${count} planners · NOK ${price}`,
+    buy: "Buy",
+    alreadyInCart: "Already in your cart",
+    added: "Added \u2713",
+  },
+} satisfies Record<Locale, unknown>;
 
 function BundleButton({
   bundleId,
@@ -32,11 +74,12 @@ function BundleButton({
 }) {
   const { addItem, isInCart } = useCart();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const t = copy[useLocale()];
   const bundle = pakker.find((p) => p.id === bundleId)!;
 
   function handleAdd() {
     if (isInCart(bundle.id)) {
-      setFeedback("Allerede i handlekurven");
+      setFeedback(t.alreadyInCart);
       setTimeout(() => setFeedback(null), 2000);
       return;
     }
@@ -47,7 +90,7 @@ function BundleButton({
       type: "bundle",
     });
     trackEvent("add_to_cart", { product: bundle.id, tier: priceTierFor({ id: bundle.id, type: "bundle", price: bundle.price }) });
-    setFeedback("Lagt til \u2713");
+    setFeedback(t.added);
     setTimeout(() => setFeedback(null), 2000);
   }
 
@@ -59,8 +102,10 @@ function BundleButton({
 }
 
 export default function BundleShowcase() {
-  const featured = pakker.find((p) => p.featured)!;
-  const categoryBundles = pakker.filter((p) => !p.featured);
+  const locale = useLocale();
+  const t = copy[locale];
+  const featured = localizeBundle(pakker.find((p) => p.featured)!, locale);
+  const categoryBundles = pakker.filter((p) => !p.featured).map((p) => localizeBundle(p, locale));
 
   return (
     <section id="pakker" className="relative bg-brand-pale py-24 md:py-32">
@@ -70,10 +115,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Alt du trenger ✦
+              {t.label}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-brand-dark mb-4 text-shadow-sm">
-              Studentplanlegger Komplett
+              {t.heading}
             </h2>
             <p className="text-brand-medium max-w-2xl mx-auto">
               {featured.description}
@@ -85,10 +130,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={100}>
           <div className="flex justify-center items-center py-12 max-w-2xl mx-auto group">
             {[
-              { src: "daglig-planlegger.jpg", alt: "Daglig Planlegger", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
-              { src: "ukentlig-plan.jpg", alt: "Ukentlig Plan", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
-              { src: "pomodoro-planlegger.jpg", alt: "Pomodoro Planlegger", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
-              { src: "vane-tracker.jpg", alt: "Vane Tracker", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
+              { src: "daglig-planlegger.jpg", id: "daglig-planlegger", alt: "Daglig Planlegger", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
+              { src: "ukentlig-plan.jpg", id: "ukentlig-plan", alt: "Ukentlig Plan", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
+              { src: "pomodoro-planlegger.jpg", id: "pomodoro-planlegger", alt: "Pomodoro Planlegger", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
+              { src: "vane-tracker.jpg", id: "vane-tracker", alt: "Vane Tracker", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
             ].map((item, i) => (
               <div
                 key={item.src}
@@ -96,7 +141,7 @@ export default function BundleShowcase() {
               >
                 <img
                   src={`/images/products/${item.src}`}
-                  alt={item.alt}
+                  alt={itemDisplayName({ id: item.id, name: item.alt }, locale)}
                   className="w-full h-full object-cover object-top"
                 />
               </div>
@@ -108,10 +153,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={200}>
           <div className="max-w-lg mx-auto mb-10 mt-6">
             <p className="text-sm font-bold text-brand-dark text-center mb-5">
-              25 planleggere inkludert:
+              {t.includedTitle}
             </p>
             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-              {includes.map((item) => (
+              {t.includes.map((item) => (
                 <div key={item} className="flex items-center gap-2">
                   <svg
                     className="h-5 w-5 text-brand-accent shrink-0"
@@ -140,23 +185,23 @@ export default function BundleShowcase() {
               <span className="font-[family-name:var(--font-display)] text-6xl md:text-7xl font-bold text-brand-dark text-shadow-sm">
                 {featured.price}
               </span>
-              <span className="text-brand-dark/70 text-2xl font-bold">kr</span>
+              <span className="text-brand-dark/70 text-2xl font-bold">{t.currency}</span>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <KomplettVippsButton
                 source="pakker"
-                label={`Kjøp komplett pakke med Vipps — ${featured.price} kr`}
+                label={t.buyKomplett(featured.price)}
                 className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
               />
               <Button
-                href="/produkter"
+                href={localizePath("/produkter", locale)}
                 data-cta="pakker_produkter"
                 variant="outline"
                 className="text-lg px-10 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 bg-white/50"
               >
-                Se alle 25 planleggere
+                {t.seeAll}
               </Button>
             </div>
           </div>
@@ -166,10 +211,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={400}>
           <div className="border-t border-brand-soft/60 pt-10">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium text-center mb-6">
-              ✦ Eller velg en pakke ✦
+              {t.orPick}
             </p>
             <p className="text-sm text-brand-medium text-center mb-6">
-              Temapakker 149 kr. Velg fem enkeltplanleggere i handlekurven for 99 kr.
+              {t.packsNote}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               {categoryBundles.map((bundle) => (
@@ -182,12 +227,12 @@ export default function BundleShowcase() {
                       {bundle.name}
                     </p>
                     <p className="text-xs text-brand-medium mt-0.5">
-                      {bundle.productIds.length} planleggere · {bundle.price} kr
+                      {t.bundleMeta(bundle.productIds.length, bundle.price)}
                     </p>
                   </div>
                   <BundleButton
                     bundleId={bundle.id}
-                    label="Kjøp"
+                    label={t.buy}
                     variant="secondary"
                     className="text-xs px-5 py-2 shrink-0 transition-transform duration-300 group-hover:scale-105"
                   />

@@ -114,7 +114,7 @@ describe("tracking wiring", () => {
   const read = (path: string) => readFileSync(new URL(path, import.meta.url), "utf8");
 
   it("mounts Vercel Analytics with URL redaction and the click tracker", () => {
-    const layout = read("../app/layout.tsx");
+    const layout = read("../app/(nb)/layout.tsx");
     assert.match(layout, /<VercelAnalytics \/>/);
     assert.match(layout, /<ClickTracker \/>/);
     assert.match(read("../components/analytics/VercelAnalytics.tsx"), /beforeSend=\{redactAnalyticsEvent\}/);
@@ -127,7 +127,7 @@ describe("tracking wiring", () => {
   });
 
   it("never passes form fields or emails to trackEvent", () => {
-    for (const file of ["../app/kasse/page.tsx", "../components/sections/NewsletterSignup.tsx", "../app/takk/page.tsx"]) {
+    for (const file of ["../app/(nb)/kasse/page.tsx", "../components/sections/NewsletterSignup.tsx", "../app/(nb)/takk/page.tsx"]) {
       const calls = read(file).match(/track(?:Event|Once)\([^;]*;/gs) ?? [];
       assert.ok(calls.length > 0, file);
       for (const call of calls) {

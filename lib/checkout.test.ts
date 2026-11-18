@@ -376,7 +376,7 @@ describe("card checkout", () => {
   });
 
   it("keeps Vipps first and visually primary, with card as a working secondary option", () => {
-    const source = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const source = readFileSync(new URL("../app/(nb)/kasse/page.tsx", import.meta.url), "utf8");
     assert.match(source, /Betal med Vipps/);
     assert.match(source, /Betal med kort/);
     assert.match(source, /handlePayment\("vipps"\)/);
@@ -388,13 +388,13 @@ describe("card checkout", () => {
   });
 
   it("keeps the checkout form for card, not for the homepage complett Vipps button", () => {
-    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const kasse = readFileSync(new URL("../app/(nb)/kasse/page.tsx", import.meta.url), "utf8");
     assert.match(kasse, /Fornavn/);
     assert.match(kasse, /E-post/);
     assert.match(kasse, /Betal med kort/);
     assert.match(kasse, /handlePayment\("stripe"\)/);
 
-    const takk = readFileSync(new URL("../app/takk/page.tsx", import.meta.url), "utf8");
+    const takk = readFileSync(new URL("../app/(nb)/takk/page.tsx", import.meta.url), "utf8");
     assert.match(takk, /Nedlastingen er klar/);
     assert.match(takk, /order\.email\.includes\("@"\)/);
   });
@@ -1159,8 +1159,8 @@ describe("marketing attribution", () => {
       new URL("../components/ui/KomplettVippsButton.tsx", import.meta.url),
       "utf8",
     );
-    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
-    const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+    const kasse = readFileSync(new URL("../app/(nb)/kasse/page.tsx", import.meta.url), "utf8");
+    const layout = readFileSync(new URL("../app/(nb)/layout.tsx", import.meta.url), "utf8");
     const ordersApi = readFileSync(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
 
     assert.match(button, /currentCampaignTags/);
@@ -1349,9 +1349,9 @@ describe("linjeforening discount codes", () => {
       new URL("../components/ui/KomplettVippsButton.tsx", import.meta.url),
       "utf8",
     );
-    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const kasse = readFileSync(new URL("../app/(nb)/kasse/page.tsx", import.meta.url), "utf8");
     const ordersApi = readFileSync(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
-    const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+    const layout = readFileSync(new URL("../app/(nb)/layout.tsx", import.meta.url), "utf8");
     const preview = readFileSync(new URL("../app/api/rabattkode/route.ts", import.meta.url), "utf8");
 
     assert.match(button, /currentDiscountCode/);
