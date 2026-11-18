@@ -6,34 +6,19 @@ import { useCart } from "@/lib/cart-context";
 import { trackEvent, trackOnce } from "@/lib/track";
 import { priceTierFor } from "@/lib/track-events";
 import Button from "./Button";
-import { useLocale } from "@/lib/i18n/use-locale";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
+import { pdfLanguageCopy } from "@/lib/i18n/products";
 import { alleProdukter } from "@/lib/products";
-
-const copy = {
-  nb: {
-    alreadyInCart: "Allerede i handlekurven",
-    added: "Lagt til \u2713",
-    badge: "Fyllbar PDF",
-    pages: "sider",
-    price: (price: number) => `${price} kr`,
-    buy: "Kjøp nå",
-  },
-  en: {
-    alreadyInCart: "Already in your cart",
-    added: "Added \u2713",
-    badge: "Fillable PDF · Norwegian",
-    pages: "pages",
-    price: (price: number) => `NOK ${price}`,
-    buy: "Buy now",
-  },
-};
 
 const VIEW_THRESHOLD = 0.6;
 const VIEW_DWELL_MS = 1500;
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem, isInCart } = useCart();
-  const t = copy[useLocale()];
+  const messages = useMessages();
+  const t = messages.productCard;
+  const { point, locale } = usePricing();
+  const pdfLanguage = pdfLanguageCopy(locale, messages).short;
   const [feedback, setFeedback] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const tier = priceTierFor({ id: product.id, type: "product", price: product.price });
@@ -106,7 +91,7 @@ export default function ProductCard({ product }: { product: Product }) {
         
         <div className="absolute bottom-3 left-3 z-10">
           <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold text-brand-dark backdrop-blur-sm shadow-sm">
-            {t.badge}
+            {pdfLanguage ? `${t.badge} · ${pdfLanguage}` : t.badge}
           </span>
         </div>
         {product.pages > 1 && (
@@ -153,7 +138,7 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Price + CTA */}
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-brand-soft/30">
           <span className="font-[family-name:var(--font-display)] text-3xl font-black text-brand-dark">
-            {t.price(product.price)}
+            {point(product.price)}
           </span>
           <Button
             variant="primary"

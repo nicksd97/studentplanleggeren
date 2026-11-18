@@ -2,38 +2,10 @@ import Link from "next/link";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import { getGuides, guidePath } from "@/lib/guides";
 import { localizePath, type Locale } from "@/lib/i18n/config";
-
-const copy = {
-  nb: {
-    tagline: "Planleggere og produktivitetsverktøy laget for norske studenter.",
-    products: "Produkter",
-    komplett: "Komplett pakke",
-    daily: "Daglig Pakke",
-    weekly: "Ukentlig Pakke",
-    all: "Alle planleggere",
-    guides: "Guider",
-    free: "Gratis smakebit",
-    privacy: "Personvern",
-    terms: "Vilkår",
-    madeWith: "Laget med kjærlighet for norske studenter",
-  },
-  en: {
-    tagline: "Planners and productivity tools made for students in Norway. The planners are in Norwegian (Bokmål).",
-    products: "Products",
-    komplett: "Complete bundle",
-    daily: "Daily Bundle",
-    weekly: "Weekly Bundle",
-    all: "All planners",
-    guides: "Guides",
-    free: "Free sample",
-    privacy: "Privacy",
-    terms: "Terms",
-    madeWith: "Made with love for students in Norway",
-  },
-};
+import { getMessages } from "@/lib/i18n/messages";
 
 export default function Footer({ locale = "nb" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).footer;
   const href = (path: string) => localizePath(path, locale);
   return (
     <footer className="bg-brand-dark text-white">
@@ -99,11 +71,11 @@ export default function Footer({ locale = "nb" }: { locale?: Locale }) {
 
           {/* Info */}
           <div>
-            <h4 className="font-medium text-sm mb-4 text-white/80">Info</h4>
+            <h4 className="font-medium text-sm mb-4 text-white/80">{t.info}</h4>
             <ul className="space-y-2.5">
               <li>
                 <Link href={href("/#faq")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  FAQ
+                  {t.faq}
                 </Link>
               </li>
               <li>
@@ -136,13 +108,9 @@ export default function Footer({ locale = "nb" }: { locale?: Locale }) {
         {/* Bottom line */}
         <div className="mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-2 relative before:absolute before:top-0 before:left-0 before:w-full before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent">
           <p className="text-sm text-white/40">
-            &copy; 2026 Studentplanlegger · Studentplanlegger Davidson · {locale === "en" ? "Org. no." : "Org.nr:"} 937416156
+            &copy; 2026 Studentplanlegger · Studentplanlegger Davidson · {t.orgNo} 937416156
           </p>
-          <LanguageSwitcher
-            className="text-white/60"
-            linkClassName="hover:text-brand-accent transition-colors"
-            activeClassName="font-bold text-white"
-          />
+          <LanguageSwitcher tone="dark" placement="up" />
           <p className="text-sm text-white/40">
             {t.madeWith}
           </p>

@@ -1,9 +1,24 @@
-import { isEnglishPath, localizePath } from "./config";
+import { currencyForCountry, defaultCurrencyForLocale, parseCurrency, type Currency } from "../currency";
+import { isLocale, isPrefixedPath, localeFromPathname, localizePath, type Locale } from "./config";
 
-// Pure decision logic for proxy.ts: should this request for an unprefixed (Bokmål)
-// page be sent to its /en twin? Kept free of Next imports so it is unit-testable.
+// Pure decision logic for proxy.ts: should this request for an unprefixed (Bokmål) page be
+// sent to its twin in another language, and which currency cookie should it get? Kept free of
+// Next imports so it is unit-testable.
 
 export const NORWEGIAN_COUNTRIES = new Set(["NO", "SJ", "BV"]);
+const SWEDISH_COUNTRIES = new Set(["SE"]);
+const DANISH_COUNTRIES = new Set(["DK", "GL", "FO"]);
+const GERMAN_COUNTRIES = new Set(["DE", "AT", "LI"]);
+/** Spain and Spanish-speaking Latin America. */
+export const SPANISH_COUNTRIES = new Set([
+  "ES", "MX", "AR", "CO", "CL", "PE", "VE", "EC", "GT", "CU", "BO", "DO", "HN", "PY", "SV",
+  "NI", "CR", "PA", "UY", "PR",
+]);
+/** France, Monaco and francophone countries and territories. */
+export const FRENCH_COUNTRIES = new Set([
+  "FR", "MC", "SN", "CI", "ML", "BF", "NE", "TG", "BJ", "GA", "CG", "CD", "CM", "MG", "HT",
+  "RE", "GP", "MQ", "GF", "YT", "PF", "NC",
+]);
 
 /** Headers a geo/language decision depends on; sent as Vary on unprefixed pages. */
 export const LOCALE_VARY = "Cookie, Accept-Language, x-vercel-ip-country";
@@ -63,10 +78,22 @@ export function isExcludedPath(pathname: string): boolean {
   );
 }
 
-function isNorwegianTag(tag: string): boolean {
-  const primary = tag.split("-")[0];
-  return primary === "nb" || primary === "nn" || primary === "no";
+/** Primary language subtag: "de-CH" -> "de", "NB" -> "nb". */
+function primary(tag: string): string {
+  return tag.split("-")[0].toLowerCase();
 }
+
+const TAG_LOCALE: Record<string, Locale> = {
+  nb: "nb",
+  nn: "nb",
+  no: "nb",
+  en: "en",
+  de: "de",
+  sv: "sv",
+  da: "da",
+  es: "es",
+  fr: "fr",
+};
 
 /** Parses Accept-Language into tags ordered by preference (q desc, then header order). */
 export function parseAcceptLanguage(header: string | null | undefined): string[] {
@@ -92,16 +119,55 @@ export function parseAcceptLanguage(header: string | null | undefined): string[]
 }
 
 /**
- * "nb" when Norwegian is the top preference or ranks above English, "en" when the
- * visitor clearly prefers another language, null when the header is absent/unclear.
+ * The visitor's most preferred language among `candidates` (primary subtags), or null when the
+ * header names none of them.
  */
-export function localeFromAcceptLanguage(header: string | null | undefined): "nb" | "en" | null {
+export function preferredLanguage(
+  header: string | null | undefined,
+  candidates: readonly string[],
+): string | null {
+  for (const tag of parseAcceptLanguage(header)) {
+    const language = primary(tag);
+    if (candidates.includes(language)) return language;
+  }
+  return null;
+}
+
+/**
+ * Locale from Accept-Language alone (no country known): the first supported language wins
+ * (nb/nn/no -> nb), anything else -> en. null when the header is absent or empty.
+ */
+export function localeFromAcceptLanguage(header: string | null | undefined): Locale | null {
   const tags = parseAcceptLanguage(header);
   if (tags.length === 0) return null;
-  const norwegian = tags.findIndex(isNorwegianTag);
-  if (norwegian === 0) return "nb";
-  const english = tags.findIndex((tag) => tag.split("-")[0] === "en");
-  if (norwegian !== -1 && (english === -1 || norwegian < english)) return "nb";
+  for (const tag of tags) {
+    const locale = TAG_LOCALE[primary(tag)];
+    if (locale) return locale;
+  }
+  return "en";
+}
+
+/** Site language for a visitor's country; Accept-Language settles multilingual countries. */
+export function localeForCountry(country: string, acceptLanguage?: string | null): Locale {
+  const code = country.trim().toUpperCase();
+  if (NORWEGIAN_COUNTRIES.has(code)) return "nb";
+  if (SWEDISH_COUNTRIES.has(code)) return "sv";
+  if (DANISH_COUNTRIES.has(code)) return "da";
+  if (GERMAN_COUNTRIES.has(code)) return "de";
+  if (code === "CH") {
+    return preferredLanguage(acceptLanguage, ["de", "fr"]) === "fr" ? "fr" : "de";
+  }
+  if (code === "LU") {
+    const language = preferredLanguage(acceptLanguage, ["fr", "de", "nl", "en"]);
+    if (language === "de") return "de";
+    if (language === "nl" || language === "en") return "en";
+    return "fr";
+  }
+  if (code === "BE" || code === "CA") {
+    return preferredLanguage(acceptLanguage, ["fr", "de", "nl", "en"]) === "fr" ? "fr" : "en";
+  }
+  if (SPANISH_COUNTRIES.has(code)) return "es";
+  if (FRENCH_COUNTRIES.has(code)) return "fr";
   return "en";
 }
 
@@ -117,46 +183,61 @@ export interface LocaleRequest {
 }
 
 export type LocaleDecision =
-  | { action: "redirect"; location: string; reason: string }
-  | { action: "next"; vary: boolean; reason: string };
+  | { action: "redirect"; location: string; locale: Locale; reason: string }
+  | { action: "next"; vary: boolean; locale: Locale; reason: string };
 
 export function decideLocale(request: LocaleRequest): LocaleDecision {
-  const method = request.method.toUpperCase();
-  if (method !== "GET" && method !== "HEAD") {
-    return { action: "next", vary: false, reason: "method" };
-  }
-  if (isExcludedPath(request.pathname)) {
-    return { action: "next", vary: false, reason: "excluded" };
-  }
-  // An explicitly requested English page is always served.
-  if (isEnglishPath(request.pathname)) {
-    return { action: "next", vary: false, reason: "english-path" };
-  }
-
-  const toEnglish = (reason: string): LocaleDecision => ({
-    action: "redirect",
-    location: `${localizePath(request.pathname, "en")}${request.search}`,
+  const pathLocale = localeFromPathname(request.pathname);
+  const next = (vary: boolean, reason: string): LocaleDecision => ({
+    action: "next",
+    vary,
+    locale: pathLocale,
     reason,
   });
 
-  const cookie = request.cookieLocale?.trim().toLowerCase();
-  if (cookie === "en") return toEnglish("cookie");
-  if (cookie === "nb") return { action: "next", vary: true, reason: "cookie" };
+  const method = request.method.toUpperCase();
+  if (method !== "GET" && method !== "HEAD") return next(false, "method");
+  if (isExcludedPath(request.pathname)) return next(false, "excluded");
+  // An explicitly requested language (/en, /de, …) is always served, never redirected.
+  if (isPrefixedPath(request.pathname)) return next(false, "prefixed-path");
 
-  if (isBot(request.userAgent)) {
-    return { action: "next", vary: true, reason: "bot" };
-  }
+  const to = (locale: Locale, reason: string): LocaleDecision =>
+    locale === "nb"
+      ? next(true, reason)
+      : {
+          action: "redirect",
+          location: `${localizePath(request.pathname, locale)}${request.search}`,
+          locale,
+          reason,
+        };
+
+  // A language the visitor picked in the language menu always wins.
+  const cookie = request.cookieLocale?.trim().toLowerCase();
+  if (isLocale(cookie)) return to(cookie, "cookie");
+
+  if (isBot(request.userAgent)) return next(true, "bot");
 
   const country = request.country?.trim().toUpperCase();
-  if (country) {
-    if (NORWEGIAN_COUNTRIES.has(country)) {
-      return { action: "next", vary: true, reason: "country" };
-    }
-    return toEnglish("country");
-  }
+  if (country) return to(localeForCountry(country, request.acceptLanguage), "country");
 
-  if (localeFromAcceptLanguage(request.acceptLanguage) === "en") {
-    return toEnglish("accept-language");
-  }
-  return { action: "next", vary: true, reason: "default" };
+  const fromHeader = localeFromAcceptLanguage(request.acceptLanguage);
+  if (fromHeader) return to(fromHeader, "accept-language");
+  return next(true, "default");
+}
+
+/**
+ * Currency cookie value proxy.ts should set, or null to leave it alone: never overrides a
+ * valid existing cookie; otherwise the visitor's country decides, then the page language.
+ */
+export function currencyCookieToSet({
+  existing,
+  country,
+  locale,
+}: {
+  existing: string | null | undefined;
+  country: string | null | undefined;
+  locale: Locale;
+}): Currency | null {
+  if (parseCurrency(existing)) return null;
+  return currencyForCountry(country) ?? defaultCurrencyForLocale(locale);
 }

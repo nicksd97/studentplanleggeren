@@ -7,12 +7,20 @@ import Footer from "@/components/layout/Footer";
 import Button from "@/components/ui/Button";
 import { campaignTagsFromItems } from "@/lib/attribution";
 import { useCart } from "@/lib/cart-context";
-import { getFilesForItems } from "@/lib/product-files";
+import { minorToDecimal } from "@/lib/currency";
+import { getFilesForItems, productFileMap } from "@/lib/product-files";
 import { trackEvent, trackOnce } from "@/lib/track";
 import { cartTier } from "@/lib/track-events";
-import { localizePath, type Locale } from "@/lib/i18n/config";
+import { hasTranslatedPdfs, localeTags, localizePath } from "@/lib/i18n/config";
+import { fmt } from "@/lib/i18n/format";
+import { useMessages } from "@/lib/i18n/provider";
 import { itemDisplayName } from "@/lib/i18n/products";
 import { useLocale } from "@/lib/i18n/use-locale";
+
+/** Storage path -> product id, to show translated names for the files. */
+const productIdByFile = new Map(
+  Object.entries(productFileMap).flatMap(([id, files]) => files.map((file) => [file, id] as const)),
+);
 
 interface OrderData {
   id: string;
@@ -20,6 +28,9 @@ interface OrderData {
   firstName: string;
   items: { id: string; name: string; price: number; type: string }[];
   amountNok?: number;
+  currency?: string;
+  amountMinor?: number;
+  locale?: string;
   paymentStatus: string;
   downloadCount: number;
   maxDownloads: number;
@@ -31,7 +42,8 @@ function TakkContent() {
   const token = searchParams.get("token");
   const { clearCart } = useCart();
   const locale = useLocale();
-  const t = copy[locale];
+  const messages = useMessages();
+  const t = messages.takk;
   const [order, setOrder] = useState<OrderData | null>(null);
   const [loading, setLoading] = useState(() => Boolean(token));
   const [error, setError] = useState(() => !token);
@@ -69,7 +81,7 @@ function TakkContent() {
       "purchase",
       {
         tier: cartTier(order.items),
-        value: order.amountNok ?? order.items.reduce((sum, item) => sum + item.price, 0),
+        value: purchaseValue(order).value,
       },
       campaignTagsFromItems(order.items),
     );
@@ -98,8 +110,7 @@ function TakkContent() {
     }
     gtag("event", "purchase", {
       transaction_id: order.id,
-      value: order.amountNok ?? order.items.reduce((sum, item) => sum + item.price, 0),
-      currency: "NOK",
+      ...purchaseValue(order),
       ...campaignTagsFromItems(order.items),
     });
   }, [order]);
@@ -172,6 +183,9 @@ function TakkContent() {
   }
 
   const files = getFilesForItems(order.items);
+  // Translated sites download the PDFs in their language (Bokmål if a translation is missing).
+  const languageNote =
+    locale !== "nb" && !hasTranslatedPdfs(locale) ? messages.pdfLanguage.norwegian.sentence : null;
   const expiryDate = new Date(order.expiresAt);
   const isExpired = expiryDate < new Date();
   const downloadsLeft = order.maxDownloads - order.downloadCount;
@@ -220,17 +234,22 @@ function TakkContent() {
         <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-brand-dark mb-4">
           {t.products}
         </h2>
-        {t.languageNote && <p className="text-xs text-brand-medium mb-4">{t.languageNote}</p>}
+        {languageNote && <p className="text-xs text-brand-medium mb-4">{languageNote}</p>}
 
         {order.paymentStatus === "completed" && !isExpired ? (
           <>
             <ul className="space-y-3">
               {files.map((file) => {
                 const fileName = file.split("/").pop()?.replace(".pdf", "") || file;
-                const displayName = fileName
-                  .split("-")
-                  .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-                  .join(" ");
+                const productId = productIdByFile.get(file);
+                const translatedName =
+                  locale !== "nb" && productId ? messages.products[productId]?.name : undefined;
+                const displayName =
+                  translatedName ??
+                  fileName
+                    .split("-")
+                    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+                    .join(" ");
 
                 return (
                   <li
@@ -241,7 +260,7 @@ function TakkContent() {
                       {displayName}
                     </span>
                     <a
-                      href={`/api/download?token=${token}&file=${encodeURIComponent(file)}`}
+                      href={`/api/download?token=${token}&file=${encodeURIComponent(file)}${locale === "nb" ? "" : `&lang=${locale}`}`}
                       onClick={() => trackEvent("download_click", { kind: "kjop", product: fileName })}
                       className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-brand-accent px-3 py-1.5 text-xs font-medium text-brand-dark hover:brightness-110 transition-all"
                     >
@@ -255,8 +274,8 @@ function TakkContent() {
               })}
             </ul>
             <p className="text-xs text-brand-medium/60 mt-4 text-center">
-              {t.downloadsLeft(downloadsLeft)} &middot; {t.expires}{" "}
-              {expiryDate.toLocaleDateString(t.dateLocale, {
+              {fmt(t.downloadsLeft, { count: downloadsLeft })} &middot; {t.expires}{" "}
+              {expiryDate.toLocaleDateString(localeTags[locale], {
                 day: "numeric",
                 month: "long",
                 year: "numeric",
@@ -272,7 +291,7 @@ function TakkContent() {
                   className="flex items-center justify-between gap-3 rounded-xl bg-brand-pale/50 p-3"
                 >
                   <span className="text-sm font-medium text-brand-dark truncate">
-                    {itemDisplayName(item, locale)}
+                    {itemDisplayName(item, messages)}
                   </span>
                   <button
                     disabled
@@ -300,7 +319,7 @@ function TakkContent() {
   );
 }
 
-// Also rendered at /en/takk; the language comes from the URL.
+// Also rendered at /<lang>/takk; the language comes from I18nProvider.
 export default function TakkPage() {
   const locale = useLocale();
   return (
@@ -316,45 +335,13 @@ export default function TakkPage() {
   );
 }
 
-const copy = {
-  nb: {
-    errorTitle: "Noe gikk galt",
-    errorText: "Vi kunne ikke finne ordren din. Sjekk e-posten din eller kontakt oss for hjelp.",
-    home: "Tilbake til forsiden",
-    paidTitle: "Takk for kjøpet!",
-    cancelledTitle: "Betalingen ble avbrutt",
-    pendingTitle: "Venter på betaling",
-    confirmationSent: "En bekreftelse er sendt til",
-    readyNoEmail: "Nedlastingen er klar. Ta vare på denne siden hvis du ikke har fått e-post.",
-    cancelledText: "Betalingen ble ikke bekreftet, så nedlastingen er ikke aktivert.",
-    pendingText: "Vi venter på bekreftelse av betalingen. Ikke lukk siden.",
-    products: "Dine produkter",
-    languageNote: null,
-    download: "Last ned",
-    downloadsLeft: (count: number) => `${count} nedlastinger gjenstår`,
-    expires: "Lenken utløper",
-    dateLocale: "nb-NO",
-    expired: "Nedlastingslenken har utl\u00f8pt. Kontakt oss for hjelp.",
-    activatesOnPayment: "Nedlasting aktiveres n\u00e5r betalingen er bekreftet",
-  },
-  en: {
-    errorTitle: "Something went wrong",
-    errorText: "We couldn't find your order. Check your email or contact us for help.",
-    home: "Back to the home page",
-    paidTitle: "Thank you for your purchase!",
-    cancelledTitle: "The payment was cancelled",
-    pendingTitle: "Waiting for payment",
-    confirmationSent: "A confirmation has been sent to",
-    readyNoEmail: "Your download is ready. Keep this page if you haven't received an email.",
-    cancelledText: "The payment wasn't confirmed, so the download hasn't been activated.",
-    pendingText: "We're waiting for the payment to be confirmed. Please don't close this page.",
-    products: "Your products",
-    languageNote: "File names and planner contents are in Norwegian (Bokmål).",
-    download: "Download",
-    downloadsLeft: (count: number) => `${count} downloads left`,
-    expires: "The link expires",
-    dateLocale: "en-GB",
-    expired: "The download link has expired. Contact us for help.",
-    activatesOnPayment: "Downloads are activated once the payment is confirmed",
-  },
-} satisfies Record<Locale, unknown>;
+/** Purchase value for analytics, in the currency the order was charged in. */
+function purchaseValue(order: OrderData): { value: number; currency: string } {
+  if (order.currency && order.currency !== "NOK" && order.amountMinor != null) {
+    return { value: minorToDecimal(order.amountMinor), currency: order.currency };
+  }
+  return {
+    value: order.amountNok ?? order.items.reduce((sum, item) => sum + item.price, 0),
+    currency: "NOK",
+  };
+}

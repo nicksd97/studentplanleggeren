@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { expectedCharge, type OrderRecord } from '@/lib/checkout';
+import { orderMetaFromItems } from '@/lib/order-store';
 import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
@@ -10,7 +12,8 @@ export async function GET(request: NextRequest) {
 
   const { data: order, error } = await supabaseAdmin
     .from('orders')
-    .select('id, email, first_name, items, amount_nok, payment_status, download_count, max_downloads, token_expires_at, created_at')
+    // "*" so this works before and after the currency/locale migration.
+    .select('*')
     .eq('download_token', token)
     .single();
 
@@ -18,12 +21,22 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Ordre ikke funnet' }, { status: 404 });
   }
 
+  const meta = orderMetaFromItems(order.items) ?? {};
+  const charge = expectedCharge({
+    ...(order as OrderRecord),
+    currency: order.currency ?? meta.currency,
+    amount_minor: order.amount_minor ?? meta.amount_minor,
+  });
+
   return NextResponse.json({
     id: order.id,
     email: order.email,
     firstName: order.first_name,
     items: order.items,
     amountNok: order.amount_nok,
+    currency: charge.currency,
+    amountMinor: charge.amountMinor,
+    locale: order.locale ?? meta.locale ?? 'nb',
     paymentStatus: order.payment_status,
     downloadCount: order.download_count,
     maxDownloads: order.max_downloads,

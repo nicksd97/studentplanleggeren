@@ -1,3 +1,23 @@
+# Seven languages, local currency for card checkout — branch `feat/geo-language` (PR #24), not merged
+
+Date: 2026-11-18
+
+## Status
+
+- Languages: Bokmål (unprefixed, text unchanged) plus `/en`, `/de`, `/sv`, `/da`, `/es`, `/fr` from one route tree `app/(intl)/[lang]` (static, `dynamicParams = false`). UI copy is in `lib/i18n/messages/<lang>.ts` (passed to client components via `I18nProvider`, one language per page), page content in `lib/i18n/content/<lang>.ts`, legal pages in `components/legal/<lang>.tsx` (the Norwegian pages stay legally binding).
+- `proxy.ts`: `NEXT_LOCALE` cookie wins, bots are never redirected, then country (`lib/i18n/detect.ts`), then Accept-Language. It also sets the functional `sp_currency` cookie (1 year) from `x-vercel-ip-country`.
+- Prices: fixed table in `lib/currency.ts` (NOK, SEK, DKK, EUR, GBP, USD). Card checkout (Stripe) charges the visitor's currency, and the server computes every amount itself. Vipps is NOK-only: it is hidden for other currencies and the server rejects it.
+- PDFs: `PDF_LANGUAGES_AVAILABLE` in `lib/i18n/config.ts`. Downloads try `planners/<lang>/<slug>.pdf` and `leads/<lang>/gratis-ukentlig-plan-smakebit.pdf`, and fall back to the Bokmål file.
+- Personvern in every language has a section on the language and currency cookies.
+
+## Nick, after merge
+
+1. Run `supabase/migrations/2026-11-18-order-currency-locale.sql` in the Supabase SQL Editor. Until then, orders are stored as before, and currency, amount and language for non-NOK or non-Bokmål orders go in `items[0].order_meta` (the migration moves them into the new columns).
+2. Upload the translated PDFs to the `products` bucket under `planners/<lang>/` and `leads/<lang>/`. Missing files fall back to Bokmål. If a language has no PDFs yet, remove it from `PDF_LANGUAGES_AVAILABLE` so the copy says the planners are in Norwegian.
+3. The binding Norwegian `/vilkar` still says that all prices are in NOK. Update it to cover the other currencies (the translations already describe local-currency card payment).
+
+---
+
 # Lead-lagring og velkomstserie — PR open, not merged
 
 Date: 2026-10-12

@@ -1,32 +1,14 @@
 import Button from "@/components/ui/Button";
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import PriceText, { VippsText } from "@/components/i18n/PriceText";
 import { localizePath, type Locale } from "@/lib/i18n/config";
-
-const copy = {
-  nb: {
-    label: "✦ Laget for norske studenter ✦",
-    tagline: "Få orden på studiene.",
-    intro:
-      "25 fyllbare PDF-planleggere for studenter. Daglig, ukentlig, månedlig — skriv ut eller fyll inn direkte på skjermen.",
-    komplett: "Se komplett pakke — 249 kr",
-    explore: "Utforsk planleggerne",
-    trust: ["Betal med Vipps eller kort", "Fyllbare PDF-er", "Umiddelbar nedlasting"],
-    coverAlt: "Studentplanlegger produkter — 25 fyllbare PDF-planleggere",
-  },
-  en: {
-    label: "✦ Made for students in Norway ✦",
-    tagline: "Get your studies organised.",
-    intro:
-      "25 fillable PDF planners for students. Daily, weekly, monthly — print them or fill them in right on your screen. The planners are in Norwegian (Bokmål).",
-    komplett: "See the complete bundle — NOK 249",
-    explore: "Explore the planners",
-    trust: ["Pay with Vipps or card", "Fillable PDFs", "Instant download"],
-    coverAlt: "Studentplanlegger products — 25 fillable PDF planners in Norwegian",
-  },
-};
+import { getMessages } from "@/lib/i18n/messages";
+import { pdfLanguageCopy } from "@/lib/i18n/products";
 
 export default function Hero({ locale = "nb" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const messages = getMessages(locale);
+  const t = messages.hero;
+  const pdfLanguage = pdfLanguageCopy(locale, messages).sentence;
   return (
     <section className="relative pt-24 pb-0 md:pt-32 overflow-hidden">
       {/* Dot pattern background */}
@@ -56,7 +38,7 @@ export default function Hero({ locale = "nb" }: { locale?: Locale }) {
         {/* Subheading */}
         <FadeInOnScroll delay={200}>
           <p className="text-brand-medium text-lg sm:text-xl max-w-2xl mx-auto mb-12 md:mb-16">
-            {t.intro}
+            {pdfLanguage ? `${t.intro} ${pdfLanguage}` : t.intro}
           </p>
         </FadeInOnScroll>
 
@@ -64,7 +46,7 @@ export default function Hero({ locale = "nb" }: { locale?: Locale }) {
         <FadeInOnScroll delay={300}>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-8">
             <Button href="#pakker" data-cta="hero_komplett" variant="primary" className="text-base px-8 py-3.5 animate-pulse shadow-[0_0_15px_rgba(196,168,130,0.4)]">
-              {t.komplett}
+              <PriceText text={t.komplett} />
             </Button>
             <Button href={localizePath("/produkter", locale)} data-cta="hero_produkter" variant="outline" className="text-base px-8 py-3.5">
               {t.explore}
@@ -79,7 +61,7 @@ export default function Hero({ locale = "nb" }: { locale?: Locale }) {
               <svg className="h-4 w-4 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              {t.trust[0]}
+              <VippsText withVipps={t.trust[0]} withoutVipps={t.trustNoVipps} />
             </span>
             <span className="flex items-center gap-1.5">
               <svg className="h-4 w-4 text-brand-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

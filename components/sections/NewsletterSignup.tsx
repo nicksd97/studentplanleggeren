@@ -8,6 +8,7 @@ import { currentCampaignTags } from "@/lib/attribution";
 import { trackEvent } from "@/lib/track";
 import { translateApiError } from "@/lib/i18n/api-errors";
 import { localizePath } from "@/lib/i18n/config";
+import { useMessages } from "@/lib/i18n/provider";
 import { useLocale } from "@/lib/i18n/use-locale";
 
 type Variant = "home" | "gratis";
@@ -21,62 +22,28 @@ type NewsletterSignupProps = {
   variant?: Variant;
 };
 
-const copy = {
-  nb: {
-    heading: "Gratis ukentlig plan-smakebit",
-    subheading: "Få en fyllbar ukeplan-smakebit på e-post — én side, ikke hele produktet.",
-    buttonLabel: "Send meg smakebiten",
-    successMessage: "Takk! Sjekk innboksen — smakebiten er på vei.",
-    error: "Noe gikk galt. Prøv igjen.",
-    emailLabel: "E-postadresse",
-    placeholder: "din@epost.no",
-    sending: "Sender...",
-    consent: (
-      <>
-        Ved å sende inn samtykker du til at vi lagrer e-posten din for å sende smakebiten og
-        jevnlige studietips. Les{" "}
-        <Link href="/personvern" className="underline underline-offset-2 hover:opacity-80">
-          personvernerklæringen
-        </Link>
-        .
-      </>
-    ),
-  },
-  en: {
-    heading: "Free weekly plan sample",
-    subheading:
-      "Get a fillable weekly plan sample by email — one page in Norwegian (Bokmål), not the full product.",
-    buttonLabel: "Send me the sample",
-    successMessage: "Thanks! Check your inbox — the sample is on its way.",
-    error: "Something went wrong. Please try again.",
-    emailLabel: "Email address",
-    placeholder: "you@example.com",
-    sending: "Sending...",
-    consent: (
-      <>
-        By submitting, you agree that we store your email address to send you the sample and
-        regular study tips (emails are in Norwegian). Read the{" "}
-        <Link
-          href={localizePath("/personvern", "en")}
-          className="underline underline-offset-2 hover:opacity-80"
-        >
-          privacy policy
-        </Link>
-        .
-      </>
-    ),
-  },
-};
-
 export default function NewsletterSignup(props: NewsletterSignupProps) {
   const locale = useLocale();
-  const t = copy[locale];
+  const messages = useMessages();
+  const t = messages.newsletter;
+  const defaultConsent = (
+    <>
+      {t.consentBefore}
+      <Link
+        href={localizePath("/personvern", locale)}
+        className="underline underline-offset-2 hover:opacity-80"
+      >
+        {t.consentLink}
+      </Link>
+      {t.consentAfter}
+    </>
+  );
   const {
     heading = t.heading,
     subheading = t.subheading,
     buttonLabel = t.buttonLabel,
     successMessage = t.successMessage,
-    consent = t.consent,
+    consent = defaultConsent,
     variant = "home",
   } = props;
   const [email, setEmail] = useState("");
@@ -94,7 +61,7 @@ export default function NewsletterSignup(props: NewsletterSignupProps) {
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, company, campaign: currentCampaignTags() }),
+        body: JSON.stringify({ email, company, campaign: currentCampaignTags(), locale }),
       });
       const payload = (await res.json().catch(() => ({}))) as { error?: string };
       if (res.ok) {
@@ -107,7 +74,7 @@ export default function NewsletterSignup(props: NewsletterSignupProps) {
           form: variant,
           reason: res.status === 429 ? "for_mange" : res.status >= 500 ? "server" : "ugyldig",
         });
-        setErrorMessage(translateApiError(payload.error, locale, t.error));
+        setErrorMessage(translateApiError(payload.error, messages, t.error));
         setStatus("error");
       }
     } catch {

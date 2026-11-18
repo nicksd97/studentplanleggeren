@@ -8,58 +8,18 @@ import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
 import { trackEvent } from "@/lib/track";
 import { priceTierFor } from "@/lib/track-events";
-import { localizePath, type Locale } from "@/lib/i18n/config";
-import { itemDisplayName, localizeBundle } from "@/lib/i18n/products";
+import { localizePath } from "@/lib/i18n/config";
+import { fmt } from "@/lib/i18n/format";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
+import { itemDisplayName, localizeBundle, pdfLanguageCopy } from "@/lib/i18n/products";
 import { useLocale } from "@/lib/i18n/use-locale";
 
-const copy = {
-  nb: {
-    label: "✦ Alt du trenger ✦",
-    heading: "Studentplanlegger Komplett",
-    includedTitle: "25 planleggere inkludert:",
-    includes: [
-      "5 daglige planleggere",
-      "5 ukentlige planleggere",
-      "3 månedlige planleggere",
-      "1 årsplanlegger",
-      "5 produktivitetsverktøy",
-      "3 helse og livsstil",
-      "3 sporingsverktøy",
-    ],
-    currency: "kr",
-    buyKomplett: (price: number) => `Kjøp komplett pakke med Vipps — ${price} kr`,
-    seeAll: "Se alle 25 planleggere",
-    orPick: "✦ Eller velg en pakke ✦",
-    packsNote: "Temapakker 149 kr. Velg fem enkeltplanleggere i handlekurven for 99 kr.",
-    bundleMeta: (count: number, price: number) => `${count} planleggere · ${price} kr`,
-    buy: "Kjøp",
-    alreadyInCart: "Allerede i handlekurven",
-    added: "Lagt til \u2713",
-  },
-  en: {
-    label: "✦ Everything you need ✦",
-    heading: "Studentplanlegger Complete",
-    includedTitle: "25 planners included:",
-    includes: [
-      "5 daily planners",
-      "5 weekly planners",
-      "3 monthly planners",
-      "1 yearly planner",
-      "5 productivity tools",
-      "3 health & lifestyle",
-      "3 tracking tools",
-    ],
-    currency: "NOK",
-    buyKomplett: (price: number) => `Buy the complete bundle with Vipps — NOK ${price}`,
-    seeAll: "See all 25 planners",
-    orPick: "✦ Or pick a bundle ✦",
-    packsNote: "Theme bundles NOK 149. Put any five single planners in the cart for NOK 99.",
-    bundleMeta: (count: number, price: number) => `${count} planners · NOK ${price}`,
-    buy: "Buy",
-    alreadyInCart: "Already in your cart",
-    added: "Added \u2713",
-  },
-} satisfies Record<Locale, unknown>;
+/** "249 kr" -> ["", "249", "kr"], "€21.99" -> ["€", "21.99", ""], so the number can be big. */
+function splitMoney(formatted: string): [string, string, string] {
+  const match = /^(\D*?)(\d[\d.,\s\u00a0]*\d|\d)(\D*)$/.exec(formatted);
+  if (!match) return ["", formatted, ""];
+  return [match[1].trim(), match[2], match[3].trim()];
+}
 
 function BundleButton({
   bundleId,
@@ -74,7 +34,7 @@ function BundleButton({
 }) {
   const { addItem, isInCart } = useCart();
   const [feedback, setFeedback] = useState<string | null>(null);
-  const t = copy[useLocale()];
+  const t = useMessages().bundleShowcase;
   const bundle = pakker.find((p) => p.id === bundleId)!;
 
   function handleAdd() {
@@ -103,9 +63,13 @@ function BundleButton({
 
 export default function BundleShowcase() {
   const locale = useLocale();
-  const t = copy[locale];
-  const featured = localizeBundle(pakker.find((p) => p.featured)!, locale);
-  const categoryBundles = pakker.filter((p) => !p.featured).map((p) => localizeBundle(p, locale));
+  const messages = useMessages();
+  const t = messages.bundleShowcase;
+  const { point, fill, vipps } = usePricing();
+  const featured = localizeBundle(pakker.find((p) => p.featured)!, messages);
+  const categoryBundles = pakker.filter((p) => !p.featured).map((p) => localizeBundle(p, messages));
+  const pdfLanguage = pdfLanguageCopy(locale, messages).sentence;
+  const [pricePrefix, priceNumber, priceSuffix] = splitMoney(point(featured.price));
 
   return (
     <section id="pakker" className="relative bg-brand-pale py-24 md:py-32">
@@ -121,7 +85,7 @@ export default function BundleShowcase() {
               {t.heading}
             </h2>
             <p className="text-brand-medium max-w-2xl mx-auto">
-              {featured.description}
+              {pdfLanguage ? `${featured.description} ${pdfLanguage}` : featured.description}
             </p>
           </div>
         </FadeInOnScroll>
@@ -141,7 +105,7 @@ export default function BundleShowcase() {
               >
                 <img
                   src={`/images/products/${item.src}`}
-                  alt={itemDisplayName({ id: item.id, name: item.alt }, locale)}
+                  alt={itemDisplayName({ id: item.id, name: item.alt }, messages)}
                   className="w-full h-full object-cover object-top"
                 />
               </div>
@@ -182,19 +146,33 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={300}>
           <div className="text-center mb-16">
             <div className="flex items-baseline justify-center gap-3 mb-8">
+              {pricePrefix && (
+                <span className="text-brand-dark/70 text-2xl font-bold">{pricePrefix}</span>
+              )}
               <span className="font-[family-name:var(--font-display)] text-6xl md:text-7xl font-bold text-brand-dark text-shadow-sm">
-                {featured.price}
+                {priceNumber}
               </span>
-              <span className="text-brand-dark/70 text-2xl font-bold">{t.currency}</span>
+              {priceSuffix && (
+                <span className="text-brand-dark/70 text-2xl font-bold">{priceSuffix}</span>
+              )}
             </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <KomplettVippsButton
-                source="pakker"
-                label={t.buyKomplett(featured.price)}
-                className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-              />
+              {vipps ? (
+                <KomplettVippsButton
+                  source="pakker"
+                  label={fmt(t.buyKomplett, { price: point(featured.price) })}
+                  className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                />
+              ) : (
+                // Vipps only takes NOK; other currencies add the bundle to the cart for card checkout.
+                <BundleButton
+                  bundleId={featured.id}
+                  label={fmt(t.addKomplett, { price: point(featured.price) })}
+                  className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                />
+              )}
               <Button
                 href={localizePath("/produkter", locale)}
                 data-cta="pakker_produkter"
@@ -214,7 +192,7 @@ export default function BundleShowcase() {
               {t.orPick}
             </p>
             <p className="text-sm text-brand-medium text-center mb-6">
-              {t.packsNote}
+              {fill(t.packsNote)}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               {categoryBundles.map((bundle) => (
@@ -227,7 +205,7 @@ export default function BundleShowcase() {
                       {bundle.name}
                     </p>
                     <p className="text-xs text-brand-medium mt-0.5">
-                      {t.bundleMeta(bundle.productIds.length, bundle.price)}
+                      {fmt(t.bundleMeta, { count: bundle.productIds.length, price: point(bundle.price) })}
                     </p>
                   </div>
                   <BundleButton

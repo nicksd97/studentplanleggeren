@@ -2,24 +2,10 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { localizePath, type Locale } from "@/lib/i18n/config";
-
-const copy = {
-  nb: {
-    heading: "Siden finnes ikke",
-    text: "Vi fant ikke siden du leter etter. Se planleggerne, eller gå tilbake til forsiden.",
-    home: "Til forsiden",
-    planners: "Se planleggerne",
-  },
-  en: {
-    heading: "Page not found",
-    text: "We couldn't find the page you're looking for. Browse the planners, or go back to the home page.",
-    home: "Go to the home page",
-    planners: "See the planners",
-  },
-};
+import { getMessages } from "@/lib/i18n/messages";
 
 export default function NotFoundPage({ locale }: { locale: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).notFound;
   return (
     <>
       <Header />

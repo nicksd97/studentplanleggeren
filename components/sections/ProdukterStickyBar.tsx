@@ -3,32 +3,19 @@
 import { useEffect, useState } from "react";
 import { pakker } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
-import { useLocale } from "@/lib/i18n/use-locale";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
+import { pdfLanguageCopy } from "@/lib/i18n/products";
 
 const komplett = pakker.find((bundle) => bundle.featured)!;
-
-const copy = {
-  nb: {
-    title: `Studentplanlegger Komplett — alle 25 for ${komplett.price} kr`,
-    subtitle: "Alle 25 fyllbare PDF-er",
-    alreadyInCart: "Allerede i handlekurven",
-    added: "Lagt til \u2713",
-    add: "Legg i handlekurv",
-  },
-  en: {
-    title: `Studentplanlegger Complete — all 25 for NOK ${komplett.price}`,
-    subtitle: "All 25 fillable PDFs, in Norwegian (Bokmål)",
-    alreadyInCart: "Already in your cart",
-    added: "Added \u2713",
-    add: "Add to cart",
-  },
-};
 
 export default function ProdukterStickyBar() {
   const [showBar, setShowBar] = useState(false);
   const { addItem, isInCart } = useCart();
   const [bundleFeedback, setBundleFeedback] = useState<string | null>(null);
-  const t = copy[useLocale()];
+  const messages = useMessages();
+  const t = messages.stickyBar;
+  const { fill, locale } = usePricing();
+  const pdfLanguage = pdfLanguageCopy(locale, messages).short;
 
   useEffect(() => {
     const onScroll = () => setShowBar(window.scrollY > 300);
@@ -61,10 +48,10 @@ export default function ProdukterStickyBar() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
         <div className="min-w-0">
           <p className="text-white text-sm font-bold truncate">
-            {t.title}
+            {fill(t.title)}
           </p>
           <p className="text-white/60 text-xs hidden sm:block mt-0.5">
-            {t.subtitle}
+            {pdfLanguage ? `${t.subtitle} · ${pdfLanguage}` : t.subtitle}
           </p>
         </div>
         <button

@@ -26,7 +26,7 @@ export default function HomePage({ locale }: { locale: Locale }) {
   const structuredData = [
     organizationJsonLd(),
     websiteJsonLd(locale),
-    faqPageJsonLd(getFaqItems(locale)),
+    faqPageJsonLd(getFaqItems(locale), locale),
     ...pakker.map((bundle) => productOfferJsonLd(bundle, "/#pakker", { locale })),
     fivePackOfferJsonLd(locale),
   ];

@@ -6,7 +6,9 @@ import {
   parseCampaignCookie,
   parseCampaignTags,
 } from "@/lib/attribution";
+import { signLocalizedPath } from "@/lib/downloads";
 import { sendLeadMagnetEmail } from "@/lib/email";
+import { isLocale } from "@/lib/i18n/config";
 import {
   CONSENT_SOURCE_FORM,
   createSupabaseLeadStore,
@@ -53,6 +55,7 @@ export async function POST(request: NextRequest) {
     company?: unknown;
     website?: unknown;
     campaign?: unknown;
+    locale?: unknown;
   };
 
   if (isHoneypot(payload)) {
@@ -81,13 +84,18 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // The sample in the visitor's language (leads/<lang>/…), falling back to Bokmål.
+  const locale = isLocale(payload.locale) ? payload.locale : "nb";
   let signedUrl: string | null = null;
   try {
-    const { data: signed, error: urlError } = await supabaseAdmin.storage
-      .from("products")
-      .createSignedUrl(path, SIGNED_URL_TTL_SECONDS);
-    signedUrl = signed?.signedUrl ?? null;
-    if (urlError || !signedUrl) {
+    const signed = await signLocalizedPath(path, locale, async (storagePath) => {
+      const { data, error: urlError } = await supabaseAdmin.storage
+        .from("products")
+        .createSignedUrl(storagePath, SIGNED_URL_TTL_SECONDS);
+      return urlError || !data ? null : data.signedUrl;
+    });
+    signedUrl = signed?.url ?? null;
+    if (!signedUrl) {
       return NextResponse.json(
         { error: "Kunne ikke lage nedlastingslenke" },
         { status: 500 },

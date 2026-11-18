@@ -1,10 +1,43 @@
 import { attachCampaignTags, campaignTagsFromItems, parseCampaignTags } from "./attribution";
 import type { CheckoutDependencies, CheckoutItem, OrderRecord } from "./checkout";
-import { createOrderInsertFailure } from "./order-insert-error";
+import { parseCurrency } from "./currency";
+import { isLocale } from "./i18n/config";
+import { createOrderInsertFailure, isMissingCurrencyColumnError } from "./order-insert-error";
 import { supabaseAdmin } from "./supabase";
 
-const ORDER_COLUMNS =
-  "id, email, first_name, last_name, items, amount_nok, payment_provider, payment_id, payment_status, download_token, token_expires_at, discount_code, list_amount_nok, discount_nok, discount_percent";
+// "*" rather than a column list, so reads keep working whether or not the currency/locale
+// migration (supabase/migrations/2026-11-18-order-currency-locale.sql) has been applied.
+const ORDER_COLUMNS = "*";
+
+/**
+ * Where currency, charged amount and language go when the orders table doesn't have the
+ * currency/locale columns yet: a small object on the first item, next to the campaign tags.
+ * Readers that only look at id/name/price/type ignore it.
+ */
+export const ORDER_META_KEY = "order_meta";
+
+export type OrderMeta = {
+  currency?: string;
+  amount_minor?: number;
+  list_amount_minor?: number;
+  discount_minor?: number;
+  locale?: string;
+};
+
+export function orderMetaFromItems(items: unknown): OrderMeta | null {
+  if (!Array.isArray(items) || items.length === 0) return null;
+  const meta = (items[0] as Record<string, unknown> | null)?.[ORDER_META_KEY];
+  return meta && typeof meta === "object" ? (meta as OrderMeta) : null;
+}
+
+function attachOrderMeta<T extends object>(items: T[], meta: OrderMeta): T[] {
+  if (items.length === 0) return items;
+  return items.map((item, index) => (index === 0 ? { ...item, [ORDER_META_KEY]: meta } : item));
+}
+
+function numberOrUndefined(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
+}
 
 type OrderRow = {
   id: string;
@@ -22,6 +55,11 @@ type OrderRow = {
   list_amount_nok?: number | null;
   discount_nok?: number | null;
   discount_percent?: number | null;
+  currency?: string | null;
+  amount_minor?: number | null;
+  list_amount_minor?: number | null;
+  discount_minor?: number | null;
+  locale?: string | null;
 };
 
 function mapOrder(row: OrderRow): OrderRecord {
@@ -42,8 +80,28 @@ function mapOrder(row: OrderRow): OrderRecord {
     ...(row.list_amount_nok != null ? { list_amount_nok: row.list_amount_nok } : {}),
     ...(row.discount_nok != null ? { discount_nok: row.discount_nok } : {}),
     ...(row.discount_percent != null ? { discount_percent: row.discount_percent } : {}),
+    ...currencyFields(row),
     ...tags,
   };
+}
+
+/** Currency, minor amounts and language from the columns, or from item metadata as fallback. */
+function currencyFields(row: OrderRow): Partial<OrderRecord> {
+  const meta = orderMetaFromItems(row.items) ?? {};
+  const fields: Partial<OrderRecord> = {};
+  const currency = parseCurrency(row.currency) ?? parseCurrency(meta.currency);
+  if (currency) fields.currency = currency;
+  const amountMinor = numberOrUndefined(row.amount_minor) ?? numberOrUndefined(meta.amount_minor);
+  if (amountMinor !== undefined) fields.amount_minor = amountMinor;
+  const listMinor =
+    numberOrUndefined(row.list_amount_minor) ?? numberOrUndefined(meta.list_amount_minor);
+  if (listMinor !== undefined) fields.list_amount_minor = listMinor;
+  const discountMinor =
+    numberOrUndefined(row.discount_minor) ?? numberOrUndefined(meta.discount_minor);
+  if (discountMinor !== undefined) fields.discount_minor = discountMinor;
+  const locale = isLocale(row.locale) ? row.locale : isLocale(meta.locale) ? meta.locale : undefined;
+  if (locale) fields.locale = locale;
+  return fields;
 }
 
 type OrderClient = Pick<typeof supabaseAdmin, "from">;
@@ -51,6 +109,8 @@ type OrderClient = Pick<typeof supabaseAdmin, "from">;
 export function createSupabaseOrderStore(
   client: OrderClient = supabaseAdmin,
 ): CheckoutDependencies["orders"] {
+  // Set once an insert shows the currency/locale columns are missing, to skip the failing try.
+  let legacyColumnsOnly = false;
   return {
     async insertPending(data) {
       try {
@@ -76,12 +136,44 @@ export function createSupabaseOrderStore(
           }
         }
 
-        const { data: order, error } = await client
-          .from("orders")
-          .insert(insert)
-          .select()
-          .single();
+        const currency = data.currency ?? "NOK";
+        const locale = data.locale ?? "nb";
+        const extended: Record<string, unknown> = {
+          ...insert,
+          currency,
+          amount_minor: data.amount_minor ?? data.amount_nok * 100,
+          locale,
+        };
+        if (data.discount_code && data.list_amount_minor != null) {
+          extended.list_amount_minor = data.list_amount_minor;
+          extended.discount_minor = data.discount_minor ?? 0;
+        }
 
+        const insertRow = async (row: Record<string, unknown>) =>
+          client.from("orders").insert(row).select().single();
+
+        let result = legacyColumnsOnly ? null : await insertRow(extended);
+        if (!result || (result.error && isMissingCurrencyColumnError(result.error))) {
+          // The currency/locale migration isn't applied yet: store the order exactly as before,
+          // and keep currency/amount/language for non-default orders in the items metadata.
+          legacyColumnsOnly = true;
+          const legacy = { ...insert };
+          if (currency !== "NOK" || locale !== "nb") {
+            const meta: OrderMeta = { locale };
+            if (currency !== "NOK") {
+              meta.currency = currency;
+              meta.amount_minor = extended.amount_minor as number;
+              if (extended.list_amount_minor != null) {
+                meta.list_amount_minor = extended.list_amount_minor as number;
+                meta.discount_minor = extended.discount_minor as number;
+              }
+            }
+            legacy.items = attachOrderMeta(insert.items as object[], meta);
+          }
+          result = await insertRow(legacy);
+        }
+
+        const { data: order, error } = result;
         if (error || !order) {
           throw createOrderInsertFailure(error ?? new Error("empty insert result"));
         }

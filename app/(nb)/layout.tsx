@@ -5,11 +5,13 @@ import DiscountCapture from "@/components/analytics/DiscountCapture";
 import GoogleAnalytics from "@/components/analytics/GoogleAnalytics";
 import VercelAnalytics from "@/components/analytics/VercelAnalytics";
 import { CartProvider } from "@/lib/cart-context";
+import { nb } from "@/lib/i18n/messages/nb";
+import { I18nProvider } from "@/lib/i18n/provider";
 import { OG_IMAGE_ALT, OG_IMAGE_PATH, SITE_NAME, SITE_ORIGIN } from "@/lib/site";
 import { dmSans, playfair } from "../fonts";
 import "../globals.css";
 
-// Root layout for the Bokmål site (unprefixed URLs). English has its own in app/(en)/en.
+// Root layout for the Bokmål site (unprefixed URLs). Other languages use app/(intl)/[lang].
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
@@ -37,12 +39,14 @@ export default function RootLayout({
     >
       <body className="min-h-screen">
         <GoogleAnalytics />
-        <CartProvider>
-          <CampaignCapture />
-          <DiscountCapture />
-          <ClickTracker />
-          {children}
-        </CartProvider>
+        <I18nProvider locale="nb" messages={nb}>
+          <CartProvider>
+            <CampaignCapture />
+            <DiscountCapture />
+            <ClickTracker />
+            {children}
+          </CartProvider>
+        </I18nProvider>
         <VercelAnalytics />
       </body>
     </html>

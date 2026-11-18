@@ -2,14 +2,10 @@ import Accordion from "@/components/ui/Accordion";
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import { getFaqItems } from "@/lib/faq";
 import type { Locale } from "@/lib/i18n/config";
-
-const copy = {
-  nb: { label: "✦ Spørsmål? ✦", heading: "Ofte stilte spørsmål" },
-  en: { label: "✦ Questions? ✦", heading: "Frequently asked questions" },
-};
+import { getMessages } from "@/lib/i18n/messages";
 
 export default function FAQ({ locale = "nb" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).faq;
   return (
     <section id="faq" className="bg-white py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

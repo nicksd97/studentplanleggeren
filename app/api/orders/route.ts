@@ -28,6 +28,8 @@ export async function POST(request: NextRequest) {
       items: body.items,
       amountNok: body.amountNok,
       paymentProvider: body.paymentProvider,
+      currency: body.currency,
+      locale: body.locale,
       campaign,
       discountCode,
       returnOrigin: checkoutOrigin(request.headers),

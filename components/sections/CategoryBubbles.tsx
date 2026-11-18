@@ -4,13 +4,9 @@ import { useState } from "react";
 import { categoryGroups } from "@/lib/products";
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import { localizePath } from "@/lib/i18n/config";
+import { useMessages } from "@/lib/i18n/provider";
 import { categoryLabel } from "@/lib/i18n/products";
 import { useLocale } from "@/lib/i18n/use-locale";
-
-const copy = {
-  nb: { label: "✦ Utforsk kategoriene ✦", heading: "Hva trenger du?", planners: "planleggere" },
-  en: { label: "✦ Explore the categories ✦", heading: "What do you need?", planners: "planners" },
-};
 
 const categories = [
   { slug: "daglig", label: "Daglig", color: "bg-[#F5E6D3]" },
@@ -34,7 +30,8 @@ const categories = [
 export default function CategoryBubbles() {
   const [hovered, setHovered] = useState<string | null>(null);
   const locale = useLocale();
-  const t = copy[locale];
+  const messages = useMessages();
+  const t = messages.categories;
 
   return (
     <section className="bg-brand-cream py-24 md:py-32">
@@ -62,7 +59,7 @@ export default function CategoryBubbles() {
                   data-cta={`kategori_${cat.slug}`}
                   className={`inline-block rounded-full px-7 py-3.5 font-medium text-base text-brand-dark shadow-inner transition-all duration-300 hover:-translate-y-1 hover:shadow-md hover:ring-2 hover:ring-brand-accent/20 ${cat.color}`}
                 >
-                  {categoryLabel(cat.slug, cat.label, locale)}
+                  {categoryLabel(cat.slug, cat.label, messages)}
                 </a>
 
                 {hovered === cat.slug && cat.previewImage && (
@@ -70,11 +67,11 @@ export default function CategoryBubbles() {
                     <div className="bg-white/95 backdrop-blur-sm rounded-lg shadow-2xl border border-brand-soft/50 p-2 w-48 relative after:absolute after:top-full after:left-1/2 after:-translate-x-1/2 after:border-solid after:border-t-white/95 after:border-t-[8px] after:border-x-transparent after:border-x-[8px] after:border-b-0">
                       <img
                         src={cat.previewImage}
-                        alt={categoryLabel(cat.slug, cat.label, locale)}
+                        alt={categoryLabel(cat.slug, cat.label, messages)}
                         className="w-full rounded-md shadow-sm"
                       />
                       <p className="text-xs text-center mt-2 font-medium text-brand-dark">
-                        {categoryLabel(cat.slug, cat.label, locale)}
+                        {categoryLabel(cat.slug, cat.label, messages)}
                       </p>
                       <p className="text-[10px] text-center mt-0.5 text-brand-medium">
                         {cat.count} {t.planners}

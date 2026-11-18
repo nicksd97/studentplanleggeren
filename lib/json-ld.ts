@@ -1,8 +1,17 @@
 import { FIVE_PACK_PRICE, type Bundle, type Product } from "./products";
 import type { Catalog } from "./catalog";
 import { catalogPath } from "./catalog";
-import type { faqItems } from "./faq";
-import { localizePath, type Locale } from "./i18n/config";
+import {
+  defaultCurrencyForLocale,
+  fillPrices,
+  minorToDecimal,
+  priceMinor,
+  type Currency,
+} from "./currency";
+import type { FaqItem } from "./faq";
+import { getContent } from "./i18n/content/index";
+import { localeTags, localizePath, type Locale } from "./i18n/config";
+import { getMessages } from "./i18n/messages/index";
 import { localizeBundle, localizeProduct } from "./i18n/products";
 import {
   LEGAL_NAME,
@@ -15,6 +24,17 @@ import {
 } from "./site";
 
 type JsonLd = Record<string, unknown>;
+
+/**
+ * Offer price in the page language's default currency (pages are static, so this is what the
+ * server renders). NOK keeps whole-krone numbers as before; other currencies use decimals.
+ */
+function offerPrice(nokPrice: number, currency: Currency) {
+  return {
+    price: currency === "NOK" ? nokPrice : minorToDecimal(priceMinor(nokPrice, currency)),
+    priceCurrency: currency,
+  };
+}
 
 export function organizationJsonLd(): JsonLd {
   return {
@@ -41,7 +61,7 @@ export function websiteJsonLd(locale: Locale = "nb"): JsonLd {
     "@id": `${SITE_ORIGIN}/#website`,
     name: SITE_NAME,
     url: SITE_ORIGIN,
-    inLanguage: locale === "en" ? ["nb-NO", "en"] : "nb-NO",
+    inLanguage: locale === "nb" ? "nb-NO" : localeTags[locale],
     publisher: {
       "@id": `${SITE_ORIGIN}/#organization`,
     },
@@ -55,8 +75,9 @@ export function productOfferJsonLd(
 ): JsonLd {
   const includeContext = options.includeContext ?? true;
   const locale = options.locale ?? "nb";
+  const messages = getMessages(locale);
   const localized =
-    "productIds" in item ? localizeBundle(item, locale) : localizeProduct(item, locale);
+    "productIds" in item ? localizeBundle(item, messages) : localizeProduct(item, messages);
   const image =
     "image" in item && typeof item.image === "string"
       ? absoluteUrl(`/images/products/${item.image}`)
@@ -70,8 +91,7 @@ export function productOfferJsonLd(
     image,
     offers: {
       "@type": "Offer",
-      price: item.price,
-      priceCurrency: "NOK",
+      ...offerPrice(item.price, defaultCurrencyForLocale(locale)),
       availability: "https://schema.org/InStock",
       url: absoluteUrl(`${localizePath(path, locale)}#${item.slug}`),
     },
@@ -79,19 +99,20 @@ export function productOfferJsonLd(
 }
 
 export function fivePackOfferJsonLd(locale: Locale = "nb"): JsonLd {
+  const currency = defaultCurrencyForLocale(locale);
+  const copy =
+    locale === "nb"
+      ? { name: "5-pakke", description: "Velg fem enkeltplanleggere og betal 99 kr." }
+      : getContent(locale).fivePack;
   return {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: locale === "en" ? "5-pack" : "5-pakke",
-    description:
-      locale === "en"
-        ? "Choose any five single planners and pay NOK 99. The planners are in Norwegian (Bokmål)."
-        : "Velg fem enkeltplanleggere og betal 99 kr.",
+    name: copy.name,
+    description: fillPrices(copy.description, currency, locale),
     image: absoluteUrl(OG_IMAGE_PATH),
     offers: {
       "@type": "Offer",
-      price: FIVE_PACK_PRICE,
-      priceCurrency: "NOK",
+      ...offerPrice(FIVE_PACK_PRICE, currency),
       availability: "https://schema.org/InStock",
       url: absoluteUrl(localizePath("/produkter", locale)),
     },
@@ -112,7 +133,8 @@ export function productListJsonLd(catalog: Catalog, locale: Locale = "nb"): Json
   };
 }
 
-export function faqPageJsonLd(items: typeof faqItems): JsonLd {
+export function faqPageJsonLd(items: FaqItem[], locale: Locale = "nb"): JsonLd {
+  const currency = defaultCurrencyForLocale(locale);
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",
@@ -121,7 +143,7 @@ export function faqPageJsonLd(items: typeof faqItems): JsonLd {
       name: item.question,
       acceptedAnswer: {
         "@type": "Answer",
-        text: item.answer,
+        text: fillPrices(item.answer, currency, locale),
       },
     })),
   };

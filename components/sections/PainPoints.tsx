@@ -1,53 +1,9 @@
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import type { Locale } from "@/lib/i18n/config";
-
-const copy = {
-  nb: {
-    label: "✦ Kjenner du deg igjen? ✦",
-    heading: "For deg som...",
-    cards: [
-      {
-        title: "...aldri vet hvor du skal begynne",
-        description:
-          "Semesterstart, eksamen, prosjekter — det er mye å holde styr på. Med daglige og ukentlige planleggere får du oversikt fra dag én.",
-      },
-      {
-        title: "...vil bygge bedre vaner",
-        description:
-          "Det er lett å starte, vanskelig å holde ut. Vane Trackeren og 30-dagers utfordringen hjelper deg å faktisk holde det gående.",
-      },
-      {
-        title: "...vil nå målene dine",
-        description:
-          "Enten det er karaktermål, treningsmål eller sparemål — Mål Planleggeren og Handlingsplanen bryter store mål ned til konkrete steg.",
-      },
-    ],
-  },
-  en: {
-    label: "✦ Sound familiar? ✦",
-    heading: "For you if you...",
-    cards: [
-      {
-        title: "...never know where to start",
-        description:
-          "Semester start, exams, projects — there's a lot to keep track of. Daily and weekly planners give you an overview from day one.",
-      },
-      {
-        title: "...want to build better habits",
-        description:
-          "Starting is easy, sticking with it is hard. The Habit Tracker and the 30-Day Challenge help you actually keep it going.",
-      },
-      {
-        title: "...want to reach your goals",
-        description:
-          "Whether it's grade goals, fitness goals or savings goals — the Goal Planner and the Action Plan break big goals down into concrete steps.",
-      },
-    ],
-  },
-};
+import { getMessages } from "@/lib/i18n/messages";
 
 export default function PainPoints({ locale = "nb" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).painPoints;
   const cards = [
     {
       icon: (

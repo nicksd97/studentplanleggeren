@@ -222,7 +222,7 @@ describe("signup and backfill wiring", () => {
   });
 
   it("describes lead storage and e-postmarkedsføring on personvern", () => {
-    assert.match(personvern, /12\. oktober 2026/);
+    assert.match(personvern, /18\. november 2026/);
     assert.match(personvern, /Supabase/);
     assert.match(personvern, /leads/);
     assert.match(personvern, /velkomstserie|velkomst/);

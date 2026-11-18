@@ -7,26 +7,8 @@ import CartPanel from "@/components/ui/CartPanel";
 import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
 import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 import { localizePath } from "@/lib/i18n/config";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
 import { useLocale } from "@/lib/i18n/use-locale";
-
-const copy = {
-  nb: {
-    planners: "Planleggere",
-    free: "Gratis",
-    bundles: "Pakker",
-    buyKomplett: "Kjøp komplett pakke med Vipps",
-    cart: "Handlekurv",
-    menu: "Meny",
-  },
-  en: {
-    planners: "Planners",
-    free: "Free sample",
-    bundles: "Bundles",
-    buyKomplett: "Buy the complete bundle with Vipps",
-    cart: "Cart",
-    menu: "Menu",
-  },
-};
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -34,7 +16,9 @@ export default function Header() {
   const [cartOpen, setCartOpen] = useState(false);
   const { itemCount } = useCart();
   const locale = useLocale();
-  const t = copy[locale];
+  const t = useMessages().header;
+  // Vipps only takes NOK, so visitors paying in another currency don't get the Vipps shortcut.
+  const { vipps } = usePricing();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -46,7 +30,7 @@ export default function Header() {
     { label: t.planners, href: "/produkter", cta: "nav_planleggere" },
     { label: t.free, href: "/gratis", cta: "nav_gratis" },
     { label: t.bundles, href: "/#pakker", cta: "nav_pakker" },
-    { label: "FAQ", href: "/#faq", cta: "nav_faq" },
+    { label: t.faq, href: "/#faq", cta: "nav_faq" },
   ].map((link) => ({ ...link, href: localizePath(link.href, locale) }));
 
   return (
@@ -81,15 +65,14 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <LanguageSwitcher
-                linkClassName="text-brand-medium hover:text-brand-dark transition-colors"
-                activeClassName="font-bold text-brand-dark"
-              />
-              <KomplettVippsButton
-                source="header"
-                label={t.buyKomplett}
-                className="px-5 py-2"
-              />
+              <LanguageSwitcher />
+              {vipps && (
+                <KomplettVippsButton
+                  source="header"
+                  label={t.buyKomplett}
+                  className="px-5 py-2"
+                />
+              )}
 
               {/* Cart button */}
               <button
@@ -162,19 +145,17 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <LanguageSwitcher
-                className="px-4 py-3"
-                linkClassName="text-brand-medium hover:text-brand-dark transition-colors"
-                activeClassName="font-bold text-brand-dark"
-              />
-              <div className="px-4 pt-2">
-                <KomplettVippsButton
-                  source="header_mobil"
-                  fullWidth
-                  label={t.buyKomplett}
-                  className="px-5 py-2.5"
-                />
-              </div>
+              <LanguageSwitcher className="px-2 py-2 w-fit" />
+              {vipps && (
+                <div className="px-4 pt-2">
+                  <KomplettVippsButton
+                    source="header_mobil"
+                    fullWidth
+                    label={t.buyKomplett}
+                    className="px-5 py-2.5"
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>

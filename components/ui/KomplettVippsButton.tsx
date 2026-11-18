@@ -6,18 +6,8 @@ import { currentDiscountCode } from "@/lib/discount";
 import { completePackageCartItem } from "@/lib/products";
 import { trackEvent } from "@/lib/track";
 import { translateApiError } from "@/lib/i18n/api-errors";
+import { useMessages } from "@/lib/i18n/provider";
 import { useLocale } from "@/lib/i18n/use-locale";
-
-const copy = {
-  nb: {
-    label: "Kjøp komplett pakke med Vipps",
-    error: "Kunne ikke starte Vipps-betaling",
-  },
-  en: {
-    label: "Buy the complete bundle with Vipps",
-    error: "Could not start the Vipps payment",
-  },
-};
 
 type KomplettVippsButtonProps = {
   label?: string;
@@ -37,7 +27,8 @@ export default function KomplettVippsButton({
   const [error, setError] = useState("");
   const inFlight = useRef(false);
   const locale = useLocale();
-  const t = copy[locale];
+  const messages = useMessages();
+  const t = messages.komplettVipps;
 
   async function startVipps() {
     if (inFlight.current) return;
@@ -55,6 +46,9 @@ export default function KomplettVippsButton({
           paymentProvider: "vipps",
           campaign: currentCampaignTags(),
           discountCode: currentDiscountCode(),
+          // Vipps is NOK-only; this button is only shown to visitors paying in NOK.
+          currency: "NOK",
+          locale,
         }),
       });
       const data = (await response.json()) as { redirectUrl?: string; error?: string };
@@ -62,7 +56,7 @@ export default function KomplettVippsButton({
         window.location.assign(data.redirectUrl);
         return;
       }
-      setError(translateApiError(data.error, locale, t.error));
+      setError(translateApiError(data.error, messages, t.error));
       inFlight.current = false;
     } catch {
       setError(t.error);

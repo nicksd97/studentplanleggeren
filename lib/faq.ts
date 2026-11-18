@@ -1,4 +1,11 @@
-export const faqItems = [
+import { hasTranslatedPdfs, type Locale } from "./i18n/config";
+import { getContent } from "./i18n/content/index";
+
+export type FaqItem = { question: string; answer: string };
+
+// Bokmål FAQ. Prices are placeholders ({single}, {fivePack}, {theme}, {komplett}) so they show in
+// the visitor's currency; other languages live in lib/i18n/content/<lang>.ts.
+export const faqItems: FaqItem[] = [
   {
     question: "Hva er en fyllbar PDF?",
     answer:
@@ -37,67 +44,25 @@ export const faqItems = [
   {
     question: "Hva er inkludert i den komplette pakken?",
     answer:
-      "Studentplanlegger Komplett inneholder alle 25 planleggere (daglige, ukentlige, månedlige, årlige, produktivitet, helse og sporing). Alt som fyllbare PDF-er. Pakken koster 249 kr.",
+      "Studentplanlegger Komplett inneholder alle 25 planleggere (daglige, ukentlige, månedlige, årlige, produktivitet, helse og sporing). Alt som fyllbare PDF-er. Pakken koster {komplett}.",
   },
   {
     question: "Hva koster planleggerne?",
     answer:
-      "Hver enkeltplanlegger koster 39 kr. Fem valgfrie enkeltplanleggere i handlekurven koster 99 kr. Temapakker koster 149 kr, og Studentplanlegger Komplett koster 249 kr.",
+      "Hver enkeltplanlegger koster {single}. Fem valgfrie enkeltplanleggere i handlekurven koster {fivePack}. Temapakker koster {theme}, og Studentplanlegger Komplett koster {komplett}.",
   },
 ];
 
-export const faqItemsEn: typeof faqItems = [
-  {
-    question: "What language are the planners in?",
-    answer:
-      "The planners are written in Norwegian (Bokmål). This website is available in English, but the headings and labels inside the PDFs are in Norwegian.",
-  },
-  {
-    question: "What is a fillable PDF?",
-    answer:
-      "A fillable PDF has interactive fields you can type into directly on your computer, tablet or phone — no printing needed. You can also print it and fill it in by hand if you prefer.",
-  },
-  {
-    question: "Can I print the planners?",
-    answer:
-      "Absolutely! All the planners are designed for A4 printing with a clean, readable layout. Perfect for your wall or your study space.",
-  },
-  {
-    question: "Do they work on phones and tablets?",
-    answer:
-      "Yes! Open the PDFs in a PDF reader and fill in the fields directly. We recommend Adobe Acrobat Reader (free) for the best experience.",
-  },
-  {
-    question: "How do I download after buying?",
-    answer:
-      "You get access to the files right after payment. You are taken to a download page, and you also receive an email with download links that are valid for 7 days.",
-  },
-  {
-    question: "Can I pay with Vipps?",
-    answer: "Yes! We accept Vipps and regular bank cards (Visa/Mastercard).",
-  },
-  {
-    question: "Is it a subscription?",
-    answer:
-      "No — you pay once and own the planners forever. No subscription, no hidden costs.",
-  },
-  {
-    question: "What if I'm not happy?",
-    answer:
-      "Because these are digital products delivered instantly, we don't normally offer refunds. But if you're unhappy, get in touch — we'll find a solution.",
-  },
-  {
-    question: "What's included in the complete bundle?",
-    answer:
-      "Studentplanlegger Complete contains all 25 planners (daily, weekly, monthly, yearly, productivity, health and tracking), all as fillable PDFs in Norwegian. The bundle costs NOK 249.",
-  },
-  {
-    question: "How much do the planners cost?",
-    answer:
-      "Each single planner costs NOK 39. Any five single planners in the cart cost NOK 99. Theme bundles cost NOK 149, and Studentplanlegger Complete costs NOK 249.",
-  },
-];
-
-export function getFaqItems(locale: "nb" | "en"): typeof faqItems {
-  return locale === "en" ? faqItemsEn : faqItems;
+/** FAQ for one language; translations start with which language the PDFs are in. */
+export function getFaqItems(locale: Locale): FaqItem[] {
+  if (locale === "nb") return faqItems;
+  const content = getContent(locale);
+  const language = content.faqLanguage;
+  return [
+    {
+      question: language.question,
+      answer: hasTranslatedPdfs(locale) ? language.available : language.norwegian,
+    },
+    ...content.faq,
+  ];
 }

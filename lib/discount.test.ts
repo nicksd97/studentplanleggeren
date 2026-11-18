@@ -209,6 +209,10 @@ describe("previewCheckoutDiscount", () => {
       percent: 20,
       associationName: "Abakus, NTNU",
       code: "ABAKUS20",
+      currency: "NOK",
+      amountMinor: 19900,
+      listAmountMinor: 24900,
+      discountMinor: 5000,
     });
   });
 

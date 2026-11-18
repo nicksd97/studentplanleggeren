@@ -1,14 +1,10 @@
 import Link from "next/link";
 import { getGuides, guidePath } from "@/lib/guides";
 import type { Locale } from "@/lib/i18n/config";
-
-const copy = {
-  nb: { label: "✦ Guider ✦", heading: "Råd til studiehverdagen", read: "Les guiden" },
-  en: { label: "✦ Guides ✦", heading: "Tips for everyday student life", read: "Read the guide" },
-};
+import { getMessages } from "@/lib/i18n/messages";
 
 export default function GuideList({ locale = "nb" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).guideList;
   return (
     <section className="bg-brand-cream py-24 md:py-32">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">

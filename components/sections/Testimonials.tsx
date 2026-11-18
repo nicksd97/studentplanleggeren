@@ -1,5 +1,6 @@
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import type { Locale } from "@/lib/i18n/config";
+import { getMessages } from "@/lib/i18n/messages";
 
 const people = [
   { name: "Ida M.", initials: "IM" },
@@ -7,55 +8,8 @@ const people = [
   { name: "Nora S.", initials: "NS" },
 ];
 
-const copy = {
-  nb: {
-    label: "✦ Fra studenter som deg ✦",
-    heading: "Hva andre sier",
-    note: null,
-    quotes: [
-      {
-        quote:
-          "Daglig Planleggeren har forandret morgenrutinen min. Jeg bruker 5 minutter på å planlegge dagen og får mye mer gjort.",
-        study: "Juss, UiO",
-      },
-      {
-        quote:
-          "Ukentlig Plan er genial for semesterplanlegging. Endelig ser jeg hele uken i ett blikk i stedet for å glemme ting.",
-        study: "Sykepleie, NTNU",
-      },
-      {
-        quote:
-          "Elsker at jeg kan fylle inn direkte på iPaden. Slipper å skrive ut, og det ser fortsatt pent ut.",
-        study: "Økonomi, NHH",
-      },
-    ],
-  },
-  en: {
-    label: "✦ From students like you ✦",
-    heading: "What others say",
-    note: "Quotes translated from Norwegian.",
-    quotes: [
-      {
-        quote:
-          "The Daily Planner has changed my morning routine. I spend 5 minutes planning the day and get much more done.",
-        study: "Law, UiO",
-      },
-      {
-        quote:
-          "The Weekly Plan is brilliant for planning the semester. I can finally see the whole week at a glance instead of forgetting things.",
-        study: "Nursing, NTNU",
-      },
-      {
-        quote:
-          "Love that I can fill it in directly on my iPad. No need to print, and it still looks nice.",
-        study: "Economics, NHH",
-      },
-    ],
-  },
-};
-
 export default function Testimonials({ locale = "nb" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).testimonials;
   const testimonials = t.quotes.map((quote, index) => ({ ...quote, ...people[index] }));
 
   return (

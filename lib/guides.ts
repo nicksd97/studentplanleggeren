@@ -1,6 +1,6 @@
 import { catalogPath } from "./catalog";
 import { localizePath, type Locale } from "./i18n/config";
-import { guidesEn } from "./i18n/guides";
+import { getContent } from "./i18n/content/index";
 import { alleProdukter, categoryGroups, type Product } from "./products";
 
 export type GuideCatalogKey = "daglig" | "ukentlig" | "produktivitet" | "sporing";
@@ -37,7 +37,7 @@ export const guides: Guide[] = [
     catalogKey: "daglig",
     productSlug: "daglig-planlegger",
     productLead:
-      "Daglig Planlegger er et fyllbart PDF-ark med agenda, fokusområder og gjøremål for 39 kr. I samme kategori finnes også Daglig Timeplan og Daglig Gjennomgang.",
+      "Daglig Planlegger er et fyllbart PDF-ark med agenda, fokusområder og gjøremål for {single}. I samme kategori finnes også Daglig Timeplan og Daglig Gjennomgang.",
     productCta: "Se de daglige planleggerne",
     sections: [
       {
@@ -81,7 +81,7 @@ export const guides: Guide[] = [
     catalogKey: "ukentlig",
     productSlug: "ukentlig-planlegger",
     productLead:
-      "Ukentlig Planlegger er en enkel fyllbar ukeplan for studier og hverdag, 39 kr. Ukentlig Plan har fokusområder og daglige blokker, og Ukentlig Gjøremål gir plass til oppgaver per dag.",
+      "Ukentlig Planlegger er en enkel fyllbar ukeplan for studier og hverdag, {single}. Ukentlig Plan har fokusområder og daglige blokker, og Ukentlig Gjøremål gir plass til oppgaver per dag.",
     productCta: "Se de ukentlige planleggerne",
     sections: [
       {
@@ -123,7 +123,7 @@ export const guides: Guide[] = [
     catalogKey: "produktivitet",
     productSlug: "pomodoro-planlegger",
     productLead:
-      "Pomodoro Planlegger er et fyllbart ark for å planlegge studieøkter og notere produktivitet, 39 kr. Den ligger sammen med de andre produktivitetsarkene.",
+      "Pomodoro Planlegger er et fyllbart ark for å planlegge studieøkter og notere produktivitet, {single}. Den ligger sammen med de andre produktivitetsarkene.",
     productCta: "Se Pomodoro Planlegger",
     sections: [
       {
@@ -165,7 +165,7 @@ export const guides: Guide[] = [
     catalogKey: "sporing",
     productSlug: "vane-tracker",
     productLead:
-      "Vane Tracker er et månedlig rutenett med plass til egne kategorier, slik at du kan se fremgangen, 39 kr. 30-Dagers Utfordring er et mer avgrenset ark for nye vaner eller mål.",
+      "Vane Tracker er et månedlig rutenett med plass til egne kategorier, slik at du kan se fremgangen, {single}. 30-Dagers Utfordring er et mer avgrenset ark for nye vaner eller mål.",
     productCta: "Se Vane Tracker",
     sections: [
       {
@@ -198,7 +198,7 @@ export const guides: Guide[] = [
 ];
 
 export function getGuides(locale: Locale = "nb"): Guide[] {
-  return locale === "en" ? guidesEn : guides;
+  return locale === "nb" ? guides : getContent(locale).guides;
 }
 
 export function guidePath(slug: string, locale: Locale = "nb"): string {

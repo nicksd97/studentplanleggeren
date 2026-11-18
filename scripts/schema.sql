@@ -56,6 +56,15 @@ ALTER TABLE orders ADD COLUMN IF NOT EXISTS discount_percent integer;
 
 CREATE INDEX IF NOT EXISTS idx_orders_discount_code ON orders (discount_code);
 
+-- Local currency and site language (also shipped as supabase/migrations/2026-11-18-order-currency-locale.sql)
+-- amount_minor/list_amount_minor/discount_minor are in minor units of `currency`; for non-NOK
+-- orders amount_nok/list_amount_nok/discount_nok hold the NOK-equivalent at catalog prices.
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS currency text NOT NULL DEFAULT 'NOK';
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS amount_minor integer;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS list_amount_minor integer;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS discount_minor integer;
+ALTER TABLE orders ADD COLUMN IF NOT EXISTS locale text NOT NULL DEFAULT 'nb';
+
 ALTER TABLE discount_codes ENABLE ROW LEVEL SECURITY;
 REVOKE ALL ON TABLE discount_codes FROM PUBLIC;
 REVOKE ALL ON TABLE discount_codes FROM anon;

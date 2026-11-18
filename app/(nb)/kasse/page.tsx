@@ -5,27 +5,30 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { useCart } from "@/lib/cart-context";
 import { currentCampaignTags } from "@/lib/attribution";
-import {
-  CARD_CHECKOUT_DISABLED_MESSAGE,
-  isCardCheckoutAllowed,
-} from "@/lib/checkout";
-import { cartPricingSummary } from "@/lib/checkout";
+import { cartAmountMinor, cartPricingSummary, isCardCheckoutAllowed } from "@/lib/checkout";
+import { priceMinor, type Currency } from "@/lib/currency";
 import { currentDiscountCode, rememberDiscountCode } from "@/lib/discount";
 import { FIVE_PACK_PRICE, FIVE_PACK_SIZE, SINGLE_PRICE } from "@/lib/products";
 import Button from "@/components/ui/Button";
 import { trackEvent, trackOnce } from "@/lib/track";
 import { cartTier } from "@/lib/track-events";
 import { translateApiError } from "@/lib/i18n/api-errors";
-import { localizePath, type Locale } from "@/lib/i18n/config";
-import { itemDisplayName } from "@/lib/i18n/products";
+import { localizePath } from "@/lib/i18n/config";
+import { fmt } from "@/lib/i18n/format";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
+import { itemDisplayName, pdfLanguageCopy } from "@/lib/i18n/products";
 import { useLocale } from "@/lib/i18n/use-locale";
 
-// Also rendered at /en/kasse; the language comes from the URL.
+// Also rendered at /<lang>/kasse; the language comes from I18nProvider. Prices are shown in the
+// visitor's currency (sp_currency cookie); the server recomputes every amount from its own table.
 export default function KassePage() {
   const { items, totalPrice, removeItem } = useCart();
   const cardCheckoutAllowed = isCardCheckoutAllowed();
   const locale = useLocale();
-  const t = copy[locale];
+  const messages = useMessages();
+  const t = messages.kasse;
+  const { currency, money, point, vipps } = usePricing();
+  const pdfLanguage = pdfLanguageCopy(locale, messages).short;
 
   const [form, setForm] = useState({
     fornavn: "",
@@ -42,17 +45,20 @@ export default function KassePage() {
   const [codeBusy, setCodeBusy] = useState(false);
   const [applied, setApplied] = useState<{
     code: string;
-    amountNok: number;
-    listAmountNok: number;
-    discountNok: number;
+    currency: Currency;
+    amountMinor: number;
+    listAmountMinor: number;
+    discountMinor: number;
     percent: number;
     associationName: string;
   } | null>(null);
   const loading = loadingProvider !== null;
 
   const pricing = cartPricingSummary(items);
-  const listAmount = pricing?.amountNok ?? totalPrice;
-  const displayTotal = applied?.amountNok ?? listAmount;
+  const listAmountMinor = cartAmountMinor(items, currency) ?? totalPrice * 100;
+  // A preview made in another currency (cookie changed) is not shown.
+  const activeDiscount = applied && applied.currency === currency ? applied : null;
+  const displayTotal = activeDiscount?.amountMinor ?? listAmountMinor;
 
   function validate() {
     const errs: Record<string, string> = {};
@@ -89,6 +95,7 @@ export default function KassePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code: trimmed,
+          currency,
           items: items.map((item) => ({
             id: item.id,
             name: item.name,
@@ -101,13 +108,15 @@ export default function KassePage() {
         ok?: boolean;
         error?: string;
         amountNok?: number;
-        listAmountNok?: number;
-        discountNok?: number;
         percent?: number;
         associationName?: string;
         code?: string;
+        currency?: Currency;
+        amountMinor?: number;
+        listAmountMinor?: number;
+        discountMinor?: number;
       };
-      if (!data.ok || !data.code || data.amountNok == null) {
+      if (!data.ok || !data.code || data.amountMinor == null) {
         setApplied(null);
         setCodeError(data.error || t.invalidCode);
         return;
@@ -116,13 +125,21 @@ export default function KassePage() {
       trackOnce(`rabatt_${data.code}`, "discount_applied", { code: data.code, source });
       setApplied({
         code: data.code,
-        amountNok: data.amountNok,
-        listAmountNok: data.listAmountNok ?? listAmount,
-        discountNok: data.discountNok ?? 0,
+        currency: data.currency ?? currency,
+        amountMinor: data.amountMinor,
+        listAmountMinor: data.listAmountMinor ?? listAmountMinor,
+        discountMinor: data.discountMinor ?? 0,
         percent: data.percent ?? 0,
         associationName: data.associationName ?? "",
       });
-      setCodeMessage(t.codeActive(data.code, data.percent ?? 0, data.associationName ?? "", data.amountNok));
+      setCodeMessage(
+        fmt(t.codeActive, {
+          code: data.code,
+          percent: data.percent ?? 0,
+          association: data.associationName ?? "",
+          amount: money(data.amountMinor),
+        }),
+      );
     } catch {
       setApplied(null);
       setCodeError(t.invalidCode);
@@ -174,6 +191,8 @@ export default function KassePage() {
           })),
           amountNok: totalPrice,
           paymentProvider: provider,
+          currency,
+          locale,
           campaign: currentCampaignTags(),
           discountCode: (applied?.code || codeInput).trim() || undefined,
         }),
@@ -186,7 +205,7 @@ export default function KassePage() {
         return;
       }
 
-      setPaymentError(translateApiError(data.error, locale, t.genericError));
+      setPaymentError(translateApiError(data.error, messages, t.genericError));
     } catch {
       setPaymentError(t.genericError);
     } finally {
@@ -313,7 +332,7 @@ export default function KassePage() {
                     className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
                       errors.epost ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                     }`}
-                    placeholder="ola@example.com"
+                    placeholder={t.emailPlaceholder}
                   />
                   {errors.epost && (
                     <p className="text-xs text-red-500 mt-1">{errors.epost}</p>
@@ -331,7 +350,7 @@ export default function KassePage() {
                     className={`w-full rounded-lg border px-4 py-3.5 text-sm text-brand-dark bg-brand-cream/50 outline-none transition-all shadow-sm focus:ring-2 focus:ring-brand-accent/40 focus:border-brand-accent ${
                       errors.epostBekreft ? "border-red-400 focus:ring-red-400/40" : "border-brand-soft"
                     }`}
-                    placeholder="ola@example.com"
+                    placeholder={t.emailPlaceholder}
                   />
                   {errors.epostBekreft && (
                     <p className="text-xs text-red-500 mt-1">{errors.epostBekreft}</p>
@@ -354,17 +373,17 @@ export default function KassePage() {
                         <button
                           onClick={() => removeItem(item.id)}
                           className="text-brand-medium hover:text-red-500 transition-colors shrink-0 cursor-pointer"
-                          aria-label={t.remove(itemDisplayName(item, locale))}
+                          aria-label={fmt(t.remove, { name: itemDisplayName(item, messages) })}
                         >
                           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                           </svg>
                         </button>
-                        <span className="text-sm text-brand-dark truncate">{itemDisplayName(item, locale)}</span>
+                        <span className="text-sm text-brand-dark truncate">{itemDisplayName(item, messages)}</span>
                       </div>
                       {(item.type === "bundle" || !pricing?.fivePacks) && (
                         <span className="text-sm font-medium text-brand-dark shrink-0">
-                          {t.price(item.price)}
+                          {point(item.price)}
                         </span>
                       )}
                     </li>
@@ -380,7 +399,7 @@ export default function KassePage() {
                           : `${pricing.fivePacks} × ${t.fivePack}`}
                       </span>
                       <span className="text-brand-dark">
-                        {t.price(pricing.fivePacks * FIVE_PACK_PRICE)}
+                        {money(pricing.fivePacks * priceMinor(FIVE_PACK_PRICE, currency))}
                       </span>
                     </div>
                   )}
@@ -389,10 +408,12 @@ export default function KassePage() {
                     pricing.singleCount % FIVE_PACK_SIZE > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-brand-medium">
-                        {t.singles(pricing.singleCount % FIVE_PACK_SIZE)}
+                        {pricing.singleCount % FIVE_PACK_SIZE === 1
+                          ? t.singleOne
+                          : fmt(t.singleOther, { count: pricing.singleCount % FIVE_PACK_SIZE })}
                       </span>
                       <span className="text-brand-dark">
-                        {t.price((pricing.singleCount % FIVE_PACK_SIZE) * SINGLE_PRICE)}
+                        {money((pricing.singleCount % FIVE_PACK_SIZE) * priceMinor(SINGLE_PRICE, currency))}
                       </span>
                     </div>
                   )}
@@ -430,42 +451,49 @@ export default function KassePage() {
                       <p className="text-xs text-brand-medium">{codeMessage}</p>
                     ) : null}
                   </div>
-                  {applied && applied.discountNok > 0 ? (
+                  {activeDiscount && activeDiscount.discountMinor > 0 ? (
                     <div className="flex justify-between text-sm">
-                      <span className="text-brand-medium">{t.listPrice(applied.listAmountNok)}</span>
+                      <span className="text-brand-medium">
+                        {fmt(t.listPrice, { amount: money(activeDiscount.listAmountMinor) })}
+                      </span>
                     </div>
                   ) : null}
                   <div className="flex justify-between pt-2 border-t border-brand-soft">
                     <span className="font-medium text-brand-dark">{t.total}</span>
                     <span className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark">
-                      {t.price(displayTotal)}
+                      {money(displayTotal)}
                     </span>
                   </div>
                 </div>
 
                 {/* Payment buttons */}
                 <div className="space-y-3 mb-4">
-                  <button
-                    onClick={() => handlePayment("vipps")}
-                    disabled={loading}
-                    className="w-full flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold text-white transition-all hover:brightness-110 shadow-sm hover:-translate-y-0.5 cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
-                    style={{ backgroundColor: "#FF5B24" }}
-                  >
-                    {loadingProvider === "vipps" ? (
-                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                      </svg>
-                    ) : (
-                      <>
-                        {t.payVipps}
-                        <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
-                          {t.recommended}
-                        </span>
-                      </>
-                    )}
-                  </button>
-                  <p className="text-center text-xs text-brand-medium">{t.or}</p>
+                  {/* Vipps only takes NOK. */}
+                  {vipps && (
+                    <>
+                    <button
+                      onClick={() => handlePayment("vipps")}
+                      disabled={loading}
+                      className="w-full flex items-center justify-center gap-2 rounded-full py-3.5 text-sm font-bold text-white transition-all hover:brightness-110 shadow-sm hover:-translate-y-0.5 cursor-pointer disabled:opacity-70 disabled:hover:translate-y-0"
+                      style={{ backgroundColor: "#FF5B24" }}
+                    >
+                      {loadingProvider === "vipps" ? (
+                        <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                      ) : (
+                        <>
+                          {t.payVipps}
+                          <span className="rounded-full bg-white/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide">
+                            {t.recommended}
+                          </span>
+                        </>
+                      )}
+                    </button>
+                    <p className="text-center text-xs text-brand-medium">{t.or}</p>
+                    </>
+                  )}
                   <button
                     type="button"
                     onClick={() => handlePayment("stripe")}
@@ -490,7 +518,7 @@ export default function KassePage() {
                 </div>
                 {!cardCheckoutAllowed && (
                   <p className="text-center text-xs text-brand-medium mb-3">
-                    {locale === "nb" ? CARD_CHECKOUT_DISABLED_MESSAGE : t.cardDisabled}
+                    {t.cardDisabled}
                   </p>
                 )}
 
@@ -499,7 +527,7 @@ export default function KassePage() {
                 )}
 
                 <p className="text-center text-xs text-brand-medium mb-2">
-                  {t.secure}
+                  {pdfLanguage ? `${t.secure} · ${pdfLanguage}` : t.secure}
                 </p>
                 <p className="text-center text-[10px] text-brand-medium/60">
                   {t.acceptTerms}
@@ -513,94 +541,3 @@ export default function KassePage() {
     </>
   );
 }
-
-const copy = {
-  nb: {
-    errors: {
-      firstName: "Fornavn er påkrevd",
-      lastName: "Etternavn er påkrevd",
-      email: "E-post er påkrevd",
-      emailInvalid: "Ugyldig e-postadresse",
-      confirm: "Bekreft e-posten din",
-      mismatch: "E-postadressene stemmer ikke overens",
-    },
-    invalidCode: "Ugyldig kode",
-    codeActive: (code: string, percent: number, association: string, amount: number) =>
-      `Kode ${code} er aktiv — ${percent} % for ${association}. Du betaler ${amount} kr.`,
-    cancelled: "Betalingen ble avbrutt eller mislyktes. Ingen ordre er fullført.",
-    genericError: "Noe gikk galt. Pr\u00f8v igjen.",
-    emptyTitle: "Handlekurven er tom",
-    emptyText: "Legg til produkter før du går til kassen.",
-    seeProducts: "Se produkter",
-    title: "Kasse",
-    steps: ["Info", "Betaling", "Nedlasting"],
-    details: "Dine opplysninger",
-    firstName: "Fornavn",
-    firstNamePlaceholder: "Ola",
-    lastName: "Etternavn",
-    lastNamePlaceholder: "Nordmann",
-    email: "E-post",
-    confirmEmail: "Bekreft e-post",
-    summary: "Ordresammendrag",
-    remove: (name: string) => `Fjern ${name}`,
-    price: (amount: number) => `${amount} kr`,
-    fivePack: "5-pakke",
-    singles: (count: number) => (count === 1 ? "1 enkeltplanlegger" : `${count} enkeltplanleggere`),
-    discountCode: "Rabattkode",
-    discountPlaceholder: "f.eks. ABAKUS20",
-    apply: "Bruk",
-    listPrice: (amount: number) => `Katalogpris ${amount} kr`,
-    total: "Totalt",
-    payVipps: "Betal med Vipps",
-    recommended: "Anbefalt",
-    or: "eller",
-    payCard: "Betal med kort",
-    cardDisabled: CARD_CHECKOUT_DISABLED_MESSAGE,
-    secure: "Trygg betaling · Umiddelbar nedlasting",
-    acceptTerms: "Ved å kjøpe godtar du våre kjøpsvilkår",
-  },
-  en: {
-    errors: {
-      firstName: "First name is required",
-      lastName: "Last name is required",
-      email: "Email is required",
-      emailInvalid: "Invalid email address",
-      confirm: "Please confirm your email",
-      mismatch: "The email addresses don't match",
-    },
-    invalidCode: "Invalid code",
-    codeActive: (code: string, percent: number, association: string, amount: number) =>
-      `Code ${code} is active — ${percent}% for ${association}. You pay NOK ${amount}.`,
-    cancelled: "The payment was cancelled or failed. No order has been completed.",
-    genericError: "Something went wrong. Please try again.",
-    emptyTitle: "Your cart is empty",
-    emptyText: "Add some products before you go to checkout.",
-    seeProducts: "See products",
-    title: "Checkout",
-    steps: ["Details", "Payment", "Download"],
-    details: "Your details",
-    firstName: "First name",
-    firstNamePlaceholder: "Jane",
-    lastName: "Last name",
-    lastNamePlaceholder: "Smith",
-    email: "Email",
-    confirmEmail: "Confirm email",
-    summary: "Order summary",
-    remove: (name: string) => `Remove ${name}`,
-    price: (amount: number) => `NOK ${amount}`,
-    fivePack: "5-pack",
-    singles: (count: number) => (count === 1 ? "1 single planner" : `${count} single planners`),
-    discountCode: "Discount code",
-    discountPlaceholder: "e.g. ABAKUS20",
-    apply: "Apply",
-    listPrice: (amount: number) => `List price NOK ${amount}`,
-    total: "Total",
-    payVipps: "Pay with Vipps",
-    recommended: "Recommended",
-    or: "or",
-    payCard: "Pay by card",
-    cardDisabled: "Card payment isn't available yet. Please pay with Vipps.",
-    secure: "Secure payment · Instant download · Planners in Norwegian (Bokmål)",
-    acceptTerms: "By purchasing, you accept our terms of sale",
-  },
-} satisfies Record<Locale, unknown>;

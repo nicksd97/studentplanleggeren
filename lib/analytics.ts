@@ -1,5 +1,6 @@
 import { campaignTagsFromItems } from "./attribution";
-import type { OrderRecord } from "./checkout";
+import { expectedCharge, type OrderRecord } from "./checkout";
+import { minorToDecimal } from "./currency";
 
 export function configuredMeasurementId(): string | null {
   const value = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID?.trim() ?? "";
@@ -39,8 +40,7 @@ export async function recordPaidPurchase(order: OrderRecord): Promise<void> {
             name: "purchase",
             params: {
               transaction_id: order.id,
-              value: order.amount_nok,
-              currency: "NOK",
+              ...purchaseValue(order),
               ...tags,
             },
           },
@@ -50,4 +50,12 @@ export async function recordPaidPurchase(order: OrderRecord): Promise<void> {
   ).catch(() => {
     // Never block fulfillment because analytics is unavailable.
   });
+}
+
+/** Purchase value in the currency the order was charged in. */
+function purchaseValue(order: OrderRecord): { value: number; currency: string } {
+  const charge = expectedCharge(order);
+  return charge.currency === "NOK"
+    ? { value: order.amount_nok, currency: "NOK" }
+    : { value: minorToDecimal(charge.amountMinor), currency: charge.currency };
 }

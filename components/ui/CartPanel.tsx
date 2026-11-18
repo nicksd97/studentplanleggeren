@@ -2,48 +2,16 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import { cartPricingSummary } from "@/lib/checkout";
+import { cartAmountMinor, cartPricingSummary } from "@/lib/checkout";
+import { priceMinor } from "@/lib/currency";
 import { FIVE_PACK_PRICE, FIVE_PACK_SIZE } from "@/lib/products";
 import { useCart } from "@/lib/cart-context";
 import Button from "./Button";
 import { localizePath } from "@/lib/i18n/config";
+import { fmt } from "@/lib/i18n/format";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
 import { itemDisplayName } from "@/lib/i18n/products";
 import { useLocale } from "@/lib/i18n/use-locale";
-
-const copy = {
-  nb: {
-    title: "Handlekurv",
-    close: "Lukk",
-    empty: "Handlekurven er tom",
-    seeProducts: "Se produkter",
-    price: (amount: number) => `${amount} kr`,
-    remove: (name: string) => `Fjern ${name}`,
-    onePack: `5-pakke: fem planleggere for ${FIVE_PACK_PRICE} kr`,
-    manyPacks: (packs: number) => `${packs} × 5-pakke for ${packs * FIVE_PACK_PRICE} kr`,
-    singles: (count: number) => ` + ${count} enkelt`,
-    addMore: (count: number) =>
-      `Legg til ${count} til og få 5-pakke for ${FIVE_PACK_PRICE} kr.`,
-    total: "Totalt",
-    checkout: "Gå til kassen",
-    clear: "Tøm handlekurv",
-  },
-  en: {
-    title: "Cart",
-    close: "Close",
-    empty: "Your cart is empty",
-    seeProducts: "See products",
-    price: (amount: number) => `NOK ${amount}`,
-    remove: (name: string) => `Remove ${name}`,
-    onePack: `5-pack: five planners for NOK ${FIVE_PACK_PRICE}`,
-    manyPacks: (packs: number) => `${packs} × 5-pack for NOK ${packs * FIVE_PACK_PRICE}`,
-    singles: (count: number) => ` + ${count} single`,
-    addMore: (count: number) =>
-      `Add ${count} more to get the 5-pack for NOK ${FIVE_PACK_PRICE}.`,
-    total: "Total",
-    checkout: "Go to checkout",
-    clear: "Empty cart",
-  },
-};
 
 export default function CartPanel({
   open,
@@ -52,10 +20,13 @@ export default function CartPanel({
   open: boolean;
   onClose: () => void;
 }) {
-  const { items, removeItem, clearCart, totalPrice } = useCart();
+  const { items, removeItem, clearCart } = useCart();
   const pricing = cartPricingSummary(items);
   const locale = useLocale();
-  const t = copy[locale];
+  const messages = useMessages();
+  const t = messages.cart;
+  const { currency, money, point, fill } = usePricing();
+  const totalMinor = cartAmountMinor(items, currency) ?? 0;
 
   // Lock body scroll when open
   useEffect(() => {
@@ -126,7 +97,7 @@ export default function CartPanel({
                   {item.image && (
                     <img
                       src={`/images/products/${item.image}`}
-                      alt={itemDisplayName(item, locale)}
+                      alt={itemDisplayName(item, messages)}
                       className="h-14 w-14 rounded-lg object-cover object-top shrink-0"
                     />
                   )}
@@ -139,16 +110,16 @@ export default function CartPanel({
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-brand-dark truncate">
-                      {itemDisplayName(item, locale)}
+                      {itemDisplayName(item, messages)}
                     </p>
                     {(item.type === "bundle" || !pricing?.fivePacks) && (
-                      <p className="text-sm text-brand-medium">{t.price(item.price)}</p>
+                      <p className="text-sm text-brand-medium">{point(item.price)}</p>
                     )}
                   </div>
                   <button
                     onClick={() => removeItem(item.id)}
                     className="p-1.5 text-brand-medium hover:text-red-500 transition-colors cursor-pointer shrink-0"
-                    aria-label={t.remove(itemDisplayName(item, locale))}
+                    aria-label={fmt(t.remove, { name: itemDisplayName(item, messages) })}
                   >
                     <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -165,20 +136,25 @@ export default function CartPanel({
           <div className="border-t border-brand-soft px-6 py-5 space-y-4">
             {pricing && pricing.fivePacks > 0 ? (
               <p className="text-sm text-brand-medium">
-                {pricing.fivePacks === 1 ? t.onePack : t.manyPacks(pricing.fivePacks)}
+                {pricing.fivePacks === 1
+                  ? fill(t.onePack)
+                  : fmt(t.manyPacks, {
+                      packs: pricing.fivePacks,
+                      price: money(pricing.fivePacks * priceMinor(FIVE_PACK_PRICE, currency)),
+                    })}
                 {pricing.singleCount % FIVE_PACK_SIZE > 0
-                  ? t.singles(pricing.singleCount % FIVE_PACK_SIZE)
+                  ? fmt(t.singles, { count: pricing.singleCount % FIVE_PACK_SIZE })
                   : ""}
               </p>
             ) : pricing && pricing.singleCount > 0 && pricing.singleCount < FIVE_PACK_SIZE ? (
               <p className="text-sm text-brand-medium">
-                {t.addMore(FIVE_PACK_SIZE - pricing.singleCount)}
+                {fill(fmt(t.addMore, { count: FIVE_PACK_SIZE - pricing.singleCount }))}
               </p>
             ) : null}
             <div className="flex items-center justify-between">
               <span className="text-sm text-brand-medium">{t.total}</span>
               <span className="font-[family-name:var(--font-display)] text-xl font-bold text-brand-dark">
-                {t.price(totalPrice)}
+                {money(totalMinor)}
               </span>
             </div>
             <Button href={localizePath("/kasse", locale)} data-cta="handlekurv_kasse" variant="primary" fullWidth onClick={onClose}>

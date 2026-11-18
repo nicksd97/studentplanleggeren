@@ -2,15 +2,12 @@ import Link from "next/link";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { guideProductHref, type Guide } from "@/lib/guides";
+import PriceText from "@/components/i18n/PriceText";
 import { localizePath, type Locale } from "@/lib/i18n/config";
-
-const copy = {
-  nb: { home: "Forside", guide: "Guide" },
-  en: { home: "Home", guide: "Guide" },
-};
+import { getMessages } from "@/lib/i18n/messages";
 
 export default function GuidePage({ guide, locale }: { guide: Guide; locale: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).guidePage;
   return (
     <>
       <Header />
@@ -44,7 +41,7 @@ export default function GuidePage({ guide, locale }: { guide: Guide; locale: Loc
 
           <aside className="mt-12 rounded-2xl bg-white border border-brand-soft p-6 md:p-8">
             <p className="text-brand-dark/80 leading-relaxed mb-5">
-              {guide.productLead}
+              <PriceText text={guide.productLead} />
             </p>
             <Link
               href={guideProductHref(guide, locale)}

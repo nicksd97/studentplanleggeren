@@ -1,59 +1,11 @@
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import type { Locale } from "@/lib/i18n/config";
+import { getMessages } from "@/lib/i18n/messages";
 
 const images = ["/images/marketing/1.png", "/images/marketing/3.png", "/images/marketing/2.png"];
 
-const copy = {
-  nb: {
-    label: "✦ Bruk den overalt ✦",
-    heading: "Fungerer på alle enheter",
-    intro:
-      "Fyll ut planleggerne digitalt på PC, Mac, iPad eller nettbrett — eller skriv ut på papir. Du velger.",
-    cards: [
-      {
-        alt: "Fyll inn planleggeren digitalt på PC, Mac, iPad eller nettbrett",
-        label: "Fyll inn digitalt",
-        subtext: "Bruk på PC, Mac, iPad eller nettbrett",
-      },
-      {
-        alt: "Årlig, månedlig, ukentlig og daglig planleggere",
-        label: "Årlig, månedlig, ukentlig og daglig",
-        subtext: "Planleggere for alle behov",
-      },
-      {
-        alt: "Tilgjengelig i flere størrelser: A4, A5, Letter og Half Letter",
-        label: "Flere størrelser",
-        subtext: "A4, A5, Letter og Half Letter",
-      },
-    ],
-  },
-  en: {
-    label: "✦ Use it anywhere ✦",
-    heading: "Works on every device",
-    intro:
-      "Fill in the planners digitally on a PC, Mac, iPad or tablet — or print them on paper. Your choice.",
-    cards: [
-      {
-        alt: "Fill in the planner digitally on a PC, Mac, iPad or tablet",
-        label: "Fill in digitally",
-        subtext: "Use on a PC, Mac, iPad or tablet",
-      },
-      {
-        alt: "Yearly, monthly, weekly and daily planners",
-        label: "Yearly, monthly, weekly and daily",
-        subtext: "Planners for every need",
-      },
-      {
-        alt: "Available in several sizes: A4, A5, Letter and Half Letter",
-        label: "Several sizes",
-        subtext: "A4, A5, Letter and Half Letter",
-      },
-    ],
-  },
-};
-
 export default function DeviceShowcase({ locale = "nb" }: { locale?: Locale }) {
-  const t = copy[locale];
+  const t = getMessages(locale).devices;
   const cards = t.cards.map((card, index) => ({ ...card, image: images[index] }));
   return (
     <section className="py-24 md:py-32 bg-brand-cream">

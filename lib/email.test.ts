@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
-import { EMAIL_FROM, buildOrderConfirmationHtml } from "./email";
+import { EMAIL_FROM, buildOrderConfirmationHtml, orderEmailCopy } from "./email";
 import { buildLeadMagnetEmail } from "./lead-magnet-email";
 
 describe("email from-address", () => {
@@ -109,5 +109,52 @@ describe("order confirmation discount line", () => {
     assert.match(html, /−50 kr/);
     assert.match(html, /Totalt — 199 kr/);
     assert.equal(html.includes("line-through"), false);
+  });
+});
+
+describe("order confirmation in the buyer's currency and language", () => {
+  const base = {
+    firstName: "Lena",
+    items: [{ id: "komplett", name: "Studentplanlegger Komplett", price: 249 }],
+    downloadToken: "tok",
+  };
+
+  it("keeps the Bokmål NOK mail as before", () => {
+    const html = buildOrderConfirmationHtml({ ...base, amountNok: 249 });
+    assert.match(html, /Takk for kjøpet, Lena!/);
+    assert.match(html, /Totalt — 249 kr/);
+    assert.match(html, /https:\/\/www\.studentplanlegger\.no\/takk\?token=tok/);
+    assert.match(html, /Studentplanlegger Komplett/);
+  });
+
+  it("formats the total and discount in the order's currency and language", () => {
+    const html = buildOrderConfirmationHtml({
+      ...base,
+      amountNok: 199,
+      discountCode: "ABAKUS20",
+      discountNok: 50,
+      discountPercent: 20,
+      currency: "EUR",
+      amountMinor: 1759,
+      discountMinor: 440,
+      locale: "de",
+    });
+    assert.match(html, /17,59 €/);
+    assert.match(html, /4,40 €/);
+    assert.doesNotMatch(html, /199 kr|NOK/);
+    assert.match(html, /\/de\/takk\?token=tok/);
+    assert.match(html, /ABAKUS20/);
+  });
+
+  it("has a translated mail for every language", () => {
+    const subjects = new Set<string>();
+    for (const locale of ["nb", "en", "de", "sv", "da", "es", "fr"] as const) {
+      const html = buildOrderConfirmationHtml({ ...base, currency: "USD", amountMinor: 2399, locale });
+      assert.doesNotMatch(html, /\{\w+\}/, locale);
+      assert.match(html, /Lena/, locale);
+      subjects.add(orderEmailCopy(locale).subject);
+    }
+    assert.equal(subjects.size, 7);
+    assert.match(buildOrderConfirmationHtml({ ...base, currency: "USD", amountMinor: 2399, locale: "en" }), /\$23\.99/);
   });
 });

@@ -22,7 +22,7 @@ export default function PersonvernPage() {
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-dark mb-8">
             Personvernerklæring
           </h1>
-          <p className="text-brand-muted mb-8">Sist oppdatert: 12. oktober 2026</p>
+          <p className="text-brand-muted mb-8">Sist oppdatert: 18. november 2026</p>
 
           <div className="prose prose-brand max-w-none space-y-8 text-brand-dark/80">
             <section>
@@ -134,6 +134,31 @@ export default function PersonvernPage() {
                 produkt, prisnivå og hvilken kampanjelenke besøket kom fra. Statistikken inneholder
                 ikke navn, e-postadresse eller annet som identifiserer deg, og nedlastingslenker
                 fjernes fra adressene før de sendes. Vercel er databehandler for statistikken.
+              </p>
+            </section>
+
+            <section>
+              <h2 className="text-xl font-semibold text-brand-dark mb-3">Språk og valuta</h2>
+              <p>
+                Vi bruker to funksjonelle informasjonskapsler som er strengt nødvendige for å vise
+                nettsiden på riktig språk og med priser i riktig valuta. De krever ikke samtykke,
+                brukes ikke til sporing og deles ikke med andre.
+              </p>
+              <ul className="list-disc pl-6 space-y-1">
+                <li>
+                  <code>NEXT_LOCALE</code> — husker språket du har valgt i språkmenyen, slik at du
+                  kommer til samme språkversjon neste gang. Settes når du velger språk. Varighet: 1 år.
+                </li>
+                <li>
+                  <code>sp_currency</code> — husker hvilken valuta prisene vises i (for eksempel NOK
+                  eller EUR). Settes av nettsiden ved første besøk, ut fra landet du besøker fra.
+                  Varighet: 1 år.
+                </li>
+              </ul>
+              <p>
+                For å velge språk og valuta bruker vi landet IP-adressen din hører til, som
+                vertsleverandøren vår Vercel oppgir ved hvert besøk. Landet brukes bare til dette
+                valget, og verken landet eller IP-adressen lagres.
               </p>
             </section>
 
