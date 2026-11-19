@@ -6,6 +6,7 @@ import {
   parseCampaignCookie,
   parseCampaignTags,
 } from "@/lib/attribution";
+import { CURRENCY_COOKIE, subscriberCurrency } from "@/lib/currency";
 import { signLocalizedPath } from "@/lib/downloads";
 import { sendLeadMagnetEmail } from "@/lib/email";
 import { isLocale } from "@/lib/i18n/config";
@@ -108,6 +109,13 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  // Prices in the emails and the welcome event: the visitor's currency cookie, else country.
+  const currency = subscriberCurrency({
+    cookie: request.cookies.get(CURRENCY_COOKIE)?.value,
+    country: request.headers.get("x-vercel-ip-country"),
+    locale,
+  });
+
   const segmentId = process.env.RESEND_LEAD_SEGMENT_ID;
   const apiKey = process.env.RESEND_API_KEY;
   if (!segmentId || !apiKey) {
@@ -131,7 +139,7 @@ export async function POST(request: NextRequest) {
 
   let emailSent = true;
   try {
-    await sendLeadMagnetEmail({ to: email, downloadUrl: signedUrl });
+    await sendLeadMagnetEmail({ to: email, downloadUrl: signedUrl, locale, currency });
   } catch {
     emailSent = false;
   }
@@ -139,7 +147,7 @@ export async function POST(request: NextRequest) {
   let welcomeEnrolled = false;
   if (contact.isNew) {
     try {
-      welcomeEnrolled = await sendGratisSignupEvent(resend, email);
+      welcomeEnrolled = await sendGratisSignupEvent(resend, email, { locale, currency });
     } catch {
       welcomeEnrolled = false;
     }
@@ -152,6 +160,8 @@ export async function POST(request: NextRequest) {
       welcomeEnrolled,
       unsubscribed: false,
       consentSource: CONSENT_SOURCE_FORM,
+      locale,
+      currency,
     });
   } catch {
     // Lead storage must not break the sample signup.

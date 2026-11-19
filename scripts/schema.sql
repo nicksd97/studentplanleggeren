@@ -90,6 +90,22 @@ CREATE TABLE IF NOT EXISTS leads (
 CREATE INDEX IF NOT EXISTS idx_leads_source ON leads (source);
 CREATE INDEX IF NOT EXISTS idx_leads_created_at ON leads (created_at);
 
+-- Lead language and currency (also shipped as supabase/migrations/2026-11-19-lead-locale.sql)
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS locale text;
+ALTER TABLE leads ADD COLUMN IF NOT EXISTS currency text;
+CREATE INDEX IF NOT EXISTS idx_leads_locale ON leads (locale);
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'leads_locale_check') THEN
+    ALTER TABLE leads ADD CONSTRAINT leads_locale_check
+      CHECK (locale IS NULL OR locale IN ('nb', 'en', 'de', 'sv', 'da', 'es', 'fr'));
+  END IF;
+  IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'leads_currency_check') THEN
+    ALTER TABLE leads ADD CONSTRAINT leads_currency_check
+      CHECK (currency IS NULL OR currency IN ('NOK', 'SEK', 'DKK', 'EUR', 'GBP', 'USD'));
+  END IF;
+END $$;
+
 CREATE TABLE IF NOT EXISTS lead_campaigns (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   lead_id uuid NOT NULL REFERENCES leads (id) ON DELETE CASCADE,

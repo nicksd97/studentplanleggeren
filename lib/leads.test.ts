@@ -27,7 +27,7 @@ describe("lead constants", () => {
 
 describe("sendGratisSignupEvent", () => {
   it("sends the custom event and returns true when Resend accepts it", async () => {
-    const calls: Array<{ event: string; email: string }> = [];
+    const calls: Array<{ event: string; email: string; payload?: Record<string, unknown> }> = [];
     const ok = await sendGratisSignupEvent(
       {
         events: {
@@ -41,7 +41,13 @@ describe("sendGratisSignupEvent", () => {
     );
 
     assert.equal(ok, true);
-    assert.deepEqual(calls, [{ event: GRATIS_SIGNUP_EVENT, email: "ny@student.no" }]);
+    assert.deepEqual(calls, [
+      {
+        event: GRATIS_SIGNUP_EVENT,
+        email: "ny@student.no",
+        payload: { locale: "nb", currency: "NOK", bundlePrice: "249 kr" },
+      },
+    ]);
   });
 
   it("returns false when the SDK reports an error or throws", async () => {
