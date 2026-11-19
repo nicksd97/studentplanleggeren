@@ -167,7 +167,7 @@ export const en: Messages = {
     placeholder: "you@example.com",
     sending: "Sending...",
     consentBefore:
-      "By submitting, you agree that we store your email address to send you the sample and regular study tips (the emails are in Norwegian). Read the ",
+      "By submitting, you agree that we store your email address to send you the sample and regular study tips. Read the ",
     consentLink: "privacy policy",
     consentAfter: ".",
   },

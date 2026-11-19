@@ -167,7 +167,7 @@ export const sv: Messages = {
     placeholder: "du@example.com",
     sending: "Skickar...",
     consentBefore:
-      "Genom att skicka in godkänner du att vi sparar din mejladress för att skicka smakprovet och regelbundna studietips (mejlen är på norska). Läs vår ",
+      "Genom att skicka in godkänner du att vi sparar din mejladress för att skicka smakprovet och regelbundna studietips. Läs vår ",
     consentLink: "integritetspolicy",
     consentAfter: ".",
   },

@@ -177,7 +177,7 @@ export const es: Messages = {
     placeholder: "tu@ejemplo.com",
     sending: "Enviando...",
     consentBefore:
-      "Al enviar el formulario, aceptas que guardemos tu correo electrónico para enviarte la muestra y consejos de estudio periódicos (los correos están en noruego). Lee la ",
+      "Al enviar el formulario, aceptas que guardemos tu correo electrónico para enviarte la muestra y consejos de estudio periódicos. Lee la ",
     consentLink: "política de privacidad",
     consentAfter: ".",
   },

@@ -167,7 +167,7 @@ export const da: Messages = {
     placeholder: "dig@example.com",
     sending: "Sender...",
     consentBefore:
-      "Når du sender formularen, giver du samtykke til, at vi gemmer din mailadresse for at sende dig smagsprøven og løbende studietips (mailene er på norsk). Læs vores ",
+      "Når du sender formularen, giver du samtykke til, at vi gemmer din mailadresse for at sende dig smagsprøven og løbende studietips. Læs vores ",
     consentLink: "privatlivspolitik",
     consentAfter: ".",
   },

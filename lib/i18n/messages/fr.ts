@@ -178,7 +178,7 @@ export const fr: Messages = {
     placeholder: "vous@example.com",
     sending: "Envoi en cours...",
     consentBefore:
-      "En envoyant ce formulaire, vous acceptez que nous conservions votre adresse e-mail pour vous envoyer l’extrait ainsi que des conseils d’études réguliers (les e-mails sont en norvégien). Consultez notre ",
+      "En envoyant ce formulaire, vous acceptez que nous conservions votre adresse e-mail pour vous envoyer l’extrait ainsi que des conseils d’études réguliers. Consultez notre ",
     consentLink: "politique de confidentialité",
     consentAfter: ".",
   },
