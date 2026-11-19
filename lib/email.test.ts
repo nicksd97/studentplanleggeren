@@ -20,7 +20,7 @@ describe("lead magnet mail", () => {
 
   it("sends through sendLeadMagnetEmail with HTML, plain text and List-Unsubscribe", () => {
     assert.match(source, /export async function sendLeadMagnetEmail/);
-    assert.match(source, /buildLeadMagnetEmail\(downloadUrl\)/);
+    assert.match(source, /buildLeadMagnetEmail\(downloadUrl, \{ locale, currency \}\)/);
     assert.match(source, /text,\s*headers,/);
     assert.equal(mail.headers["List-Unsubscribe"], "<mailto:hei@studentplanlegger.no?subject=Avmelding>");
   });

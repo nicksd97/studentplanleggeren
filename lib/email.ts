@@ -158,14 +158,19 @@ export async function sendOrderConfirmation(
   });
 }
 
+/** The free sample in the subscriber's language, with prices in their currency (Bokmål/NOK by default). */
 export async function sendLeadMagnetEmail({
   to,
   downloadUrl,
+  locale,
+  currency,
 }: {
   to: string;
   downloadUrl: string;
+  locale?: Locale;
+  currency?: Currency;
 }) {
-  const { subject, html, text, headers } = buildLeadMagnetEmail(downloadUrl);
+  const { subject, html, text, headers } = buildLeadMagnetEmail(downloadUrl, { locale, currency });
 
   await sendHtmlEmail({
     to,

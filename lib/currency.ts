@@ -231,3 +231,19 @@ export function currencyFromCookieHeader(cookieHeader: string | null | undefined
   }
   return null;
 }
+
+/**
+ * Currency for a form post (e.g. the /gratis signup): the validated sp_currency cookie, else
+ * the visitor's country (as proxy.ts would set the cookie), else the language's default.
+ */
+export function subscriberCurrency({
+  cookie,
+  country,
+  locale,
+}: {
+  cookie?: string | null;
+  country?: string | null;
+  locale: Locale;
+}): Currency {
+  return parseCurrency(cookie) ?? currencyForCountry(country) ?? defaultCurrencyForLocale(locale) ?? DEFAULT_CURRENCY;
+}
