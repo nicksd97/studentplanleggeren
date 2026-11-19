@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test lib/seo.test.ts lib/checkout.test.ts lib/order-store.test.ts lib/attribution.test.ts lib/analytics.test.ts lib/email.test.ts lib/newsletter.test.ts lib/discount.test.ts lib/track-events.test.ts lib/leads.test.ts lib/i18n.test.ts lib/currency.test.ts lib/checkout-currency.test.ts lib/downloads.test.ts lib/order-currency.test.ts",
-    "backfill-leads": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs scripts/backfill-resend-leads.ts"
+    "test": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test lib/seo.test.ts lib/checkout.test.ts lib/order-store.test.ts lib/attribution.test.ts lib/analytics.test.ts lib/email.test.ts lib/newsletter.test.ts lib/discount.test.ts lib/track-events.test.ts lib/leads.test.ts lib/i18n.test.ts lib/currency.test.ts lib/checkout-currency.test.ts lib/downloads.test.ts lib/order-currency.test.ts lib/emails.test.ts lib/leads-locale.test.ts",
+    "backfill-leads": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs scripts/backfill-resend-leads.ts",
+    "setup-resend-welcome-i18n": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs scripts/setup-resend-welcome-i18n.ts",
+    "render-emails": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs scripts/render-email-previews.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.103.0",
