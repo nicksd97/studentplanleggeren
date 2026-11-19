@@ -21,7 +21,7 @@ export default function VilkarPage() {
           <h1 className="font-display text-3xl sm:text-4xl font-bold text-brand-dark mb-8">
             Kjøpsvilkår
           </h1>
-          <p className="text-brand-muted mb-8">Sist oppdatert: 12. april 2026</p>
+          <p className="text-brand-muted mb-8">Sist oppdatert: 19. november 2026</p>
 
           <div className="prose prose-brand max-w-none space-y-8 text-brand-dark/80">
             <section>
@@ -44,11 +44,13 @@ export default function VilkarPage() {
             <section>
               <h2 className="text-xl font-semibold text-brand-dark mb-3">Priser og betaling</h2>
               <p>
-                Alle priser på nettsiden er oppgitt i norske kroner (NOK) og inkluderer merverdiavgift (MVA).
+                Prisene vises i din lokale valuta der vi støtter den (NOK, SEK, DKK, EUR, GBP eller
+                USD), ellers i amerikanske dollar, og inkluderer merverdiavgift (MVA). Du betaler
+                beløpet som vises i kassen.
               </p>
               <p>
-                Vi tilbyr betaling via Stripe (kort) og Vipps. Betalingen gjennomføres
-                før produktet leveres.
+                Vi tilbyr kortbetaling via Stripe i alle disse valutaene, og Vipps for betalinger i
+                norske kroner (NOK). Betalingen gjennomføres før produktet leveres.
               </p>
             </section>
 
