@@ -1,4 +1,4 @@
-# Emails in the subscriber's language — branch `feat/i18n-emails`, not merged
+# Emails in the subscriber's language — rolled out 2026-11-19
 
 Date: 2026-11-19
 
@@ -18,7 +18,23 @@ Date: 2026-11-19
 3. In Resend, review the 6 new automations «Studentplanlegger gratis – velkomstserie – EN/DE/…» and their templates (send yourself a test), then enable them.
 4. In Vercel, set `RESEND_WELCOME_LOCALES=en,de,sv,da,es,fr` (only the languages you enabled).
 5. Redeploy.
-6. After that, remove «(the emails are in Norwegian)» from `newsletter.consentBefore` in `lib/i18n/messages/<lang>.ts`. Until step 4, the sample email is already localized, but the welcome series is still in Bokmål.
+6. Done: the «(the emails are in Norwegian)» note was removed from `newsletter.consentBefore` in all translated languages.
+
+# Brand favicon — replace stock Next.js icon
+
+Date: 2026-10-28
+Branch: `cursor/favicon-3e8d`
+Plan: `plans/2026-10-28-favicon.md`
+
+## Status
+
+- Live `/favicon.ico` was still the default Next.js 25931-byte icon. `app/favicon.ico` is now a 16×16 + 32×32 Studentplanlegger ICO.
+- `public/favicon.png` already was the brand logo; left unchanged. Added 32×32 `app/icon.png` and 180×180 apple icons. Layout `icons` metadata lists the `.ico`, the PNG, and the apple touch icon.
+- No product or feature changes.
+
+## Nick, after merge
+
+Hard-refresh or open `/favicon.ico` on the production host. It must not be 25931 bytes or the Next.js “N” mark.
 
 ---
 
