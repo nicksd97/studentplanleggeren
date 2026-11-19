@@ -8,16 +8,18 @@ import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
 import { trackEvent } from "@/lib/track";
 import { priceTierFor } from "@/lib/track-events";
+import { localizePath } from "@/lib/i18n/config";
+import { fmt } from "@/lib/i18n/format";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
+import { itemDisplayName, localizeBundle, pdfLanguageCopy } from "@/lib/i18n/products";
+import { useLocale } from "@/lib/i18n/use-locale";
 
-const includes = [
-  "5 daglige planleggere",
-  "5 ukentlige planleggere",
-  "3 månedlige planleggere",
-  "1 årsplanlegger",
-  "5 produktivitetsverktøy",
-  "3 helse og livsstil",
-  "3 sporingsverktøy",
-];
+/** "249 kr" -> ["", "249", "kr"], "€21.99" -> ["€", "21.99", ""], so the number can be big. */
+function splitMoney(formatted: string): [string, string, string] {
+  const match = /^(\D*?)(\d[\d.,\s\u00a0]*\d|\d)(\D*)$/.exec(formatted);
+  if (!match) return ["", formatted, ""];
+  return [match[1].trim(), match[2], match[3].trim()];
+}
 
 function BundleButton({
   bundleId,
@@ -32,11 +34,12 @@ function BundleButton({
 }) {
   const { addItem, isInCart } = useCart();
   const [feedback, setFeedback] = useState<string | null>(null);
+  const t = useMessages().bundleShowcase;
   const bundle = pakker.find((p) => p.id === bundleId)!;
 
   function handleAdd() {
     if (isInCart(bundle.id)) {
-      setFeedback("Allerede i handlekurven");
+      setFeedback(t.alreadyInCart);
       setTimeout(() => setFeedback(null), 2000);
       return;
     }
@@ -47,7 +50,7 @@ function BundleButton({
       type: "bundle",
     });
     trackEvent("add_to_cart", { product: bundle.id, tier: priceTierFor({ id: bundle.id, type: "bundle", price: bundle.price }) });
-    setFeedback("Lagt til \u2713");
+    setFeedback(t.added);
     setTimeout(() => setFeedback(null), 2000);
   }
 
@@ -59,8 +62,14 @@ function BundleButton({
 }
 
 export default function BundleShowcase() {
-  const featured = pakker.find((p) => p.featured)!;
-  const categoryBundles = pakker.filter((p) => !p.featured);
+  const locale = useLocale();
+  const messages = useMessages();
+  const t = messages.bundleShowcase;
+  const { point, fill, vipps } = usePricing();
+  const featured = localizeBundle(pakker.find((p) => p.featured)!, messages);
+  const categoryBundles = pakker.filter((p) => !p.featured).map((p) => localizeBundle(p, messages));
+  const pdfLanguage = pdfLanguageCopy(locale, messages).sentence;
+  const [pricePrefix, priceNumber, priceSuffix] = splitMoney(point(featured.price));
 
   return (
     <section id="pakker" className="relative bg-brand-pale py-24 md:py-32">
@@ -70,13 +79,13 @@ export default function BundleShowcase() {
         <FadeInOnScroll>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Alt du trenger ✦
+              {t.label}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-4xl md:text-5xl font-bold text-brand-dark mb-4 text-shadow-sm">
-              Studentplanlegger Komplett
+              {t.heading}
             </h2>
             <p className="text-brand-medium max-w-2xl mx-auto">
-              {featured.description}
+              {pdfLanguage ? `${featured.description} ${pdfLanguage}` : featured.description}
             </p>
           </div>
         </FadeInOnScroll>
@@ -85,10 +94,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={100}>
           <div className="flex justify-center items-center py-12 max-w-2xl mx-auto group">
             {[
-              { src: "daglig-planlegger.jpg", alt: "Daglig Planlegger", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
-              { src: "ukentlig-plan.jpg", alt: "Ukentlig Plan", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
-              { src: "pomodoro-planlegger.jpg", alt: "Pomodoro Planlegger", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
-              { src: "vane-tracker.jpg", alt: "Vane Tracker", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
+              { src: "daglig-planlegger.jpg", id: "daglig-planlegger", alt: "Daglig Planlegger", rotate: "-rotate-6", hover: "group-hover:-translate-x-8 group-hover:-translate-y-2 group-hover:-rotate-12" },
+              { src: "ukentlig-plan.jpg", id: "ukentlig-plan", alt: "Ukentlig Plan", rotate: "rotate-2", hover: "group-hover:-translate-x-2 group-hover:-translate-y-1" },
+              { src: "pomodoro-planlegger.jpg", id: "pomodoro-planlegger", alt: "Pomodoro Planlegger", rotate: "-rotate-2", hover: "group-hover:translate-x-2 group-hover:-translate-y-1" },
+              { src: "vane-tracker.jpg", id: "vane-tracker", alt: "Vane Tracker", rotate: "rotate-6", hover: "group-hover:translate-x-8 group-hover:-translate-y-2 group-hover:rotate-12" },
             ].map((item, i) => (
               <div
                 key={item.src}
@@ -96,7 +105,7 @@ export default function BundleShowcase() {
               >
                 <img
                   src={`/images/products/${item.src}`}
-                  alt={item.alt}
+                  alt={itemDisplayName({ id: item.id, name: item.alt }, messages)}
                   className="w-full h-full object-cover object-top"
                 />
               </div>
@@ -108,10 +117,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={200}>
           <div className="max-w-lg mx-auto mb-10 mt-6">
             <p className="text-sm font-bold text-brand-dark text-center mb-5">
-              25 planleggere inkludert:
+              {t.includedTitle}
             </p>
             <div className="grid grid-cols-2 gap-x-6 gap-y-3">
-              {includes.map((item) => (
+              {t.includes.map((item) => (
                 <div key={item} className="flex items-center gap-2">
                   <svg
                     className="h-5 w-5 text-brand-accent shrink-0"
@@ -137,26 +146,40 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={300}>
           <div className="text-center mb-16">
             <div className="flex items-baseline justify-center gap-3 mb-8">
+              {pricePrefix && (
+                <span className="text-brand-dark/70 text-2xl font-bold">{pricePrefix}</span>
+              )}
               <span className="font-[family-name:var(--font-display)] text-6xl md:text-7xl font-bold text-brand-dark text-shadow-sm">
-                {featured.price}
+                {priceNumber}
               </span>
-              <span className="text-brand-dark/70 text-2xl font-bold">kr</span>
+              {priceSuffix && (
+                <span className="text-brand-dark/70 text-2xl font-bold">{priceSuffix}</span>
+              )}
             </div>
 
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <KomplettVippsButton
-                source="pakker"
-                label={`Kjøp komplett pakke med Vipps — ${featured.price} kr`}
-                className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
-              />
+              {vipps ? (
+                <KomplettVippsButton
+                  source="pakker"
+                  label={fmt(t.buyKomplett, { price: point(featured.price) })}
+                  className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                />
+              ) : (
+                // Vipps only takes NOK; other currencies add the bundle to the cart for card checkout.
+                <BundleButton
+                  bundleId={featured.id}
+                  label={fmt(t.addKomplett, { price: point(featured.price) })}
+                  className="text-lg px-10 py-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-0.5"
+                />
+              )}
               <Button
-                href="/produkter"
+                href={localizePath("/produkter", locale)}
                 data-cta="pakker_produkter"
                 variant="outline"
                 className="text-lg px-10 py-4 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 bg-white/50"
               >
-                Se alle 25 planleggere
+                {t.seeAll}
               </Button>
             </div>
           </div>
@@ -166,10 +189,10 @@ export default function BundleShowcase() {
         <FadeInOnScroll delay={400}>
           <div className="border-t border-brand-soft/60 pt-10">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium text-center mb-6">
-              ✦ Eller velg en pakke ✦
+              {t.orPick}
             </p>
             <p className="text-sm text-brand-medium text-center mb-6">
-              Temapakker 149 kr. Velg fem enkeltplanleggere i handlekurven for 99 kr.
+              {fill(t.packsNote)}
             </p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
               {categoryBundles.map((bundle) => (
@@ -182,12 +205,12 @@ export default function BundleShowcase() {
                       {bundle.name}
                     </p>
                     <p className="text-xs text-brand-medium mt-0.5">
-                      {bundle.productIds.length} planleggere · {bundle.price} kr
+                      {fmt(t.bundleMeta, { count: bundle.productIds.length, price: point(bundle.price) })}
                     </p>
                   </div>
                   <BundleButton
                     bundleId={bundle.id}
-                    label="Kjøp"
+                    label={t.buy}
                     variant="secondary"
                     className="text-xs px-5 py-2 shrink-0 transition-transform duration-300 group-hover:scale-105"
                   />

@@ -42,3 +42,12 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# PDF translation build output (paid PDFs — never commit)
+/scripts/pdf-i18n/source/
+/scripts/pdf-i18n/out/
+/scripts/pdf-i18n/png/
+/scripts/pdf-i18n/fonts/
+/scripts/pdf-i18n/build-info/
+/scripts/pdf-i18n/verify-report.json
+__pycache__/

@@ -137,7 +137,8 @@ function memoryDeps(vippsPayment: VippsPayment | null = null) {
     stripe: {
       async createCheckoutSession(input) {
         createdSessions.push({
-          amountOre: input.amountOre,
+          // Minor units of input.currency; øre for these NOK checkouts.
+          amountOre: input.amountMinor,
           email: input.email,
           successUrl: input.successUrl,
           cancelUrl: input.cancelUrl,
@@ -202,6 +203,14 @@ const checkoutInput = {
   paymentProvider: "vipps" as const,
   returnOrigin: "https://www.studentplanlegger.no",
 };
+
+
+/** UI copy moved from the components to lib/i18n/messages/nb.ts. */
+const NB_COPY = readFileSync(new URL("./i18n/messages/nb.ts", import.meta.url), "utf8");
+
+function kasseWithCopy(): string {
+  return `${readFileSync(new URL("../app/(nb)/kasse/page.tsx", import.meta.url), "utf8")}\n${NB_COPY}`;
+}
 
 describe("catalog prices and 5-pack", () => {
   it("prices every single at 39 kr and theme packs at 149 kr", () => {
@@ -376,7 +385,7 @@ describe("card checkout", () => {
   });
 
   it("keeps Vipps first and visually primary, with card as a working secondary option", () => {
-    const source = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const source = kasseWithCopy();
     assert.match(source, /Betal med Vipps/);
     assert.match(source, /Betal med kort/);
     assert.match(source, /handlePayment\("vipps"\)/);
@@ -388,13 +397,13 @@ describe("card checkout", () => {
   });
 
   it("keeps the checkout form for card, not for the homepage complett Vipps button", () => {
-    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const kasse = kasseWithCopy();
     assert.match(kasse, /Fornavn/);
     assert.match(kasse, /E-post/);
     assert.match(kasse, /Betal med kort/);
     assert.match(kasse, /handlePayment\("stripe"\)/);
 
-    const takk = readFileSync(new URL("../app/takk/page.tsx", import.meta.url), "utf8");
+    const takk = `${readFileSync(new URL("../app/(nb)/takk/page.tsx", import.meta.url), "utf8")}\n${NB_COPY}`;
     assert.match(takk, /Nedlastingen er klar/);
     assert.match(takk, /order\.email\.includes\("@"\)/);
   });
@@ -495,7 +504,7 @@ describe("Stripe payment confirmation", () => {
       "utf8",
     );
     assert.match(returnSource, /reason === "error"/);
-    assert.match(returnSource, /\/takk\?token=/);
+    assert.match(returnSource, /localizePath\("\/takk"[^`]*\?token=/);
   });
 
   it("marks the order paid and sends the download only after Stripe reports paid", async () => {
@@ -564,7 +573,7 @@ describe("header complete package", () => {
     assert.equal(item.price, KOMPLETT_PRICE);
     assert.match(item.name, /komplett/i);
 
-    const header = readFileSync(new URL("../components/layout/Header.tsx", import.meta.url), "utf8");
+    const header = `${readFileSync(new URL("../components/layout/Header.tsx", import.meta.url), "utf8")}\n${NB_COPY}`;
     assert.match(header, /KomplettVippsButton/);
     assert.match(header, /Kjøp komplett pakke med Vipps/);
     assert.equal(header.includes("router.push(\"/kasse\")"), false);
@@ -578,7 +587,8 @@ describe("header complete package", () => {
       "utf8",
     );
     assert.match(button, /#FF5B24/);
-    assert.match(button, /Kjøp komplett pakke med Vipps/);
+    assert.match(button, /komplettVipps/);
+    assert.match(NB_COPY, /Kjøp komplett pakke med Vipps/);
     assert.match(button, /paymentProvider: "vipps"/);
     assert.match(button, /completePackageCartItem/);
     assert.equal(button.includes("firstName"), false);
@@ -592,7 +602,7 @@ describe("header complete package", () => {
       "utf8",
     );
     assert.match(showcase, /KomplettVippsButton/);
-    assert.match(showcase, /Kjøp komplett pakke med Vipps/);
+    assert.match(showcase, /t\.buyKomplett/);
 
     const card = readFileSync(new URL("../components/ui/BundleCard.tsx", import.meta.url), "utf8");
     assert.match(card, /KomplettVippsButton/);
@@ -1159,8 +1169,8 @@ describe("marketing attribution", () => {
       new URL("../components/ui/KomplettVippsButton.tsx", import.meta.url),
       "utf8",
     );
-    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
-    const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+    const kasse = kasseWithCopy();
+    const layout = readFileSync(new URL("../app/(nb)/layout.tsx", import.meta.url), "utf8");
     const ordersApi = readFileSync(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
 
     assert.match(button, /currentCampaignTags/);
@@ -1349,9 +1359,9 @@ describe("linjeforening discount codes", () => {
       new URL("../components/ui/KomplettVippsButton.tsx", import.meta.url),
       "utf8",
     );
-    const kasse = readFileSync(new URL("../app/kasse/page.tsx", import.meta.url), "utf8");
+    const kasse = kasseWithCopy();
     const ordersApi = readFileSync(new URL("../app/api/orders/route.ts", import.meta.url), "utf8");
-    const layout = readFileSync(new URL("../app/layout.tsx", import.meta.url), "utf8");
+    const layout = readFileSync(new URL("../app/(nb)/layout.tsx", import.meta.url), "utf8");
     const preview = readFileSync(new URL("../app/api/rabattkode/route.ts", import.meta.url), "utf8");
 
     assert.match(button, /currentDiscountCode/);

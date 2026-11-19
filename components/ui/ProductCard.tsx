@@ -6,12 +6,19 @@ import { useCart } from "@/lib/cart-context";
 import { trackEvent, trackOnce } from "@/lib/track";
 import { priceTierFor } from "@/lib/track-events";
 import Button from "./Button";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
+import { pdfLanguageCopy } from "@/lib/i18n/products";
+import { alleProdukter } from "@/lib/products";
 
 const VIEW_THRESHOLD = 0.6;
 const VIEW_DWELL_MS = 1500;
 
 export default function ProductCard({ product }: { product: Product }) {
   const { addItem, isInCart } = useCart();
+  const messages = useMessages();
+  const t = messages.productCard;
+  const { point, locale } = usePricing();
+  const pdfLanguage = pdfLanguageCopy(locale, messages).short;
   const [feedback, setFeedback] = useState<string | null>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const tier = priceTierFor({ id: product.id, type: "product", price: product.price });
@@ -48,19 +55,20 @@ export default function ProductCard({ product }: { product: Product }) {
 
   function handleAdd() {
     if (isInCart(product.id)) {
-      setFeedback("Allerede i handlekurven");
+      setFeedback(t.alreadyInCart);
       setTimeout(() => setFeedback(null), 2000);
       return;
     }
     addItem({
       id: product.id,
-      name: product.name,
+      // Cart and order lines keep the Bokmål name, whatever the page language.
+      name: alleProdukter.find((item) => item.id === product.id)?.name ?? product.name,
       price: product.price,
       type: "product",
       image: product.image,
     });
     trackEvent("add_to_cart", { product: product.slug, tier });
-    setFeedback("Lagt til \u2713");
+    setFeedback(t.added);
     setTimeout(() => setFeedback(null), 2000);
   }
 
@@ -83,13 +91,13 @@ export default function ProductCard({ product }: { product: Product }) {
         
         <div className="absolute bottom-3 left-3 z-10">
           <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold text-brand-dark backdrop-blur-sm shadow-sm">
-            Fyllbar PDF
+            {pdfLanguage ? `${t.badge} · ${pdfLanguage}` : t.badge}
           </span>
         </div>
         {product.pages > 1 && (
           <div className="absolute top-3 left-3 z-10">
             <span className="inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-[10px] font-bold text-brand-dark backdrop-blur-sm shadow-sm">
-              {product.pages} sider
+              {product.pages} {t.pages}
             </span>
           </div>
         )}
@@ -130,14 +138,14 @@ export default function ProductCard({ product }: { product: Product }) {
         {/* Price + CTA */}
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-brand-soft/30">
           <span className="font-[family-name:var(--font-display)] text-3xl font-black text-brand-dark">
-            {`${product.price} kr`}
+            {point(product.price)}
           </span>
           <Button
             variant="primary"
             className="text-xs px-5 py-2.5 transition-transform duration-300 group-hover:scale-[1.02] shadow-sm"
             onClick={handleAdd}
           >
-            {feedback ?? "Kjøp nå"}
+            {feedback ?? t.buy}
           </Button>
         </div>
       </div>

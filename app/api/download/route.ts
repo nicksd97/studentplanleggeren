@@ -1,4 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { downloadLocale, isOrderFile, signLocalizedPath } from '@/lib/downloads';
+import { orderMetaFromItems } from '@/lib/order-store';
 import { supabaseAdmin } from '@/lib/supabase';
 
 export async function GET(request: NextRequest) {
@@ -31,16 +33,27 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: 'Maks antall nedlastinger er nådd' }, { status: 403 });
   }
 
-  // Map fileId to actual storage path
-  const storagePath = fileId;
+  // `file` is a storage path; only files of the products in this order are allowed.
+  if (!isOrderFile(fileId, order.items)) {
+    return NextResponse.json({ error: 'Filen hører ikke til denne ordren' }, { status: 403 });
+  }
+
+  // Deliver the PDF in the page's (or order's) language, falling back to Bokmål.
+  const locale = downloadLocale(
+    request.nextUrl.searchParams.get('lang'),
+    order.locale ?? orderMetaFromItems(order.items)?.locale,
+  );
 
   // Generate signed URL (valid for 1 hour)
-  const { data: signedUrl, error: urlError } = await supabaseAdmin
-    .storage
-    .from('products')
-    .createSignedUrl(storagePath, 3600);
+  const signed = await signLocalizedPath(fileId, locale, async (path) => {
+    const { data, error: urlError } = await supabaseAdmin
+      .storage
+      .from('products')
+      .createSignedUrl(path, 3600);
+    return urlError || !data ? null : data.signedUrl;
+  });
 
-  if (urlError || !signedUrl) {
+  if (!signed) {
     return NextResponse.json({ error: 'Kunne ikke generere nedlastingslenke' }, { status: 500 });
   }
 
@@ -51,5 +64,5 @@ export async function GET(request: NextRequest) {
     .eq('id', order.id);
 
   // Redirect to the signed URL
-  return NextResponse.redirect(signedUrl.signedUrl);
+  return NextResponse.redirect(signed.url);
 }

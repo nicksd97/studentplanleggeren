@@ -37,7 +37,8 @@ export function createStripeGateway(): CheckoutDependencies["stripe"] {
       const stripe = createStripeClient(env.secretKey);
       const session = await stripe.checkout.sessions.create({
         mode: "payment",
-        locale: "nb",
+        // Stripe Checkout supports all of the site's languages under the same codes.
+        locale: input.locale,
         customer_email: input.email,
         success_url: input.successUrl,
         cancel_url: input.cancelUrl,
@@ -45,8 +46,9 @@ export function createStripeGateway(): CheckoutDependencies["stripe"] {
           {
             quantity: 1,
             price_data: {
-              currency: "nok",
-              unit_amount: input.amountOre,
+              // Amount and currency come from the server's price table (lib/currency.ts).
+              currency: input.currency.toLowerCase(),
+              unit_amount: input.amountMinor,
               product_data: {
                 name: input.description,
               },

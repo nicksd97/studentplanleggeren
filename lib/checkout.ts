@@ -10,6 +10,15 @@ import {
   type DiscountLookup,
   type DiscountStore,
 } from "./discount";
+import {
+  DEFAULT_CURRENCY,
+  STRIPE_MINIMUM_MINOR,
+  discountedMinor,
+  parseCurrency,
+  priceMinor,
+  type Currency,
+} from "./currency";
+import { isLocale, localizePath, type Locale } from "./i18n/config";
 import { insertFailureResult } from "./order-insert-error";
 import {
   alleProdukter,
@@ -27,6 +36,9 @@ export function isCardCheckoutAllowed(): boolean {
 
 export const CARD_CHECKOUT_DISABLED_MESSAGE =
   "Kortbetaling er ikke tilgjengelig ennå. Betal med Vipps.";
+
+export const INVALID_CURRENCY_MESSAGE = "Ugyldig valuta";
+export const VIPPS_NOK_ONLY_MESSAGE = "Vipps kan bare brukes ved betaling i norske kroner (NOK)";
 
 export type MoneyAmount = {
   currency: string;
@@ -90,6 +102,19 @@ export type OrderRecord = {
   list_amount_nok?: number;
   discount_nok?: number;
   discount_percent?: number;
+  /**
+   * Currency the buyer paid in (NOK when absent). For non-NOK orders, amount_nok,
+   * list_amount_nok and discount_nok hold the NOK-equivalent of the same cart and discount
+   * (from the NOK catalog prices), so NOK reporting stays meaningful; the charged amount is
+   * amount_minor in `currency`.
+   */
+  currency?: Currency;
+  /** Charged total in minor units of `currency` (øre for NOK). */
+  amount_minor?: number;
+  list_amount_minor?: number;
+  discount_minor?: number;
+  /** Site language at checkout: PDF language and email language. Bokmål when absent. */
+  locale?: Locale;
 } & CampaignTags;
 
 export type CheckoutDependencies = {
@@ -113,7 +138,10 @@ export type CheckoutDependencies = {
   };
   stripe: {
     createCheckoutSession(input: {
-      amountOre: number;
+      /** Total in minor units of `currency`. */
+      amountMinor: number;
+      currency: Currency;
+      locale: Locale;
       email: string;
       successUrl: string;
       cancelUrl: string;
@@ -131,6 +159,10 @@ export type CheckoutDependencies = {
       discountCode?: string;
       discountNok?: number;
       discountPercent?: number;
+      currency?: Currency;
+      amountMinor?: number;
+      discountMinor?: number;
+      locale?: Locale;
     }): Promise<void>;
   };
   discounts?: DiscountStore;
@@ -151,6 +183,10 @@ export type StartCheckoutInput = {
   paymentProvider?: string;
   campaign?: CampaignTags | Record<string, unknown> | string | null;
   discountCode?: string;
+  /** Currency the page showed; validated against lib/currency.ts. Absent means NOK. */
+  currency?: unknown;
+  /** Page language; anything unknown falls back to Bokmål. */
+  locale?: unknown;
   returnOrigin: string;
 };
 
@@ -159,13 +195,14 @@ export type StartCheckoutResult =
   | { ok: false; status: number; error: string; code?: string; details?: string };
 
 export type ConfirmPaymentResult =
-  | { ok: true; downloadToken: string }
+  | { ok: true; downloadToken: string; locale?: Locale }
   | {
       ok: false;
       status: number;
       error: string;
       reason: "pending" | "cancelled" | "mismatch" | "not_found" | "error";
       downloadToken?: string;
+      locale?: Locale;
     };
 
 export type ConfirmVippsResult = ConfirmPaymentResult;
@@ -215,20 +252,76 @@ export function priceCheckoutItems(
   return { items, amountNok: singlesAmountNok(singleCount) + bundleAmountNok };
 }
 
+/**
+ * List price of priced items in `currency`, in minor units, from the fixed price table:
+ * the same 5-pack rule as NOK (every five singles cost one 5-pack), bundles at their own price.
+ */
+export function itemsAmountMinor(items: Pick<CheckoutItem, "type" | "price">[], currency: Currency): number {
+  let singleCount = 0;
+  let total = 0;
+  for (const item of items) {
+    if (item.type === "product") {
+      singleCount += 1;
+    } else {
+      total += priceMinor(item.price, currency);
+    }
+  }
+  const packs = fivePackCount(singleCount);
+  const remainder = singleCount - packs * FIVE_PACK_SIZE;
+  return (
+    total +
+    packs * priceMinor(FIVE_PACK_PRICE, currency) +
+    remainder * priceMinor(SINGLE_PRICE, currency)
+  );
+}
+
+/** Cart total in minor units of `currency`, or null if the cart has unknown items. */
+export function cartAmountMinor(rawItems: StartCheckoutInput["items"], currency: Currency): number | null {
+  const priced = priceCheckoutItems(rawItems);
+  return "error" in priced ? null : itemsAmountMinor(priced.items, currency);
+}
+
+/** Currency from a request: absent/empty means NOK (older clients), unknown values are rejected. */
+export function checkoutCurrency(value: unknown): Currency | null {
+  if (value === undefined || value === null || value === "") return DEFAULT_CURRENCY;
+  return parseCurrency(value);
+}
+
+/** Amounts for one order in its currency, all computed on the server. */
+export type OrderAmounts = {
+  currency: Currency;
+  listMinor: number;
+  amountMinor: number;
+  discountMinor: number;
+};
+
+/** Applies a percent discount (0 for none) to the cart's list price in `currency`. */
+export function orderAmounts(items: CheckoutItem[], currency: Currency, percent: number): OrderAmounts {
+  const listMinor = itemsAmountMinor(items, currency);
+  const amountMinor = percent > 0 ? discountedMinor(listMinor, percent, currency) : listMinor;
+  return { currency, listMinor, amountMinor, discountMinor: listMinor - amountMinor };
+}
+
 export async function previewCheckoutDiscount(
   rawItems: StartCheckoutInput["items"],
   rawCode: unknown,
   lookup: (code: string) => Promise<DiscountLookup>,
+  rawCurrency?: unknown,
 ) {
   const priced = priceCheckoutItems(rawItems);
   if ("error" in priced) {
     return { ok: false as const, error: priced.error };
+  }
+  const currency = checkoutCurrency(rawCurrency);
+  if (!currency) {
+    return { ok: false as const, error: INVALID_DISCOUNT_PREVIEW_MESSAGE };
   }
 
   const applied = await applyDiscountCode(priced.amountNok, rawCode, lookup);
   if (!applied.ok) {
     return { ok: false as const, error: INVALID_DISCOUNT_PREVIEW_MESSAGE };
   }
+  const amounts = orderAmounts(priced.items, currency, applied.percent);
 
   return {
     ok: true as const,
@@ -238,6 +331,10 @@ export async function previewCheckoutDiscount(
     percent: applied.percent,
     associationName: applied.associationName,
     code: applied.code,
+    currency,
+    amountMinor: amounts.amountMinor,
+    listAmountMinor: amounts.listMinor,
+    discountMinor: amounts.discountMinor,
   };
 }
 
@@ -289,6 +386,37 @@ export function isReservedOrCaptured(payment: VippsPayment, expectedOre: number)
   return captured >= expectedOre || (payment.state === "AUTHORIZED" && authorized >= expectedOre);
 }
 
+/**
+ * What the payment provider must have charged for this order. Orders from before multi-currency
+ * (or stored without the new columns) are NOK and use amount_nok.
+ */
+export function expectedCharge(order: OrderRecord): { currency: Currency; amountMinor: number } {
+  const currency = order.currency ?? "NOK";
+  if (currency === "NOK" || order.amount_minor == null) {
+    return { currency: "NOK", amountMinor: order.amount_nok * 100 };
+  }
+  return { currency, amountMinor: order.amount_minor };
+}
+
+/** Order-confirmation mail input, in the order's currency and language. */
+function confirmationMail(order: OrderRecord, fallback?: OrderRecord) {
+  const discountCode = order.discount_code ?? fallback?.discount_code;
+  return {
+    email: order.email,
+    firstName: order.first_name,
+    items: order.items,
+    downloadToken: order.download_token,
+    amountNok: order.amount_nok,
+    discountCode,
+    discountNok: order.discount_nok ?? fallback?.discount_nok,
+    discountPercent: order.discount_percent ?? fallback?.discount_percent,
+    currency: order.currency ?? fallback?.currency,
+    amountMinor: order.amount_minor ?? fallback?.amount_minor,
+    discountMinor: order.discount_minor ?? fallback?.discount_minor,
+    locale: order.locale ?? fallback?.locale,
+  };
+}
+
 function tokenExpiry(now: Date): Date {
   const expiry = new Date(now);
   expiry.setDate(expiry.getDate() + 7);
@@ -332,6 +460,15 @@ export async function startCheckoutPayment(
     return { ok: false, status: 400, error: "Mangler påkrevde felt" };
   }
 
+  const currency = checkoutCurrency(input.currency);
+  if (!currency) {
+    return { ok: false, status: 400, error: INVALID_CURRENCY_MESSAGE };
+  }
+  if (input.paymentProvider === "vipps" && currency !== "NOK") {
+    return { ok: false, status: 400, error: VIPPS_NOK_ONLY_MESSAGE };
+  }
+  const locale: Locale = isLocale(input.locale) ? input.locale : "nb";
+
   const priced = priceCheckoutItems(input.items);
   if ("error" in priced) {
     return { ok: false, status: 400, error: priced.error };
@@ -347,6 +484,21 @@ export async function startCheckoutPayment(
   );
   if (!applied.ok) {
     return { ok: false, status: 400, error: applied.error };
+  }
+
+  // Amounts come only from the server's price table; client prices and amounts are ignored.
+  // NOK keeps the original whole-krone computation (amount_nok × 100).
+  const amounts =
+    currency === "NOK"
+      ? {
+          currency,
+          listMinor: applied.listAmountNok * 100,
+          amountMinor: applied.amountNok * 100,
+          discountMinor: applied.discountNok * 100,
+        }
+      : orderAmounts(priced.items, currency, applied.percent);
+  if (input.paymentProvider === "stripe" && amounts.amountMinor < STRIPE_MINIMUM_MINOR[currency]) {
+    return { ok: false, status: 400, error: "Kunne ikke starte kortbetaling" };
   }
 
   const downloadToken = deps.createDownloadToken();
@@ -369,6 +521,12 @@ export async function startCheckoutPayment(
           discount_percent: applied.percent,
         }
       : {}),
+    currency,
+    amount_minor: amounts.amountMinor,
+    ...(applied.code
+      ? { list_amount_minor: amounts.listMinor, discount_minor: amounts.discountMinor }
+      : {}),
+    locale,
     ...campaign,
   };
 
@@ -376,10 +534,12 @@ export async function startCheckoutPayment(
     let session: { id: string; url: string };
     try {
       session = await deps.stripe.createCheckoutSession({
-        amountOre,
+        amountMinor: amounts.amountMinor,
+        currency,
+        locale,
         email,
         successUrl: `${input.returnOrigin}/api/stripe/return?session_id={CHECKOUT_SESSION_ID}`,
-        cancelUrl: `${input.returnOrigin}/kasse?betaling=avbrutt`,
+        cancelUrl: `${input.returnOrigin}${localizePath("/kasse", locale)}?betaling=avbrutt`,
         description: paymentDescription(priced.items),
       });
       if (!session.id || !session.url) {
@@ -462,24 +622,15 @@ export async function confirmVippsPayment(
       const updated = await applyVippsBuyerDetails(order, payment, deps);
       if (!hadEmail && hasValidEmail(updated.email)) {
         try {
-          await deps.mailer.sendOrderConfirmation({
-            email: updated.email,
-            firstName: updated.first_name,
-            items: updated.items,
-            downloadToken: updated.download_token,
-            amountNok: updated.amount_nok,
-            discountCode: updated.discount_code,
-            discountNok: updated.discount_nok,
-            discountPercent: updated.discount_percent,
-          });
+          await deps.mailer.sendOrderConfirmation(confirmationMail(updated));
         } catch {
           // Payment is already captured/reserved; do not roll back fulfillment.
         }
       }
     } catch {
-      return { ok: true, downloadToken: order.download_token };
+      return { ok: true, downloadToken: order.download_token, locale: order.locale };
     }
-    return { ok: true, downloadToken: order.download_token };
+    return { ok: true, downloadToken: order.download_token, locale: order.locale };
   }
 
   let payment: VippsPayment;
@@ -492,6 +643,7 @@ export async function confirmVippsPayment(
       error: "Kunne ikke hente betalingsstatus",
       reason: "error",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
@@ -508,6 +660,7 @@ export async function confirmVippsPayment(
       error: "Beløpet stemmer ikke",
       reason: "mismatch",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
@@ -519,6 +672,7 @@ export async function confirmVippsPayment(
       error: "Betalingen ble avbrutt",
       reason: "cancelled",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
@@ -529,6 +683,7 @@ export async function confirmVippsPayment(
       error: "Betalingen er ikke bekreftet ennå",
       reason: "pending",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
@@ -563,7 +718,7 @@ export async function confirmStripePayment(
   }
 
   if (order.payment_status === "completed") {
-    return { ok: true, downloadToken: order.download_token };
+    return { ok: true, downloadToken: order.download_token, locale: order.locale };
   }
 
   let session: StripeCheckoutSession;
@@ -576,15 +731,17 @@ export async function confirmStripePayment(
       error: "Kunne ikke hente betalingsstatus",
       reason: "error",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
-  const expectedOre = order.amount_nok * 100;
-  const currency = session.currency?.toLowerCase() ?? "";
+  // Compare against what was stored at checkout: the order's own currency and minor amount.
+  const expected = expectedCharge(order);
+  const currency = session.currency?.toUpperCase() ?? "";
   const paidMatchingAmount =
     session.payment_status === "paid" &&
-    currency === "nok" &&
-    session.amount_total === expectedOre;
+    currency === expected.currency &&
+    session.amount_total === expected.amountMinor;
 
   if (paidMatchingAmount) {
     return finalizePaidOrder(order, deps);
@@ -597,6 +754,7 @@ export async function confirmStripePayment(
       error: "Beløpet stemmer ikke",
       reason: "mismatch",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
@@ -611,6 +769,7 @@ export async function confirmStripePayment(
       error: "Betalingen ble avbrutt",
       reason: "cancelled",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
@@ -620,6 +779,7 @@ export async function confirmStripePayment(
     error: "Betalingen er ikke bekreftet ennå",
     reason: "pending",
     downloadToken: order.download_token,
+    locale: order.locale,
   };
 }
 
@@ -628,14 +788,14 @@ async function finalizePaidOrder(
   deps: CheckoutDependencies,
 ): Promise<ConfirmPaymentResult> {
   if (order.payment_status === "completed") {
-    return { ok: true, downloadToken: order.download_token };
+    return { ok: true, downloadToken: order.download_token, locale: order.locale };
   }
 
   const completed = await deps.orders.completeIfPending(order.id);
   if (!completed) {
     const latest = await deps.orders.findByPaymentId(order.payment_id ?? "");
     if (latest?.payment_status === "completed") {
-      return { ok: true, downloadToken: latest.download_token };
+      return { ok: true, downloadToken: latest.download_token, locale: latest.locale };
     }
     return {
       ok: false,
@@ -643,6 +803,7 @@ async function finalizePaidOrder(
       error: "Betalingen er ikke bekreftet ennå",
       reason: "pending",
       downloadToken: order.download_token,
+      locale: order.locale,
     };
   }
 
@@ -657,16 +818,7 @@ async function finalizePaidOrder(
 
   if (hasValidEmail(completed.email)) {
     try {
-      await deps.mailer.sendOrderConfirmation({
-        email: completed.email,
-        firstName: completed.first_name,
-        items: completed.items,
-        downloadToken: completed.download_token,
-        amountNok: completed.amount_nok,
-        discountCode,
-        discountNok: completed.discount_nok ?? order.discount_nok,
-        discountPercent: completed.discount_percent ?? order.discount_percent,
-      });
+      await deps.mailer.sendOrderConfirmation(confirmationMail(completed, order));
     } catch {
       // Payment is already captured/reserved; do not roll back fulfillment.
     }
@@ -683,7 +835,7 @@ async function finalizePaidOrder(
     }
   }
 
-  return { ok: true, downloadToken: completed.download_token };
+  return { ok: true, downloadToken: completed.download_token, locale: completed.locale };
 }
 
 async function applyVippsBuyerDetails(

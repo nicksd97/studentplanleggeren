@@ -1,0 +1,300 @@
+{
+ "slug": "aarlig-planlegger",
+ "source": "aarlig-planlegger.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "ÅRSPLAN",
+   "font": "Montserrat-SemiBold",
+   "size": 23.0,
+   "bbox": [
+    35.0,
+    34.0,
+    166.4,
+    51.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "YEARLY PLAN",
+   "de": "JAHRESPLAN",
+   "sv": "ÅRSPLAN",
+   "da": "ÅRSPLAN",
+   "es": "PLAN ANUAL",
+   "fr": "PLANNING ANNUEL"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "JANUAR",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    36.0,
+    86.9,
+    104.2,
+    98.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "JANUARY",
+   "de": "JANUAR",
+   "sv": "JANUARI",
+   "da": "JANUAR",
+   "es": "ENERO",
+   "fr": "JANVIER"
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "FEBRUAR",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    308.8,
+    86.9,
+    388.7,
+    98.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "FEBRUARY",
+   "de": "FEBRUAR",
+   "sv": "FEBRUARI",
+   "da": "FEBRUAR",
+   "es": "FEBRERO",
+   "fr": "FÉVRIER"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "MARS",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    36.0,
+    331.8,
+    83.6,
+    342.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MARCH",
+   "de": "MÄRZ",
+   "sv": "MARS",
+   "da": "MARTS",
+   "es": "MARZO",
+   "fr": "MARS"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "APRIL",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    308.8,
+    331.8,
+    358.0,
+    342.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "APRIL",
+   "de": "APRIL",
+   "sv": "APRIL",
+   "da": "APRIL",
+   "es": "ABRIL",
+   "fr": "AVRIL"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "MAI",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    36.0,
+    578.8,
+    66.1,
+    589.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "MAY",
+   "de": "MAI",
+   "sv": "MAJ",
+   "da": "MAJ",
+   "es": "MAYO",
+   "fr": "MAI"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "JUNI",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    308.8,
+    578.8,
+    347.3,
+    589.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "JUNE",
+   "de": "JUNI",
+   "sv": "JUNI",
+   "da": "JUNI",
+   "es": "JUNIO",
+   "fr": "JUIN"
+  },
+  {
+   "id": "p2-001",
+   "page": 2,
+   "src": "Uke:",
+   "font": "Montserrat-Regular",
+   "size": 11.7,
+   "bbox": [
+    458.9,
+    47.2,
+    486.8,
+    56.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Week:",
+   "de": "Woche:",
+   "sv": "Vecka:",
+   "da": "Uge:",
+   "es": "Semana:",
+   "fr": "Semaine :"
+  },
+  {
+   "id": "p2-002",
+   "page": 2,
+   "src": "JULI",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    37.0,
+    86.9,
+    72.3,
+    98.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "JULY",
+   "de": "JULI",
+   "sv": "JULI",
+   "da": "JULI",
+   "es": "JULIO",
+   "fr": "JUILLET"
+  },
+  {
+   "id": "p2-003",
+   "page": 2,
+   "src": "AUGUST",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    309.7,
+    86.9,
+    377.7,
+    98.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "AUGUST",
+   "de": "AUGUST",
+   "sv": "AUGUSTI",
+   "da": "AUGUST",
+   "es": "AGOSTO",
+   "fr": "AOÛT"
+  },
+  {
+   "id": "p2-004",
+   "page": 2,
+   "src": "SEPTEMBER",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    37.0,
+    331.8,
+    138.5,
+    342.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "SEPTEMBER",
+   "de": "SEPTEMBER",
+   "sv": "SEPTEMBER",
+   "da": "SEPTEMBER",
+   "es": "SEPTIEMBRE",
+   "fr": "SEPTEMBRE"
+  },
+  {
+   "id": "p2-005",
+   "page": 2,
+   "src": "OKTOBER",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    309.7,
+    331.8,
+    391.1,
+    342.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "OCTOBER",
+   "de": "OKTOBER",
+   "sv": "OKTOBER",
+   "da": "OKTOBER",
+   "es": "OCTUBRE",
+   "fr": "OCTOBRE"
+  },
+  {
+   "id": "p2-006",
+   "page": 2,
+   "src": "NOVEMBER",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    37.0,
+    578.8,
+    134.1,
+    589.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NOVEMBER",
+   "de": "NOVEMBER",
+   "sv": "NOVEMBER",
+   "da": "NOVEMBER",
+   "es": "NOVIEMBRE",
+   "fr": "NOVEMBRE"
+  },
+  {
+   "id": "p2-007",
+   "page": 2,
+   "src": "DESEMBER",
+   "font": "Montserrat-Medium",
+   "size": 14.8,
+   "bbox": [
+    309.7,
+    578.8,
+    403.2,
+    589.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DECEMBER",
+   "de": "DEZEMBER",
+   "sv": "DECEMBER",
+   "da": "DECEMBER",
+   "es": "DICIEMBRE",
+   "fr": "DÉCEMBRE"
+  }
+ ]
+}

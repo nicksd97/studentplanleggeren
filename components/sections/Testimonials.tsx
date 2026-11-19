@@ -1,29 +1,16 @@
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import type { Locale } from "@/lib/i18n/config";
+import { getMessages } from "@/lib/i18n/messages";
 
-export default function Testimonials() {
-  const testimonials = [
-    {
-      quote:
-        "Daglig Planleggeren har forandret morgenrutinen min. Jeg bruker 5 minutter på å planlegge dagen og får mye mer gjort.",
-      name: "Ida M.",
-      study: "Juss, UiO",
-      initials: "IM",
-    },
-    {
-      quote:
-        "Ukentlig Plan er genial for semesterplanlegging. Endelig ser jeg hele uken i ett blikk i stedet for å glemme ting.",
-      name: "Thea K.",
-      study: "Sykepleie, NTNU",
-      initials: "TK",
-    },
-    {
-      quote:
-        "Elsker at jeg kan fylle inn direkte på iPaden. Slipper å skrive ut, og det ser fortsatt pent ut.",
-      name: "Nora S.",
-      study: "Økonomi, NHH",
-      initials: "NS",
-    },
-  ];
+const people = [
+  { name: "Ida M.", initials: "IM" },
+  { name: "Thea K.", initials: "TK" },
+  { name: "Nora S.", initials: "NS" },
+];
+
+export default function Testimonials({ locale = "nb" }: { locale?: Locale }) {
+  const t = getMessages(locale).testimonials;
+  const testimonials = t.quotes.map((quote, index) => ({ ...quote, ...people[index] }));
 
   return (
     <section className="bg-brand-cream py-24 md:py-32">
@@ -31,11 +18,12 @@ export default function Testimonials() {
         <FadeInOnScroll>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Fra studenter som deg ✦
+              {t.label}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
-              Hva andre sier
+              {t.heading}
             </h2>
+            {t.note && <p className="text-xs text-brand-medium mt-3">{t.note}</p>}
           </div>
         </FadeInOnScroll>
 

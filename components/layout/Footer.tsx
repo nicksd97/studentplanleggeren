@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { guidePath, guides } from "@/lib/guides";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import { getGuides, guidePath } from "@/lib/guides";
+import { localizePath, type Locale } from "@/lib/i18n/config";
+import { getMessages } from "@/lib/i18n/messages";
 
-export default function Footer() {
+export default function Footer({ locale = "nb" }: { locale?: Locale }) {
+  const t = getMessages(locale).footer;
+  const href = (path: string) => localizePath(path, locale);
   return (
     <footer className="bg-brand-dark text-white">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-16">
@@ -16,32 +21,32 @@ export default function Footer() {
               />
             </div>
             <p className="text-brand-soft text-sm leading-relaxed">
-              Planleggere og produktivitetsverktøy laget for norske studenter.
+              {t.tagline}
             </p>
           </div>
 
           {/* Produkter */}
           <div>
-            <h4 className="font-medium text-sm mb-4 text-white/80">Produkter</h4>
+            <h4 className="font-medium text-sm mb-4 text-white/80">{t.products}</h4>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/#pakker" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  Komplett pakke
+                <Link href={href("/#pakker")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.komplett}
                 </Link>
               </li>
               <li>
-                <Link href="/produkter?kategori=daglig" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  Daglig Pakke
+                <Link href={href("/produkter?kategori=daglig")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.daily}
                 </Link>
               </li>
               <li>
-                <Link href="/produkter?kategori=ukentlig" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  Ukentlig Pakke
+                <Link href={href("/produkter?kategori=ukentlig")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.weekly}
                 </Link>
               </li>
               <li>
-                <Link href="/produkter" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  Alle planleggere
+                <Link href={href("/produkter")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.all}
                 </Link>
               </li>
             </ul>
@@ -49,12 +54,12 @@ export default function Footer() {
 
           {/* Guider */}
           <div>
-            <h4 className="font-medium text-sm mb-4 text-white/80">Guider</h4>
+            <h4 className="font-medium text-sm mb-4 text-white/80">{t.guides}</h4>
             <ul className="space-y-2.5">
-              {guides.map((guide) => (
+              {getGuides(locale).map((guide) => (
                 <li key={guide.slug}>
                   <Link
-                    href={guidePath(guide.slug)}
+                    href={guidePath(guide.slug, locale)}
                     className="text-sm text-brand-soft hover:text-brand-accent transition-colors"
                   >
                     {guide.footerLabel}
@@ -66,26 +71,26 @@ export default function Footer() {
 
           {/* Info */}
           <div>
-            <h4 className="font-medium text-sm mb-4 text-white/80">Info</h4>
+            <h4 className="font-medium text-sm mb-4 text-white/80">{t.info}</h4>
             <ul className="space-y-2.5">
               <li>
-                <Link href="/#faq" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  FAQ
+                <Link href={href("/#faq")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.faq}
                 </Link>
               </li>
               <li>
-                <Link href="/gratis" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  Gratis smakebit
+                <Link href={href("/gratis")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.free}
                 </Link>
               </li>
               <li>
-                <Link href="/personvern" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  Personvern
+                <Link href={href("/personvern")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.privacy}
                 </Link>
               </li>
               <li>
-                <Link href="/vilkar" className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
-                  Vilkår
+                <Link href={href("/vilkar")} className="text-sm text-brand-soft hover:text-brand-accent transition-colors">
+                  {t.terms}
                 </Link>
               </li>
               <li>
@@ -103,10 +108,11 @@ export default function Footer() {
         {/* Bottom line */}
         <div className="mt-12 pt-8 flex flex-col sm:flex-row justify-between items-center gap-2 relative before:absolute before:top-0 before:left-0 before:w-full before:h-px before:bg-gradient-to-r before:from-transparent before:via-white/20 before:to-transparent">
           <p className="text-sm text-white/40">
-            &copy; 2026 Studentplanlegger · Studentplanlegger Davidson · Org.nr: 937416156
+            &copy; 2026 Studentplanlegger · Studentplanlegger Davidson · {t.orgNo} 937416156
           </p>
+          <LanguageSwitcher tone="dark" placement="up" />
           <p className="text-sm text-white/40">
-            Laget med kjærlighet for norske studenter
+            {t.madeWith}
           </p>
         </div>
       </div>

@@ -1,0 +1,496 @@
+{
+ "slug": "prosjekt-planlegger",
+ "source": "prosjekt-planlegger.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "PROSJECT",
+   "font": "Montserrat-Regular",
+   "size": 19.7,
+   "bbox": [
+    36.0,
+    29.3,
+    149.8,
+    44.1
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PROJECT",
+   "de": "PROJEKT",
+   "sv": "PROJEKT",
+   "da": "PROJEKT",
+   "es": "PLANIFICADOR DE",
+   "fr": "PLANNING DE"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "PLANLEGGER",
+   "font": "Montserrat-SemiBold",
+   "size": 19.7,
+   "bbox": [
+    157.6,
+    29.3,
+    308.1,
+    44.1
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PLANNER",
+   "de": "PLANER",
+   "sv": "PLANERARE",
+   "da": "PLANLÆGGER",
+   "es": "PROYECTOS",
+   "fr": "PROJET",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "START DATO :",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    33.6,
+    85.3,
+    107.2,
+    92.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "START DATE :",
+   "de": "STARTDATUM :",
+   "sv": "STARTDATUM :",
+   "da": "STARTDATO :",
+   "es": "INICIO :",
+   "fr": "DÉBUT :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "SLUTT DATO :",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    198.8,
+    86.3,
+    271.6,
+    93.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "END DATE :",
+   "de": "ENDDATUM :",
+   "sv": "SLUTDATUM :",
+   "da": "SLUTDATO :",
+   "es": "FIN :",
+   "fr": "FIN :",
+   "align_manual": true
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "FULLFØRT :",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    408.1,
+    86.3,
+    470.0,
+    93.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "COMPLETED :",
+   "de": "ABGESCHLOSSEN :",
+   "sv": "SLUTFÖRT :",
+   "da": "AFSLUTTET :",
+   "es": "COMPLETADO :",
+   "fr": "TERMINÉ :",
+   "align_manual": true
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "BESKRIVELSE",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    35.5,
+    125.9,
+    117.5,
+    133.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DESCRIPTION",
+   "de": "BESCHREIBUNG",
+   "sv": "BESKRIVNING",
+   "da": "BESKRIVELSE",
+   "es": "DESCRIPCIÓN",
+   "fr": "DESCRIPTION"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "OBJEKTIV",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    336.0,
+    125.9,
+    395.4,
+    133.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "OBJECTIVE",
+   "de": "ZIEL",
+   "sv": "MÅL",
+   "da": "MÅL",
+   "es": "OBJETIVO",
+   "fr": "OBJECTIF"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "NØDVENDIGE RESSURSER",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    35.5,
+    302.1,
+    193.4,
+    310.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "RESOURCES NEEDED",
+   "de": "BENÖTIGTE RESSOURCEN",
+   "sv": "RESURSER SOM BEHÖVS",
+   "da": "NØDVENDIGE RESSOURCER",
+   "es": "RECURSOS NECESARIOS",
+   "fr": "RESSOURCES NÉCESSAIRES"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "OPPGAVER",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    247.4,
+    302.1,
+    314.8,
+    310.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TASKS",
+   "de": "AUFGABEN",
+   "sv": "UPPGIFTER",
+   "da": "OPGAVER",
+   "es": "TAREAS",
+   "fr": "TÂCHES"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "INNEN",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    422.5,
+    302.1,
+    461.3,
+    310.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DUE",
+   "de": "BIS",
+   "sv": "SENAST",
+   "da": "INDEN",
+   "es": "PLAZO",
+   "fr": "POUR LE"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "FERDIG",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    523.0,
+    302.1,
+    568.1,
+    310.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DONE",
+   "de": "ERLEDIGT",
+   "sv": "KLAR",
+   "da": "FÆRDIG",
+   "es": "HECHO",
+   "fr": "FAIT"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    35.5,
+    472.1,
+    92.4,
+    480.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "PROGRESSION",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    39.4,
+    792.0,
+    112.9,
+    799.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "PROGRESSION",
+   "de": "FORTSCHRITT",
+   "sv": "FRAMSTEG",
+   "da": "FREMSKRIDT",
+   "es": "PROGRESO",
+   "fr": "PROGRESSION"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "10%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    166.3,
+    792.0,
+    185.5,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "10%",
+   "de": "10%",
+   "sv": "10%",
+   "da": "10%",
+   "es": "10%",
+   "fr": "10%"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "20%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    205.5,
+    792.0,
+    226.6,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "20%",
+   "de": "20%",
+   "sv": "20%",
+   "da": "20%",
+   "es": "20%",
+   "fr": "20%"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "30%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    245.6,
+    792.0,
+    266.7,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "30%",
+   "de": "30%",
+   "sv": "30%",
+   "da": "30%",
+   "es": "30%",
+   "fr": "30%"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "40%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    285.3,
+    792.0,
+    307.3,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "40%",
+   "de": "40%",
+   "sv": "40%",
+   "da": "40%",
+   "es": "40%",
+   "fr": "40%"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "50%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    325.8,
+    792.0,
+    347.0,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "50%",
+   "de": "50%",
+   "sv": "50%",
+   "da": "50%",
+   "es": "50%",
+   "fr": "50%"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "60%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    365.8,
+    792.0,
+    387.3,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "60%",
+   "de": "60%",
+   "sv": "60%",
+   "da": "60%",
+   "es": "60%",
+   "fr": "60%"
+  },
+  {
+   "id": "p1-020",
+   "page": 1,
+   "src": "70%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    406.1,
+    792.0,
+    427.3,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "70%",
+   "de": "70%",
+   "sv": "70%",
+   "da": "70%",
+   "es": "70%",
+   "fr": "70%"
+  },
+  {
+   "id": "p1-021",
+   "page": 1,
+   "src": "80%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    445.9,
+    792.0,
+    467.7,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "80%",
+   "de": "80%",
+   "sv": "80%",
+   "da": "80%",
+   "es": "80%",
+   "fr": "80%"
+  },
+  {
+   "id": "p1-022",
+   "page": 1,
+   "src": "90%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    486.1,
+    792.0,
+    507.7,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "90%",
+   "de": "90%",
+   "sv": "90%",
+   "da": "90%",
+   "es": "90%",
+   "fr": "90%"
+  },
+  {
+   "id": "p1-023",
+   "page": 1,
+   "src": "100%",
+   "font": "Montserrat-Medium",
+   "size": 9.6,
+   "bbox": [
+    524.0,
+    792.0,
+    550.1,
+    799.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "100%",
+   "de": "100%",
+   "sv": "100%",
+   "da": "100%",
+   "es": "100%",
+   "fr": "100%"
+  }
+ ]
+}

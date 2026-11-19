@@ -199,7 +199,7 @@ describe("Resend backfill mapping", () => {
 describe("signup and backfill wiring", () => {
   const route = readFileSync(new URL("../app/api/newsletter/route.ts", import.meta.url), "utf8");
   const backfill = readFileSync(new URL("../scripts/backfill-resend-leads.ts", import.meta.url), "utf8");
-  const personvern = readFileSync(new URL("../app/personvern/page.tsx", import.meta.url), "utf8");
+  const personvern = readFileSync(new URL("../app/(nb)/personvern/page.tsx", import.meta.url), "utf8");
   const signup = readFileSync(new URL("../components/sections/NewsletterSignup.tsx", import.meta.url), "utf8");
 
   it("fires the welcome event only for new signups and never lets it break the handler", () => {
@@ -222,7 +222,7 @@ describe("signup and backfill wiring", () => {
   });
 
   it("describes lead storage and e-postmarkedsføring on personvern", () => {
-    assert.match(personvern, /12\. oktober 2026/);
+    assert.match(personvern, /18\. november 2026/);
     assert.match(personvern, /Supabase/);
     assert.match(personvern, /leads/);
     assert.match(personvern, /velkomstserie|velkomst/);

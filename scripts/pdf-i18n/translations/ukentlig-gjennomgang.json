@@ -1,0 +1,514 @@
+{
+ "slug": "ukentlig-gjennomgang",
+ "source": "ukentlig-gjennomgang.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "UKENTLIG",
+   "font": "Montserrat-SemiBold",
+   "size": 23.2,
+   "bbox": [
+    36.0,
+    36.1,
+    179.8,
+    53.5
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "WEEKLY",
+   "de": "WOCHEN",
+   "sv": "VECKO",
+   "da": "UGENTLIG",
+   "es": "REVISIÓN",
+   "fr": "BILAN"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "GJENNOMGANG",
+   "font": "Montserrat-Regular",
+   "size": 23.2,
+   "bbox": [
+    192.3,
+    36.1,
+    415.9,
+    53.5
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "REVIEW",
+   "de": "RÜCKBLICK",
+   "sv": "GENOMGÅNG",
+   "da": "GENNEMGANG",
+   "es": "SEMANAL",
+   "fr": "HEBDOMADAIRE",
+   "join": [
+    "de",
+    "sv"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "Uke :",
+   "font": "Montserrat-Regular",
+   "size": 8.7,
+   "bbox": [
+    446.8,
+    68.3,
+    471.8,
+    74.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Week :",
+   "de": "Woche :",
+   "sv": "Vecka :",
+   "da": "Uge :",
+   "es": "Semana :",
+   "fr": "Semaine :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "HVORDAN JEG HAR FØLT MEG DENNE UKEN",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    105.0,
+    327.9,
+    113.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "HOW I FELT THIS WEEK",
+   "de": "SO HABE ICH MICH DIESE WOCHE GEFÜHLT",
+   "sv": "SÅ HAR JAG MÅTT DEN HÄR VECKAN",
+   "da": "SÅDAN HAR JEG HAFT DET DENNE UGE",
+   "es": "CÓMO ME HE SENTIDO ESTA SEMANA",
+   "fr": "COMMENT JE ME SUIS SENTI(E) CETTE SEMAINE"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "1",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    47.4,
+    127.7,
+    50.8,
+    134.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "1",
+   "de": "1",
+   "sv": "1",
+   "da": "1",
+   "es": "1",
+   "fr": "1"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "2",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    102.2,
+    128.1,
+    107.9,
+    135.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "2",
+   "de": "2",
+   "sv": "2",
+   "da": "2",
+   "es": "2",
+   "fr": "2"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "3",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    157.3,
+    128.1,
+    162.9,
+    135.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "3",
+   "de": "3",
+   "sv": "3",
+   "da": "3",
+   "es": "3",
+   "fr": "3"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "4",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    212.4,
+    128.1,
+    218.1,
+    135.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "4",
+   "de": "4",
+   "sv": "4",
+   "da": "4",
+   "es": "4",
+   "fr": "4"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "5",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    267.4,
+    128.1,
+    273.5,
+    135.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "5",
+   "de": "5",
+   "sv": "5",
+   "da": "5",
+   "es": "5",
+   "fr": "5"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "6",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    322.5,
+    128.1,
+    328.5,
+    135.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "6",
+   "de": "6",
+   "sv": "6",
+   "da": "6",
+   "es": "6",
+   "fr": "6"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "7",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    377.6,
+    128.1,
+    382.8,
+    135.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "7",
+   "de": "7",
+   "sv": "7",
+   "da": "7",
+   "es": "7",
+   "fr": "7"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "8",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    432.7,
+    128.1,
+    438.8,
+    135.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "8",
+   "de": "8",
+   "sv": "8",
+   "da": "8",
+   "es": "8",
+   "fr": "8"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "9",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    487.7,
+    128.1,
+    493.7,
+    135.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "9",
+   "de": "9",
+   "sv": "9",
+   "da": "9",
+   "es": "9",
+   "fr": "9"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "10",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    540.4,
+    128.1,
+    550.2,
+    135.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "10",
+   "de": "10",
+   "sv": "10",
+   "da": "10",
+   "es": "10",
+   "fr": "10"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "TING SOM HAR GJORT MEG GLAD/STOLT",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    182.9,
+    300.6,
+    191.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHAT MADE ME HAPPY/PROUD",
+   "de": "WAS MICH FROH/STOLZ GEMACHT HAT",
+   "sv": "DET SOM GJORT MIG GLAD/STOLT",
+   "da": "DET DER HAR GJORT MIG GLAD/STOLT",
+   "es": "LO QUE ME HIZO FELIZ/ME ENORGULLECIÓ",
+   "fr": "CE QUI M'A RENDU(E) HEUREUX/FIER"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "TING JEG ER TAKKNEMLIG FOR",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    274.2,
+    239.3,
+    282.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "THINGS I'M GRATEFUL FOR",
+   "de": "WOFÜR ICH DANKBAR BIN",
+   "sv": "DET HÄR ÄR JAG TACKSAM FÖR",
+   "da": "DET ER JEG TAKNEMMELIG FOR",
+   "es": "COSAS QUE AGRADEZCO",
+   "fr": "CE POUR QUOI JE SUIS RECONNAISSANT(E)"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "NYE TING JEG HAR LÆRT/OPPLEVD",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    367.7,
+    268.2,
+    376.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NEW THINGS I LEARNED/EXPERIENCED",
+   "de": "NEUES, DAS ICH GELERNT/ERLEBT HABE",
+   "sv": "NYTT JAG HAR LÄRT MIG/UPPLEVT",
+   "da": "NYT JEG HAR LÆRT/OPLEVET",
+   "es": "LO NUEVO QUE APRENDÍ/VIVÍ",
+   "fr": "CE QUE J'AI APPRIS/VÉCU DE NOUVEAU"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "NYE TING Å PRØVE UT",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    305.8,
+    367.7,
+    451.7,
+    376.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "NEW THINGS TO TRY",
+   "de": "NEUES ZUM AUSPROBIEREN",
+   "sv": "NYTT ATT TESTA",
+   "da": "NYT AT PRØVE",
+   "es": "COSAS NUEVAS POR PROBAR",
+   "fr": "NOUVEAUTÉS À ESSAYER"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "VANER SOM ER VANSKELIGE Å",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    303.6,
+    477.4,
+    483.6,
+    485.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "HABITS THAT ARE HARD TO",
+   "de": "GEWOHNHEITEN, DIE MIR SCHWER-",
+   "sv": "VANOR SOM ÄR SVÅRA ATT",
+   "da": "VANER DER ER SVÆRE AT",
+   "es": "HÁBITOS QUE ME CUESTA",
+   "fr": "HABITUDES DIFFICILES À"
+  },
+  {
+   "id": "p1-020",
+   "page": 1,
+   "src": "VANER JEG HAR BEHOLDT",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    487.8,
+    209.5,
+    496.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "HABITS I KEPT UP",
+   "de": "BEIBEHALTENE GEWOHNHEITEN",
+   "sv": "VANOR JAG HAR BEHÅLLIT",
+   "da": "VANER JEG HAR HOLDT FAST I",
+   "es": "HÁBITOS QUE HE MANTENIDO",
+   "fr": "HABITUDES QUE J'AI GARDÉES"
+  },
+  {
+   "id": "p1-021",
+   "page": 1,
+   "src": "VEDLIKEHOLDE, HVORFOR?",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    303.6,
+    490.6,
+    468.8,
+    498.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "KEEP UP, AND WHY?",
+   "de": "FALLEN, UND WARUM?",
+   "sv": "UPPRÄTTHÅLLA, VARFÖR?",
+   "da": "HOLDE FAST I, HVORFOR?",
+   "es": "MANTENER, ¿POR QUÉ?",
+   "fr": "MAINTENIR, POURQUOI ?"
+  },
+  {
+   "id": "p1-022",
+   "page": 1,
+   "src": "MÅL JEG OPPNÅDDE DENNE UKEN",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    606.1,
+    265.3,
+    614.4
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "GOALS I REACHED THIS WEEK",
+   "de": "DIESE WOCHE ERREICHTE ZIELE",
+   "sv": "MÅL JAG NÅDDE DEN HÄR VECKAN",
+   "da": "MÅL JEG NÅEDE I DENNE UGE",
+   "es": "METAS LOGRADAS ESTA SEMANA",
+   "fr": "OBJECTIFS ATTEINTS CETTE SEMAINE"
+  },
+  {
+   "id": "p1-023",
+   "page": 1,
+   "src": "MÅL FOR NESTE UKE",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    305.5,
+    608.2,
+    442.2,
+    616.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "GOALS FOR NEXT WEEK",
+   "de": "ZIELE FÜR NÄCHSTE WOCHE",
+   "sv": "MÅL FÖR NÄSTA VECKA",
+   "da": "MÅL FOR NÆSTE UGE",
+   "es": "METAS PARA LA PRÓXIMA SEMANA",
+   "fr": "OBJECTIFS DE LA SEMAINE PROCHAINE"
+  },
+  {
+   "id": "p1-024",
+   "page": 1,
+   "src": "TANKER / NOTATER",
+   "font": "Montserrat-Medium",
+   "size": 11.0,
+   "bbox": [
+    36.0,
+    722.8,
+    163.5,
+    731.1
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "THOUGHTS / NOTES",
+   "de": "GEDANKEN / NOTIZEN",
+   "sv": "TANKAR / ANTECKNINGAR",
+   "da": "TANKER / NOTER",
+   "es": "IDEAS / NOTAS",
+   "fr": "PENSÉES / NOTES"
+  }
+ ]
+}

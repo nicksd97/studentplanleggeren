@@ -1,0 +1,240 @@
+{
+ "slug": "daglig-gjennomgang",
+ "source": "daglig-gjennomgang.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "DAGLIG",
+   "font": "Montserrat-SemiBold",
+   "size": 24.0,
+   "bbox": [
+    37.0,
+    38.2,
+    149.5,
+    56.2
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "DAILY",
+   "de": "TAGES",
+   "sv": "DAGLIG",
+   "da": "DAGLIG",
+   "es": "REVISIÓN",
+   "fr": "BILAN"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "GJENNOMGANG",
+   "font": "Montserrat-Regular",
+   "size": 24.0,
+   "bbox": [
+    162.4,
+    38.2,
+    393.7,
+    56.2
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "REVIEW",
+   "de": "RÜCKBLICK",
+   "sv": "GENOMGÅNG",
+   "da": "GENNEMGANG",
+   "es": "DIARIA",
+   "fr": "QUOTIDIEN",
+   "join": [
+    "de"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "DATO :",
+   "font": "Montserrat-Regular",
+   "size": 10.0,
+   "bbox": [
+    451.3,
+    76.1,
+    490.6,
+    83.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DATE :",
+   "de": "DATUM :",
+   "sv": "DATUM :",
+   "da": "DATO :",
+   "es": "FECHA :",
+   "fr": "DATE :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "TOPP 3 PRESTASJONER",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    35.9,
+    112.5,
+    201.8,
+    121.5
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TOP 3 ACHIEVEMENTS",
+   "de": "MEINE TOP 3 ERFOLGE",
+   "sv": "TOPP 3 PRESTATIONER",
+   "da": "TOP 3 PRÆSTATIONER",
+   "es": "MIS 3 GRANDES LOGROS",
+   "fr": "MES 3 RÉUSSITES"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "DAGENS HØYDEPUNKTER",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    37.2,
+    193.2,
+    221.1,
+    202.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TODAY'S HIGHLIGHTS",
+   "de": "HIGHLIGHTS DES TAGES",
+   "sv": "DAGENS HÖJDPUNKTER",
+   "da": "DAGENS HØJDEPUNKTER",
+   "es": "LO MEJOR DEL DÍA",
+   "fr": "MOMENTS FORTS DU JOUR"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "TING JEG HAR LÆRT I DAG",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    36.0,
+    286.8,
+    226.2,
+    295.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHAT I LEARNED TODAY",
+   "de": "WAS ICH HEUTE GELERNT HABE",
+   "sv": "DET HÄR LÄRDE JAG MIG IDAG",
+   "da": "DET HAR JEG LÆRT I DAG",
+   "es": "LO QUE APRENDÍ HOY",
+   "fr": "CE QUE J'AI APPRIS AUJOURD'HUI"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "TING JEG GJORDE BRA I DAG",
+   "font": "Montserrat-Medium",
+   "size": 10.0,
+   "bbox": [
+    36.0,
+    392.2,
+    209.8,
+    399.7
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHAT I DID WELL TODAY",
+   "de": "WAS MIR HEUTE GUT GELUNGEN IST",
+   "sv": "DET HÄR GJORDE JAG BRA IDAG",
+   "da": "DET GJORDE JEG GODT I DAG",
+   "es": "LO QUE HICE BIEN HOY",
+   "fr": "CE QUE J'AI BIEN FAIT AUJOURD'HUI"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "TING JEG KAN FORBEDRE I MORGEN",
+   "font": "Montserrat-Medium",
+   "size": 10.0,
+   "bbox": [
+    304.6,
+    392.4,
+    523.4,
+    399.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "WHAT I CAN IMPROVE TOMORROW",
+   "de": "WAS ICH MORGEN BESSER MACHEN KANN",
+   "sv": "DET HÄR KAN JAG GÖRA BÄTTRE IMORGON",
+   "da": "DET KAN JEG GØRE BEDRE I MORGEN",
+   "es": "LO QUE PUEDO MEJORAR MAÑANA",
+   "fr": "CE QUE JE PEUX AMÉLIORER DEMAIN"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "I DAG ER JEG TAKKNEMLIG FOR",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    36.0,
+    549.0,
+    264.1,
+    558.0
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TODAY I'M GRATEFUL FOR",
+   "de": "HEUTE BIN ICH DANKBAR FÜR",
+   "sv": "IDAG ÄR JAG TACKSAM FÖR",
+   "da": "I DAG ER JEG TAKNEMMELIG FOR",
+   "es": "HOY DOY GRACIAS POR",
+   "fr": "AUJOURD'HUI, JE SUIS RECONNAISSANT(E) POUR"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "SCORE",
+   "font": "Montserrat-Medium",
+   "size": 12.3,
+   "bbox": [
+    457.5,
+    550.5,
+    506.3,
+    559.7
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SCORE",
+   "de": "BEWERTUNG",
+   "sv": "BETYG",
+   "da": "SCORE",
+   "es": "PUNTUACIÓN",
+   "fr": "NOTE"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "MORGENDAGENS MÅL / NOTATER",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    34.9,
+    694.3,
+    276.1,
+    703.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TOMORROW'S GOALS / NOTES",
+   "de": "ZIELE FÜR MORGEN / NOTIZEN",
+   "sv": "MÅL FÖR IMORGON / ANTECKNINGAR",
+   "da": "MÅL FOR I MORGEN / NOTER",
+   "es": "METAS PARA MAÑANA / NOTAS",
+   "fr": "OBJECTIFS DE DEMAIN / NOTES"
+  }
+ ]
+}

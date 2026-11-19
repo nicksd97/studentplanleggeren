@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test lib/seo.test.ts lib/checkout.test.ts lib/order-store.test.ts lib/attribution.test.ts lib/analytics.test.ts lib/email.test.ts lib/newsletter.test.ts lib/discount.test.ts lib/track-events.test.ts lib/leads.test.ts",
+    "test": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs --test lib/seo.test.ts lib/checkout.test.ts lib/order-store.test.ts lib/attribution.test.ts lib/analytics.test.ts lib/email.test.ts lib/newsletter.test.ts lib/discount.test.ts lib/track-events.test.ts lib/leads.test.ts lib/i18n.test.ts lib/currency.test.ts lib/checkout-currency.test.ts lib/downloads.test.ts lib/order-currency.test.ts",
     "backfill-leads": "node --experimental-strip-types --import ./scripts/register-ts-tests.mjs scripts/backfill-resend-leads.ts"
   },
   "dependencies": {

@@ -1,6 +1,9 @@
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
+import type { Locale } from "@/lib/i18n/config";
+import { getMessages } from "@/lib/i18n/messages";
 
-export default function PainPoints() {
+export default function PainPoints({ locale = "nb" }: { locale?: Locale }) {
+  const t = getMessages(locale).painPoints;
   const cards = [
     {
       icon: (
@@ -8,9 +11,7 @@ export default function PainPoints() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5A2.25 2.25 0 0121 11.25v7.5" />
         </svg>
       ),
-      title: "...aldri vet hvor du skal begynne",
-      description:
-        "Semesterstart, eksamen, prosjekter — det er mye å holde styr på. Med daglige og ukentlige planleggere får du oversikt fra dag én.",
+      ...t.cards[0],
     },
     {
       icon: (
@@ -18,9 +19,7 @@ export default function PainPoints() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
         </svg>
       ),
-      title: "...vil bygge bedre vaner",
-      description:
-        "Det er lett å starte, vanskelig å holde ut. Vane Trackeren og 30-dagers utfordringen hjelper deg å faktisk holde det gående.",
+      ...t.cards[1],
     },
     {
       icon: (
@@ -28,9 +27,7 @@ export default function PainPoints() {
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
       ),
-      title: "...vil nå målene dine",
-      description:
-        "Enten det er karaktermål, treningsmål eller sparemål — Mål Planleggeren og Handlingsplanen bryter store mål ned til konkrete steg.",
+      ...t.cards[2],
     },
   ];
 
@@ -40,10 +37,10 @@ export default function PainPoints() {
         <FadeInOnScroll>
           <div className="text-center mb-12">
             <p className="text-xs font-medium tracking-[0.1em] uppercase text-brand-medium mb-3">
-              ✦ Kjenner du deg igjen? ✦
+              {t.label}
             </p>
             <h2 className="font-[family-name:var(--font-display)] text-3xl sm:text-4xl font-bold text-brand-dark text-shadow-sm">
-              For deg som...
+              {t.heading}
             </h2>
           </div>
         </FadeInOnScroll>

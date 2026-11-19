@@ -6,6 +6,10 @@ import Link from "next/link";
 import FadeInOnScroll from "@/components/ui/FadeInOnScroll";
 import { currentCampaignTags } from "@/lib/attribution";
 import { trackEvent } from "@/lib/track";
+import { translateApiError } from "@/lib/i18n/api-errors";
+import { localizePath } from "@/lib/i18n/config";
+import { useMessages } from "@/lib/i18n/provider";
+import { useLocale } from "@/lib/i18n/use-locale";
 
 type Variant = "home" | "gratis";
 
@@ -18,29 +22,34 @@ type NewsletterSignupProps = {
   variant?: Variant;
 };
 
-const defaultConsent = (
-  <>
-    Ved å sende inn samtykker du til at vi lagrer e-posten din for å sende smakebiten og
-    jevnlige studietips. Les{" "}
-    <Link href="/personvern" className="underline underline-offset-2 hover:opacity-80">
-      personvernerklæringen
-    </Link>
-    .
-  </>
-);
-
-export default function NewsletterSignup({
-  heading = "Gratis ukentlig plan-smakebit",
-  subheading = "Få en fyllbar ukeplan-smakebit på e-post — én side, ikke hele produktet.",
-  buttonLabel = "Send meg smakebiten",
-  successMessage = "Takk! Sjekk innboksen — smakebiten er på vei.",
-  consent = defaultConsent,
-  variant = "home",
-}: NewsletterSignupProps) {
+export default function NewsletterSignup(props: NewsletterSignupProps) {
+  const locale = useLocale();
+  const messages = useMessages();
+  const t = messages.newsletter;
+  const defaultConsent = (
+    <>
+      {t.consentBefore}
+      <Link
+        href={localizePath("/personvern", locale)}
+        className="underline underline-offset-2 hover:opacity-80"
+      >
+        {t.consentLink}
+      </Link>
+      {t.consentAfter}
+    </>
+  );
+  const {
+    heading = t.heading,
+    subheading = t.subheading,
+    buttonLabel = t.buttonLabel,
+    successMessage = t.successMessage,
+    consent = defaultConsent,
+    variant = "home",
+  } = props;
   const [email, setEmail] = useState("");
   const [company, setCompany] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const [errorMessage, setErrorMessage] = useState("Noe gikk galt. Prøv igjen.");
+  const [errorMessage, setErrorMessage] = useState(t.error);
   const isHome = variant === "home";
 
   async function handleSubmit(e: React.FormEvent) {
@@ -52,7 +61,7 @@ export default function NewsletterSignup({
       const res = await fetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, company, campaign: currentCampaignTags() }),
+        body: JSON.stringify({ email, company, campaign: currentCampaignTags(), locale }),
       });
       const payload = (await res.json().catch(() => ({}))) as { error?: string };
       if (res.ok) {
@@ -65,12 +74,12 @@ export default function NewsletterSignup({
           form: variant,
           reason: res.status === 429 ? "for_mange" : res.status >= 500 ? "server" : "ugyldig",
         });
-        setErrorMessage(payload.error || "Noe gikk galt. Prøv igjen.");
+        setErrorMessage(translateApiError(payload.error, messages, t.error));
         setStatus("error");
       }
     } catch {
       trackEvent("lead_signup_error", { form: variant, reason: "nettverk" });
-      setErrorMessage("Noe gikk galt. Prøv igjen.");
+      setErrorMessage(t.error);
       setStatus("error");
     }
   }
@@ -92,14 +101,14 @@ export default function NewsletterSignup({
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-3">
           <label className="sr-only" htmlFor={`newsletter-email-${variant}`}>
-            E-postadresse
+            {t.emailLabel}
           </label>
           <input
             id={`newsletter-email-${variant}`}
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            placeholder="din@epost.no"
+            placeholder={t.placeholder}
             required
             autoComplete="email"
             className={
@@ -123,7 +132,7 @@ export default function NewsletterSignup({
             disabled={status === "loading"}
             className="rounded-full bg-brand-accent px-6 py-3 text-sm font-bold text-brand-dark transition-all duration-300 hover:brightness-110 hover:shadow-md hover:-translate-y-0.5 disabled:opacity-60"
           >
-            {status === "loading" ? "Sender..." : buttonLabel}
+            {status === "loading" ? t.sending : buttonLabel}
           </button>
         </form>
       )}

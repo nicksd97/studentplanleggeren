@@ -1,4 +1,11 @@
-export const faqItems = [
+import { hasTranslatedPdfs, type Locale } from "./i18n/config";
+import { getContent } from "./i18n/content/index";
+
+export type FaqItem = { question: string; answer: string };
+
+// Bokmål FAQ. Prices are placeholders ({single}, {fivePack}, {theme}, {komplett}) so they show in
+// the visitor's currency; other languages live in lib/i18n/content/<lang>.ts.
+export const faqItems: FaqItem[] = [
   {
     question: "Hva er en fyllbar PDF?",
     answer:
@@ -37,11 +44,25 @@ export const faqItems = [
   {
     question: "Hva er inkludert i den komplette pakken?",
     answer:
-      "Studentplanlegger Komplett inneholder alle 25 planleggere (daglige, ukentlige, månedlige, årlige, produktivitet, helse og sporing). Alt som fyllbare PDF-er. Pakken koster 249 kr.",
+      "Studentplanlegger Komplett inneholder alle 25 planleggere (daglige, ukentlige, månedlige, årlige, produktivitet, helse og sporing). Alt som fyllbare PDF-er. Pakken koster {komplett}.",
   },
   {
     question: "Hva koster planleggerne?",
     answer:
-      "Hver enkeltplanlegger koster 39 kr. Fem valgfrie enkeltplanleggere i handlekurven koster 99 kr. Temapakker koster 149 kr, og Studentplanlegger Komplett koster 249 kr.",
+      "Hver enkeltplanlegger koster {single}. Fem valgfrie enkeltplanleggere i handlekurven koster {fivePack}. Temapakker koster {theme}, og Studentplanlegger Komplett koster {komplett}.",
   },
 ];
+
+/** FAQ for one language; translations start with which language the PDFs are in. */
+export function getFaqItems(locale: Locale): FaqItem[] {
+  if (locale === "nb") return faqItems;
+  const content = getContent(locale);
+  const language = content.faqLanguage;
+  return [
+    {
+      question: language.question,
+      answer: hasTranslatedPdfs(locale) ? language.available : language.norwegian,
+    },
+    ...content.faq,
+  ];
+}

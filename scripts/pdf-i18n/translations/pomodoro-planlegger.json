@@ -1,0 +1,536 @@
+{
+ "slug": "pomodoro-planlegger",
+ "source": "pomodoro-planlegger.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "POMODORO",
+   "font": "Montserrat-SemiBold",
+   "size": 24.0,
+   "bbox": [
+    35.5,
+    35.3,
+    210.9,
+    53.3
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "POMODORO",
+   "de": "POMODORO-",
+   "sv": "POMODORO-",
+   "da": "POMODORO-",
+   "es": "PLANIFICADOR",
+   "fr": "PLANNING"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "PLANLEGGER",
+   "font": "Montserrat-Regular",
+   "size": 24.0,
+   "bbox": [
+    222.1,
+    35.3,
+    412.5,
+    53.3
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "PLANNER",
+   "de": "PLANER",
+   "sv": "PLANERARE",
+   "da": "PLANLÆGGER",
+   "es": "POMODORO",
+   "fr": "POMODORO",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "POMODORO TIDSBLOCKER :",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    35.5,
+    91.6,
+    226.3,
+    100.6
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "POMODORO TIME BLOCKS :",
+   "de": "POMODORO-ZEITBLÖCKE :",
+   "sv": "POMODOROPASS :",
+   "da": "POMODORO-TIDSBLOKKE :",
+   "es": "BLOQUES POMODORO :",
+   "fr": "BLOCS POMODORO :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "DATO :",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    430.4,
+    94.2,
+    475.1,
+    103.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "DATE :",
+   "de": "DATUM :",
+   "sv": "DATUM :",
+   "da": "DATO :",
+   "es": "FECHA :",
+   "fr": "DATE :"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "DAGENS PRODUCTIVITET SCORE",
+   "font": "Montserrat-Regular",
+   "size": 10.8,
+   "bbox": [
+    35.5,
+    127.2,
+    217.1,
+    135.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "TODAY'S PRODUCTIVITY SCORE",
+   "de": "MEINE PRODUKTIVITÄT HEUTE",
+   "sv": "DAGENS PRODUKTIVITET",
+   "da": "DAGENS PRODUKTIVITET",
+   "es": "PRODUCTIVIDAD DEL DÍA",
+   "fr": "PRODUCTIVITÉ DU JOUR"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "1",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    47.4,
+    150.6,
+    50.8,
+    157.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "1",
+   "de": "1",
+   "sv": "1",
+   "da": "1",
+   "es": "1",
+   "fr": "1"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "2",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    102.2,
+    151.0,
+    107.9,
+    158.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "2",
+   "de": "2",
+   "sv": "2",
+   "da": "2",
+   "es": "2",
+   "fr": "2"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "3",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    157.3,
+    151.0,
+    162.9,
+    158.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "3",
+   "de": "3",
+   "sv": "3",
+   "da": "3",
+   "es": "3",
+   "fr": "3"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "4",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    212.4,
+    151.0,
+    218.1,
+    158.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "4",
+   "de": "4",
+   "sv": "4",
+   "da": "4",
+   "es": "4",
+   "fr": "4"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "5",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    267.4,
+    151.0,
+    273.5,
+    158.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "5",
+   "de": "5",
+   "sv": "5",
+   "da": "5",
+   "es": "5",
+   "fr": "5"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "6",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    322.5,
+    151.0,
+    328.5,
+    158.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "6",
+   "de": "6",
+   "sv": "6",
+   "da": "6",
+   "es": "6",
+   "fr": "6"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "7",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    377.6,
+    151.0,
+    382.8,
+    158.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "7",
+   "de": "7",
+   "sv": "7",
+   "da": "7",
+   "es": "7",
+   "fr": "7"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "8",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    432.7,
+    151.0,
+    438.8,
+    158.2
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "8",
+   "de": "8",
+   "sv": "8",
+   "da": "8",
+   "es": "8",
+   "fr": "8"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "9",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    487.7,
+    151.0,
+    493.7,
+    158.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "9",
+   "de": "9",
+   "sv": "9",
+   "da": "9",
+   "es": "9",
+   "fr": "9"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "10",
+   "font": "Exo-Regular",
+   "size": 9.6,
+   "bbox": [
+    540.4,
+    151.0,
+    550.2,
+    158.2
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "10",
+   "de": "10",
+   "sv": "10",
+   "da": "10",
+   "es": "10",
+   "fr": "10"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "PROSJEKTVISUALISERING",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    202.2,
+    190.3,
+    377.2,
+    199.3
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "PROJECT OVERVIEW",
+   "de": "PROJEKTÜBERSICHT",
+   "sv": "PROJEKTÖVERSIKT",
+   "da": "PROJEKTOVERSIGT",
+   "es": "RESUMEN DE PROYECTOS",
+   "fr": "APERÇU DES PROJETS"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "PROSJEKT",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    154.1,
+    218.9,
+    223.3,
+    227.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "PROJECT",
+   "de": "PROJEKT",
+   "sv": "PROJEKT",
+   "da": "PROJEKT",
+   "es": "PROYECTO",
+   "fr": "PROJET"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "MÅL",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    321.6,
+    218.9,
+    350.1,
+    227.9
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "GOAL",
+   "de": "ZIEL",
+   "sv": "MÅL",
+   "da": "MÅL",
+   "es": "META",
+   "fr": "BUT"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    389.4,
+    218.9,
+    443.8,
+    227.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-020",
+   "page": 1,
+   "src": "TID",
+   "font": "Montserrat-Regular",
+   "size": 12.0,
+   "bbox": [
+    467.7,
+    218.9,
+    489.5,
+    227.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TIME",
+   "de": "ZEIT",
+   "sv": "TID",
+   "da": "TID",
+   "es": "TIEMPO",
+   "fr": "TEMPS"
+  },
+  {
+   "id": "p1-021",
+   "page": 1,
+   "src": "MÅL / AKTIVITET",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    145.2,
+    358.8,
+    255.9,
+    367.8
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "GOAL / ACTIVITY",
+   "de": "ZIEL / AKTIVITÄT",
+   "sv": "MÅL / AKTIVITET",
+   "da": "MÅL / AKTIVITET",
+   "es": "META / ACTIVIDAD",
+   "fr": "OBJECTIF / ACTIVITÉ"
+  },
+  {
+   "id": "p1-022",
+   "page": 1,
+   "src": "START",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    432.0,
+    358.8,
+    473.3,
+    367.8
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "START",
+   "de": "START",
+   "sv": "START",
+   "da": "START",
+   "es": "INICIO",
+   "fr": "DÉBUT"
+  },
+  {
+   "id": "p1-023",
+   "page": 1,
+   "src": "SLUTT",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    510.0,
+    358.8,
+    551.0,
+    367.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "END",
+   "de": "ENDE",
+   "sv": "SLUT",
+   "da": "SLUT",
+   "es": "FIN",
+   "fr": "FIN"
+  },
+  {
+   "id": "p1-024",
+   "page": 1,
+   "src": "PAUSER",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    120.0,
+    680.4,
+    174.8,
+    689.4
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BREAKS",
+   "de": "PAUSEN",
+   "sv": "PAUSER",
+   "da": "PAUSER",
+   "es": "DESCANSOS",
+   "fr": "PAUSES"
+  },
+  {
+   "id": "p1-025",
+   "page": 1,
+   "src": "NOTATER",
+   "font": "Montserrat-Medium",
+   "size": 12.0,
+   "bbox": [
+    392.4,
+    680.4,
+    456.2,
+    689.4
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "NOTES",
+   "de": "NOTIZEN",
+   "sv": "ANTECKNINGAR",
+   "da": "NOTER",
+   "es": "NOTAS",
+   "fr": "NOTES"
+  }
+ ]
+}

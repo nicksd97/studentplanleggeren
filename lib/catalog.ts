@@ -1,3 +1,5 @@
+import type { Locale } from "./i18n/config";
+import { getContent } from "./i18n/content/index";
 import {
   alleProdukter,
   categoryGroups,
@@ -18,7 +20,7 @@ const categoryCopy: Record<
   alle: {
     title: "Alle planleggere — Studentplanlegger",
     description:
-      "25 fyllbare PDF-planleggere for norske studenter. 39 kr per stykk, fem valgfrie for 99 kr, eller pakker fra 149 kr.",
+      "25 fyllbare PDF-planleggere for norske studenter. {single} per stykk, fem valgfrie for {fivePack}, eller pakker fra {theme}.",
     heading: "Alle planleggere",
   },
   daglig: {
@@ -65,6 +67,10 @@ const categoryCopy: Record<
   },
 };
 
+function copyFor(locale: Locale) {
+  return locale === "nb" ? categoryCopy : getContent(locale).catalog;
+}
+
 export function catalogPath(key: string | undefined): string {
   if (!key || key === "alle") {
     return "/produkter";
@@ -83,16 +89,16 @@ export function resolveCatalog(kategori: string | undefined): Catalog {
   return { key: group.key, products: group.products };
 }
 
-export function catalogTitle(key: string): string {
-  return categoryCopy[normalizeKey(key)].title;
+export function catalogTitle(key: string, locale: Locale = "nb"): string {
+  return copyFor(locale)[normalizeKey(key)].title;
 }
 
-export function catalogDescription(key: string): string {
-  return categoryCopy[normalizeKey(key)].description;
+export function catalogDescription(key: string, locale: Locale = "nb"): string {
+  return copyFor(locale)[normalizeKey(key)].description;
 }
 
-export function catalogHeading(key: string): string {
-  return categoryCopy[normalizeKey(key)].heading;
+export function catalogHeading(key: string, locale: Locale = "nb"): string {
+  return copyFor(locale)[normalizeKey(key)].heading;
 }
 
 function normalizeKey(key: string): CatalogKey {

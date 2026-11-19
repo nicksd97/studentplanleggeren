@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePricing } from "@/lib/i18n/provider";
 
 interface AccordionItem {
   question: string;
@@ -9,6 +10,8 @@ interface AccordionItem {
 
 export default function Accordion({ items }: { items: AccordionItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  // Answers may mention prices as {single}/{fivePack}/{theme}/{komplett}.
+  const { fill } = usePricing();
 
   return (
     <div className="w-full max-w-[640px] mx-auto divide-y divide-brand-soft">
@@ -50,7 +53,7 @@ export default function Accordion({ items }: { items: AccordionItem[] }) {
             }`}
           >
             <p className="text-brand-medium text-sm leading-relaxed">
-              {item.answer}
+              {fill(item.answer)}
             </p>
           </div>
         </div>

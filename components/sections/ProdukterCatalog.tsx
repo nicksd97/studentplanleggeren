@@ -4,6 +4,10 @@ import ProdukterStickyBar from "@/components/sections/ProdukterStickyBar";
 import TrackView from "@/components/analytics/TrackView";
 import { alleProdukter, categoryGroups } from "@/lib/products";
 import { catalogPath, type Catalog } from "@/lib/catalog";
+import { localizePath, type Locale } from "@/lib/i18n/config";
+import PriceText from "@/components/i18n/PriceText";
+import { getMessages } from "@/lib/i18n/messages";
+import { categoryLabel, localizeProduct, pdfLanguageCopy } from "@/lib/i18n/products";
 
 const tabs = [
   { key: "alle", label: "Alle", count: alleProdukter.length },
@@ -18,11 +22,16 @@ export default function ProdukterCatalog({
   catalog,
   heading,
   intro,
+  locale = "nb",
 }: {
   catalog: Catalog;
   heading: string;
   intro: string;
+  locale?: Locale;
 }) {
+  const messages = getMessages(locale);
+  const t = messages.catalog;
+  const language = pdfLanguageCopy(locale, messages).sentence;
   return (
     <>
       <TrackView event="catalog_view" props={{ category: catalog.key }} />
@@ -32,28 +41,33 @@ export default function ProdukterCatalog({
             <h1 className="font-[family-name:var(--font-display)] text-3xl md:text-4xl font-bold text-brand-dark mb-3">
               {heading}
             </h1>
-            <p className="text-brand-medium max-w-xl mx-auto">{intro}</p>
-            <p className="text-sm text-brand-dark mt-4">
-              39 kr per planlegger. Legg fem valgfrie i handlekurven og betal 99 kr.
+            <p className="text-brand-medium max-w-xl mx-auto">
+              <PriceText text={intro} />
             </p>
+            <p className="text-sm text-brand-dark mt-4">
+              <PriceText text={t.prices} />
+            </p>
+            {language && (
+              <p className="text-sm text-brand-medium mt-2 max-w-xl mx-auto">{language}</p>
+            )}
           </div>
 
           <nav
-            aria-label="Produktkategorier"
+            aria-label={t.nav}
             className="mb-10 -mx-4 px-4 overflow-x-auto scrollbar-hide"
           >
             <div className="flex gap-1 min-w-max justify-center">
               {tabs.map((tab) => (
                 <Link
                   key={tab.key}
-                  href={catalogPath(tab.key)}
+                  href={localizePath(catalogPath(tab.key), locale)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
                     catalog.key === tab.key
                       ? "bg-brand-accent text-brand-dark"
                       : "text-brand-medium hover:text-brand-dark hover:bg-brand-pale"
                   }`}
                 >
-                  {tab.label}
+                  {categoryLabel(tab.key, tab.key === "alle" ? t.allTab : tab.label, messages)}
                   <span className="ml-1.5 text-xs opacity-60">({tab.count})</span>
                 </Link>
               ))}
@@ -62,7 +76,7 @@ export default function ProdukterCatalog({
 
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
             {catalog.products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard key={product.id} product={localizeProduct(product, messages)} />
             ))}
           </div>
         </div>

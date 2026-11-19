@@ -94,3 +94,32 @@ export function insertFailureResult(error: unknown): {
     ...(failure.details ? { details: failure.details } : {}),
   };
 }
+
+/** Order columns added by supabase/migrations/2026-11-18-order-currency-locale.sql. */
+export const CURRENCY_LOCALE_COLUMNS = [
+  "currency",
+  "amount_minor",
+  "list_amount_minor",
+  "discount_minor",
+  "locale",
+] as const;
+
+/**
+ * True when an insert failed only because the currency/locale columns don't exist yet
+ * (migration not applied): Postgres 42703 undefined_column, or PostgREST PGRST204
+ * "Could not find the '…' column of 'orders' in the schema cache".
+ */
+export function isMissingCurrencyColumnError(error: unknown): boolean {
+  const collected = collectErrorParts(error);
+  const text = [...collected.parts, collected.hint ?? ""].join(" ");
+  const code = collected.code ?? "";
+  const mentionsColumn = CURRENCY_LOCALE_COLUMNS.some((column) =>
+    new RegExp(`['"\\s.]${column}['"\\s]|column ${column}\\b`, "i").test(` ${text} `),
+  );
+  if (!mentionsColumn) return false;
+  return (
+    code === "42703" ||
+    code === "PGRST204" ||
+    /does not exist|could not find the .* column|schema cache/i.test(text)
+  );
+}

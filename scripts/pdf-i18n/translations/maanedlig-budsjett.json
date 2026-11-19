@@ -1,0 +1,557 @@
+{
+ "slug": "maanedlig-budsjett",
+ "source": "maanedlig-budsjett.pdf",
+ "units": [
+  {
+   "id": "p1-001",
+   "page": 1,
+   "src": "MÅNEDLIG",
+   "font": "Montserrat-Regular",
+   "size": 23.0,
+   "bbox": [
+    42.3,
+    32.6,
+    181.8,
+    49.9
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "MONTHLY",
+   "de": "MONATS",
+   "sv": "MÅNADS",
+   "da": "MÅNEDS",
+   "es": "PRESUPUESTO",
+   "fr": "BUDGET"
+  },
+  {
+   "id": "p1-002",
+   "page": 1,
+   "src": "BUDSJETT",
+   "font": "Montserrat-SemiBold",
+   "size": 23.0,
+   "bbox": [
+    191.0,
+    32.6,
+    325.0,
+    49.9
+   ],
+   "align": "left",
+   "chain": "c1-1",
+   "en": "BUDGET",
+   "de": "BUDGET",
+   "sv": "BUDGET",
+   "da": "BUDGET",
+   "es": "MENSUAL",
+   "fr": "MENSUEL",
+   "join": [
+    "de",
+    "sv",
+    "da"
+   ]
+  },
+  {
+   "id": "p1-003",
+   "page": 1,
+   "src": "Måned :",
+   "font": "Montserrat-Regular",
+   "size": 8.7,
+   "bbox": [
+    434.4,
+    45.3,
+    469.1,
+    51.8
+   ],
+   "align": "left",
+   "chain": null,
+   "en": "Month :",
+   "de": "Monat :",
+   "sv": "Månad :",
+   "da": "Måned :",
+   "es": "Mes :",
+   "fr": "Mois :"
+  },
+  {
+   "id": "p1-004",
+   "page": 1,
+   "src": "INTEKT",
+   "font": "Montserrat-Bold",
+   "size": 10.6,
+   "bbox": [
+    79.8,
+    90.8,
+    119.9,
+    98.8
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "INCOME",
+   "de": "EINNAHMEN",
+   "sv": "INKOMST",
+   "da": "INDKOMST",
+   "es": "INGRESOS",
+   "fr": "REVENUS"
+  },
+  {
+   "id": "p1-005",
+   "page": 1,
+   "src": "PLANLAGT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    205.8,
+    90.8,
+    265.2,
+    98.8
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "PLANNED",
+   "de": "GEPLANT",
+   "sv": "PLANERAT",
+   "da": "PLANLAGT",
+   "es": "PREVISTO",
+   "fr": "PRÉVU"
+  },
+  {
+   "id": "p1-006",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    341.7,
+    90.8,
+    387.3,
+    98.8
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-007",
+   "page": 1,
+   "src": "FORSKJELL",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    458.9,
+    90.8,
+    522.1,
+    98.8
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "DIFFERENCE",
+   "de": "DIFFERENZ",
+   "sv": "DIFFERENS",
+   "da": "DIFFERENCE",
+   "es": "DIFERENCIA",
+   "fr": "ÉCART"
+  },
+  {
+   "id": "p1-008",
+   "page": 1,
+   "src": "BUDSJETT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    135.4,
+    218.0,
+    192.7,
+    226.0
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BUDGET",
+   "de": "BUDGET",
+   "sv": "BUDGET",
+   "da": "BUDGET",
+   "es": "PRESUPUESTO",
+   "fr": "BUDGET"
+  },
+  {
+   "id": "p1-009",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    227.9,
+    218.2,
+    273.5,
+    226.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-010",
+   "page": 1,
+   "src": "BUDSJETT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    403.0,
+    218.2,
+    460.4,
+    226.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BUDGET",
+   "de": "BUDGET",
+   "sv": "BUDGET",
+   "da": "BUDGET",
+   "es": "PRESUPUESTO",
+   "fr": "BUDGET"
+  },
+  {
+   "id": "p1-011",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    494.4,
+    218.2,
+    540.1,
+    226.1
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-012",
+   "page": 1,
+   "src": "TOTALT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    61.8,
+    391.9,
+    103.6,
+    399.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TOTAL",
+   "de": "GESAMT",
+   "sv": "TOTALT",
+   "da": "TOTAL",
+   "es": "TOTAL",
+   "fr": "TOTAL"
+  },
+  {
+   "id": "p1-013",
+   "page": 1,
+   "src": "TOTALT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    328.3,
+    391.9,
+    370.1,
+    399.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TOTAL",
+   "de": "GESAMT",
+   "sv": "TOTALT",
+   "da": "TOTAL",
+   "es": "TOTAL",
+   "fr": "TOTAL"
+  },
+  {
+   "id": "p1-014",
+   "page": 1,
+   "src": "BUDSJETT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    135.6,
+    420.9,
+    192.9,
+    428.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BUDGET",
+   "de": "BUDGET",
+   "sv": "BUDGET",
+   "da": "BUDGET",
+   "es": "PRESUPUESTO",
+   "fr": "BUDGET"
+  },
+  {
+   "id": "p1-015",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    227.9,
+    420.9,
+    273.5,
+    428.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-016",
+   "page": 1,
+   "src": "BUDSJETT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    404.0,
+    420.9,
+    461.3,
+    428.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BUDGET",
+   "de": "BUDGET",
+   "sv": "BUDGET",
+   "da": "BUDGET",
+   "es": "PRESUPUESTO",
+   "fr": "BUDGET"
+  },
+  {
+   "id": "p1-017",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    494.4,
+    420.9,
+    540.1,
+    428.9
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-018",
+   "page": 1,
+   "src": "TOTAL",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    61.8,
+    594.6,
+    97.2,
+    602.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TOTAL",
+   "de": "GESAMT",
+   "sv": "TOTALT",
+   "da": "TOTAL",
+   "es": "TOTAL",
+   "fr": "TOTAL"
+  },
+  {
+   "id": "p1-019",
+   "page": 1,
+   "src": "TOTAL",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    328.3,
+    594.6,
+    363.7,
+    602.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TOTAL",
+   "de": "GESAMT",
+   "sv": "TOTALT",
+   "da": "TOTAL",
+   "es": "TOTAL",
+   "fr": "TOTAL"
+  },
+  {
+   "id": "p1-020",
+   "page": 1,
+   "src": "BUDSJETT",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    136.5,
+    623.6,
+    193.8,
+    631.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "BUDGET",
+   "de": "BUDGET",
+   "sv": "BUDGET",
+   "da": "BUDGET",
+   "es": "PRESUPUESTO",
+   "fr": "BUDGET"
+  },
+  {
+   "id": "p1-021",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    227.9,
+    623.6,
+    273.5,
+    631.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-022",
+   "page": 1,
+   "src": "SPARING",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    321.7,
+    623.6,
+    371.9,
+    631.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "SAVINGS",
+   "de": "SPAREN",
+   "sv": "SPARANDE",
+   "da": "OPSPARING",
+   "es": "AHORRO",
+   "fr": "ÉPARGNE"
+  },
+  {
+   "id": "p1-023",
+   "page": 1,
+   "src": "MÅL",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    415.6,
+    623.6,
+    440.0,
+    631.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "GOAL",
+   "de": "ZIEL",
+   "sv": "MÅL",
+   "da": "MÅL",
+   "es": "META",
+   "fr": "OBJECTIF"
+  },
+  {
+   "id": "p1-024",
+   "page": 1,
+   "src": "FAKTISK",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    494.4,
+    623.6,
+    540.1,
+    631.6
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "ACTUAL",
+   "de": "IST",
+   "sv": "FAKTISKT",
+   "da": "FAKTISK",
+   "es": "REAL",
+   "fr": "RÉEL"
+  },
+  {
+   "id": "p1-025",
+   "page": 1,
+   "src": "TOTAL",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    61.8,
+    797.4,
+    97.2,
+    805.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TOTAL",
+   "de": "GESAMT",
+   "sv": "TOTALT",
+   "da": "TOTAL",
+   "es": "TOTAL",
+   "fr": "TOTAL"
+  },
+  {
+   "id": "p1-026",
+   "page": 1,
+   "src": "TOTAL",
+   "font": "Montserrat-SemiBold",
+   "size": 10.6,
+   "bbox": [
+    328.3,
+    797.4,
+    363.7,
+    805.3
+   ],
+   "align": "center",
+   "chain": null,
+   "en": "TOTAL",
+   "de": "GESAMT",
+   "sv": "TOTALT",
+   "da": "TOTAL",
+   "es": "TOTAL",
+   "fr": "TOTAL"
+  }
+ ]
+}

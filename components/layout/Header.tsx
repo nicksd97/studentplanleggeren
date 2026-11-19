@@ -5,12 +5,20 @@ import Link from "next/link";
 import { useCart } from "@/lib/cart-context";
 import CartPanel from "@/components/ui/CartPanel";
 import KomplettVippsButton from "@/components/ui/KomplettVippsButton";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
+import { localizePath } from "@/lib/i18n/config";
+import { useMessages, usePricing } from "@/lib/i18n/provider";
+import { useLocale } from "@/lib/i18n/use-locale";
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartOpen, setCartOpen] = useState(false);
   const { itemCount } = useCart();
+  const locale = useLocale();
+  const t = useMessages().header;
+  // Vipps only takes NOK, so visitors paying in another currency don't get the Vipps shortcut.
+  const { vipps } = usePricing();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -19,11 +27,11 @@ export default function Header() {
   }, []);
 
   const navLinks = [
-    { label: "Planleggere", href: "/produkter", cta: "nav_planleggere" },
-    { label: "Gratis", href: "/gratis", cta: "nav_gratis" },
-    { label: "Pakker", href: "/#pakker", cta: "nav_pakker" },
-    { label: "FAQ", href: "/#faq", cta: "nav_faq" },
-  ];
+    { label: t.planners, href: "/produkter", cta: "nav_planleggere" },
+    { label: t.free, href: "/gratis", cta: "nav_gratis" },
+    { label: t.bundles, href: "/#pakker", cta: "nav_pakker" },
+    { label: t.faq, href: "/#faq", cta: "nav_faq" },
+  ].map((link) => ({ ...link, href: localizePath(link.href, locale) }));
 
   return (
     <>
@@ -37,7 +45,7 @@ export default function Header() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link href="/" className="flex items-center group">
+            <Link href={localizePath("/", locale)} className="flex items-center group">
               <img
                 src="/images/brand/Studentplanlegger_Text-removebg-preview.png"
                 alt="Studentplanlegger"
@@ -57,18 +65,21 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <KomplettVippsButton
-                source="header"
-                label="Kjøp komplett pakke med Vipps"
-                className="px-5 py-2"
-              />
+              <LanguageSwitcher />
+              {vipps && (
+                <KomplettVippsButton
+                  source="header"
+                  label={t.buyKomplett}
+                  className="px-5 py-2"
+                />
+              )}
 
               {/* Cart button */}
               <button
                 data-cta="handlekurv_apne"
                 onClick={() => setCartOpen(true)}
                 className="relative p-2 text-brand-medium hover:text-brand-dark transition-colors cursor-pointer"
-                aria-label="Handlekurv"
+                aria-label={t.cart}
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -87,7 +98,7 @@ export default function Header() {
                 data-cta="handlekurv_apne"
                 onClick={() => setCartOpen(true)}
                 className="relative p-2 text-brand-dark cursor-pointer"
-                aria-label="Handlekurv"
+                aria-label={t.cart}
               >
                 <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
@@ -101,7 +112,7 @@ export default function Header() {
               <button
                 onClick={() => setMobileOpen(!mobileOpen)}
                 className="p-2 text-brand-dark cursor-pointer"
-                aria-label="Meny"
+                aria-label={t.menu}
               >
                 <svg
                   className="h-6 w-6"
@@ -134,14 +145,17 @@ export default function Header() {
                   {link.label}
                 </Link>
               ))}
-              <div className="px-4 pt-2">
-                <KomplettVippsButton
-                  source="header_mobil"
-                  fullWidth
-                  label="Kjøp komplett pakke med Vipps"
-                  className="px-5 py-2.5"
-                />
-              </div>
+              <LanguageSwitcher className="px-2 py-2 w-fit" />
+              {vipps && (
+                <div className="px-4 pt-2">
+                  <KomplettVippsButton
+                    source="header_mobil"
+                    fullWidth
+                    label={t.buyKomplett}
+                    className="px-5 py-2.5"
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
