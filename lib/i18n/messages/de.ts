@@ -169,7 +169,7 @@ export const de: Messages = {
     placeholder: "du@beispiel.de",
     sending: "Wird gesendet …",
     consentBefore:
-      "Mit dem Absenden erklärst du dich einverstanden, dass wir deine E-Mail-Adresse speichern, um dir die Probe und regelmäßig Lerntipps zu schicken (die E-Mails sind auf Norwegisch). Lies dazu die ",
+      "Mit dem Absenden erklärst du dich einverstanden, dass wir deine E-Mail-Adresse speichern, um dir die Probe und regelmäßig Lerntipps zu schicken. Lies dazu die ",
     consentLink: "Datenschutzerklärung",
     consentAfter: ".",
   },

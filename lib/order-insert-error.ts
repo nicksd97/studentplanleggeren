@@ -105,15 +105,15 @@ export const CURRENCY_LOCALE_COLUMNS = [
 ] as const;
 
 /**
- * True when an insert failed only because the currency/locale columns don't exist yet
- * (migration not applied): Postgres 42703 undefined_column, or PostgREST PGRST204
- * "Could not find the '…' column of 'orders' in the schema cache".
+ * True when a write failed only because one of `columns` doesn't exist yet (migration not
+ * applied): Postgres 42703 undefined_column, or PostgREST PGRST204
+ * "Could not find the '…' column of '…' in the schema cache".
  */
-export function isMissingCurrencyColumnError(error: unknown): boolean {
+export function isMissingColumnError(error: unknown, columns: readonly string[]): boolean {
   const collected = collectErrorParts(error);
   const text = [...collected.parts, collected.hint ?? ""].join(" ");
   const code = collected.code ?? "";
-  const mentionsColumn = CURRENCY_LOCALE_COLUMNS.some((column) =>
+  const mentionsColumn = columns.some((column) =>
     new RegExp(`['"\\s.]${column}['"\\s]|column ${column}\\b`, "i").test(` ${text} `),
   );
   if (!mentionsColumn) return false;
@@ -122,4 +122,9 @@ export function isMissingCurrencyColumnError(error: unknown): boolean {
     code === "PGRST204" ||
     /does not exist|could not find the .* column|schema cache/i.test(text)
   );
+}
+
+/** True when an order insert failed only because the currency/locale columns don't exist yet. */
+export function isMissingCurrencyColumnError(error: unknown): boolean {
+  return isMissingColumnError(error, CURRENCY_LOCALE_COLUMNS);
 }

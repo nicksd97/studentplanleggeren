@@ -1,3 +1,25 @@
+# Emails in the subscriber's language — rolled out 2026-11-19
+
+Date: 2026-11-19
+
+## Status
+
+- All subscriber emails are built from one source: `lib/emails/` (copy per language in `lib/emails/copy/<lang>.ts`, builders `lead-magnet.ts` and `welcome.ts`). `lib/lead-magnet-email.ts` re-exports for the old import path. The Bokmål lead-magnet email is byte-identical to before. The Bokmål welcome templates rendered from code match the live Resend HTML exactly.
+- `/api/newsletter` sends the free sample in the form's `locale` (validated, Bokmål fallback). Prices use the `sp_currency` cookie, then `x-vercel-ip-country`, then the language default. All links go to `/<lang>/…` pages, and the UTM tags are unchanged.
+- Welcome event (`lib/leads.ts`): Bokmål keeps `studentplanlegger.gratis_signup`. Another language uses `studentplanlegger.gratis_signup.<lang>` only if it is listed in env `RESEND_WELCOME_LOCALES` (e.g. `en,de,sv,da,es,fr`). Otherwise it falls back to the Bokmål event, which is today's behaviour. The payload is always `{ locale, currency, bundlePrice }`.
+- `leads` gets `locale` and `currency`. Until the migration runs, the write is retried without them (Postgres 42703 / PostgREST PGRST204), so signups are still stored.
+- `npm run setup-resend-welcome-i18n` is a dry-run by default and makes no API calls. With `-- --apply` it creates and publishes 3 templates per language (alias `studentplanlegger-gratis-e-post-<n>-dag-<d>-<lang>`) and the custom event. It also creates one **disabled** automation per language, copying the delays, from address and reply-to of the Bokmål automation. Email 3 uses `{{{BUNDLE_PRICE}}}` <- `event.bundlePrice`. Anything that already exists is skipped. The Bokmål automation is not touched.
+- `npm run render-emails -- --screenshots` writes HTML and PNG previews of every email in every language to `/workspace/sp-email-previews` (not in git). No emails were sent.
+
+## Nick, after merge (in this order)
+
+1. Run `supabase/migrations/2026-11-19-lead-locale.sql` in the Supabase SQL Editor.
+2. With the full-access `RESEND_API_KEY`, run `npm run setup-resend-welcome-i18n` (dry-run). Check the output, then run `npm run setup-resend-welcome-i18n -- --apply`.
+3. In Resend, review the 6 new automations «Studentplanlegger gratis – velkomstserie – EN/DE/…» and their templates (send yourself a test), then enable them.
+4. In Vercel, set `RESEND_WELCOME_LOCALES=en,de,sv,da,es,fr` (only the languages you enabled).
+5. Redeploy.
+6. Done: the «(the emails are in Norwegian)» note was removed from `newsletter.consentBefore` in all translated languages.
+
 # Brand favicon — replace stock Next.js icon
 
 Date: 2026-10-28

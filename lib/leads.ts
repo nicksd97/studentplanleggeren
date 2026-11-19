@@ -1,11 +1,16 @@
 import type { CampaignTags } from "./attribution";
+import { defaultCurrencyForLocale, parseCurrency, type Currency } from "./currency";
+import { bundlePrice, GRATIS_SIGNUP_EVENT, welcomeEventName } from "./emails/welcome";
+import { isLocale, isPrefixedLocale, type Locale, type PrefixedLocale } from "./i18n/config";
 import { normalizeEmail } from "./newsletter";
+import { isMissingColumnError } from "./order-insert-error";
 import { supabaseAdmin } from "./supabase";
+
+export { GRATIS_SIGNUP_EVENT };
 
 export const LEAD_SOURCE_GRATIS = "gratis-ukeplan";
 export const CAMPAIGN_GRATIS_SAMPLE = "gratis-sample";
 export const CAMPAIGN_VELKOMSTSERIE = "velkomstserie";
-export const GRATIS_SIGNUP_EVENT = "studentplanlegger.gratis_signup";
 export const CONSENT_SOURCE_FORM = "gratis-form";
 export const CONSENT_SOURCE_BACKFILL = "resend-backfill";
 
@@ -22,7 +27,14 @@ export type LeadRow = {
   consent_source: string;
   unsubscribed: boolean;
   unsubscribed_at: string | null;
+  /** Site language at signup. Absent until supabase/migrations/2026-11-19-lead-locale.sql runs. */
+  locale?: string | null;
+  /** Currency the subscriber saw prices in. Same migration as `locale`. */
+  currency?: string | null;
 };
+
+/** Lead columns added by supabase/migrations/2026-11-19-lead-locale.sql. */
+export const LEAD_LOCALE_COLUMNS = ["locale", "currency"] as const;
 
 export type LeadCampaignRow = {
   id: string;
@@ -44,7 +56,11 @@ export type LeadStore = {
 
 export type ResendEventClient = {
   events: {
-    send(params: { event: string; email: string }): Promise<{ data?: unknown; error?: unknown }>;
+    send(params: {
+      event: string;
+      email: string;
+      payload?: Record<string, unknown>;
+    }): Promise<{ data?: unknown; error?: unknown }>;
   };
 };
 
@@ -65,6 +81,10 @@ export type PersistGratisSignupInput = {
   consentAt?: string;
   createdAt?: string;
   now?: string;
+  /** Subscriber's site language; stored only when valid. */
+  locale?: unknown;
+  /** Subscriber's currency; stored only when valid. */
+  currency?: unknown;
 };
 
 type LeadClient = Pick<typeof supabaseAdmin, "from">;
@@ -110,9 +130,16 @@ export function createMemoryLeadStore(): LeadStore & {
   };
 }
 
-function requireRow<T>(data: T | null, error: { message?: string } | null, message: string): T {
+type StoreError = { message?: string; code?: string; details?: string; hint?: string };
+
+/** Keeps the Postgres/PostgREST code, so callers can tell a missing column from other failures. */
+function requireRow<T>(data: T | null, error: StoreError | null, message: string): T {
   if (error || !data) {
-    throw new Error(error?.message || message);
+    const failure = new Error(error?.message || message) as Error & StoreError;
+    if (error?.code) failure.code = error.code;
+    if (error?.details) failure.details = error.details;
+    if (error?.hint) failure.hint = error.hint;
+    throw failure;
   }
   return data;
 }
@@ -153,11 +180,52 @@ export function createSupabaseLeadStore(client: LeadClient = supabaseAdmin): Lea
   };
 }
 
-export async function sendGratisSignupEvent(resend: ResendEventClient, email: string): Promise<boolean> {
+/** Env var listing the languages whose Resend welcome automation is live, e.g. "en,de,sv". */
+export const WELCOME_LOCALES_ENV = "RESEND_WELCOME_LOCALES";
+
+/** "en, DE,xx,nb" -> ["en", "de"]: prefixed locales only (Bokmål always has its automation). */
+export function parseWelcomeLocales(value: string | null | undefined): PrefixedLocale[] {
+  if (!value) return [];
+  const parsed = value
+    .split(",")
+    .map((part) => part.trim().toLowerCase())
+    .filter(isPrefixedLocale);
+  return [...new Set(parsed)];
+}
+
+/**
+ * Event that starts the welcome series: "studentplanlegger.gratis_signup.<lang>" when that
+ * language's automation is listed in RESEND_WELCOME_LOCALES, else the Bokmål event, so every
+ * signup still gets the (Bokmål) series before the other automations exist.
+ */
+export function selectWelcomeEvent(
+  locale: unknown,
+  enabledLocales: string | null | undefined = process.env[WELCOME_LOCALES_ENV],
+): string {
+  if (!isPrefixedLocale(locale)) return GRATIS_SIGNUP_EVENT;
+  return parseWelcomeLocales(enabledLocales).includes(locale) ? welcomeEventName(locale) : GRATIS_SIGNUP_EVENT;
+}
+
+export type GratisSignupPayload = { locale: Locale; currency: Currency; bundlePrice: string };
+
+/** Event payload: the automation templates read event.bundlePrice as {{{BUNDLE_PRICE}}}. */
+export function gratisSignupPayload(locale: unknown, currency: unknown): GratisSignupPayload {
+  const lang: Locale = isLocale(locale) ? locale : "nb";
+  const cur = parseCurrency(currency) ?? defaultCurrencyForLocale(lang);
+  return { locale: lang, currency: cur, bundlePrice: bundlePrice(lang, cur) };
+}
+
+export async function sendGratisSignupEvent(
+  resend: ResendEventClient,
+  email: string,
+  subscriber: { locale?: unknown; currency?: unknown } = {},
+  enabledLocales: string | null | undefined = process.env[WELCOME_LOCALES_ENV],
+): Promise<boolean> {
   try {
     const { error } = await resend.events.send({
-      event: GRATIS_SIGNUP_EVENT,
+      event: selectWelcomeEvent(subscriber.locale, enabledLocales),
       email,
+      payload: gratisSignupPayload(subscriber.locale, subscriber.currency),
     });
     return !error;
   } catch {
@@ -203,9 +271,26 @@ export async function persistGratisSignup(
   const tags = input.tags ?? {};
   const existing = await store.findByEmail(email);
   const unsubscribed = input.unsubscribed ?? existing?.unsubscribed ?? false;
+  const localeFields: Pick<LeadRow, "locale" | "currency"> = {};
+  if (isLocale(input.locale)) localeFields.locale = input.locale;
+  const currency = parseCurrency(input.currency);
+  if (currency) localeFields.currency = currency;
+
+  // Writes locale/currency, and retries once without them while the migration that adds the
+  // columns hasn't run, so signups keep being stored.
+  async function write<T>(run: (fields: typeof localeFields) => Promise<T>): Promise<T> {
+    if (Object.keys(localeFields).length === 0) return run({});
+    try {
+      return await run(localeFields);
+    } catch (error) {
+      if (!isMissingColumnError(error, LEAD_LOCALE_COLUMNS)) throw error;
+      return run({});
+    }
+  }
 
   const lead = existing
-    ? await store.update(existing.id, {
+    ? await write((fields) => store.update(existing.id, {
+        ...fields,
         consent_at: input.consentAt ?? now,
         consent_source: input.consentSource ?? existing.consent_source,
         utm_source: firstTouch(existing.utm_source, tags.utm_source),
@@ -214,8 +299,9 @@ export async function persistGratisSignup(
         utm_content: firstTouch(existing.utm_content, tags.utm_content),
         unsubscribed,
         unsubscribed_at: unsubscribed ? (existing.unsubscribed_at ?? now) : null,
-      })
-    : await store.insert({
+      }))
+    : await write((fields) => store.insert({
+        ...fields,
         email,
         source: input.source ?? LEAD_SOURCE_GRATIS,
         utm_source: tags.utm_source ?? null,
@@ -227,7 +313,7 @@ export async function persistGratisSignup(
         consent_source: input.consentSource ?? CONSENT_SOURCE_FORM,
         unsubscribed,
         unsubscribed_at: unsubscribed ? now : null,
-      });
+      }));
 
   await ensureCampaign(
     store,
